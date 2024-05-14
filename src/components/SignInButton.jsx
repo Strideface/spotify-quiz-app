@@ -1,11 +1,20 @@
-import { spotifyAuthenticationLink } from "../util/spotify-api";
+import { fetchUserAuthentication, spotifyAuthenticationLink, openSpotifyAuthenticationLink } from "../util/spotify-api";
 
 export default function () {
+  const handleOnClick = () => openSpotifyAuthenticationLink();
+
   return (
-    <div>
-      <a href={spotifyAuthenticationLink} id="signInSpotify">
-        Sign in to Spotify
-      </a>
-    </div>
+    <button onClick={handleOnClick} id="signInSpotify">
+      Sign in to Spotify
+    </button>
   );
+  // return (
+  //   <div>
+  //     <a href={spotifyAuthenticationLink} id="signInSpotify">
+  //       Sign in to Spotify
+  //     </a>
+  //   </div>
+  // );
 }
+
+  

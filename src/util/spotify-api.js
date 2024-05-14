@@ -1,38 +1,88 @@
 import {
-  setExpirationTimestamp,
-  getExpirationTimestamp,
-  setLocalAuthCode,
   getLocalAuthCode,
   setLocalAccessToken,
   getLocalAccessToken,
   setLocalRefreshToken,
   getLocalRefreshToken,
+  getCodeVerifier,
+  setCodeVerifier,
+  createCodeChallange,
 } from "./authentication";
 
-// A file to store all API requests for Spotify
+// A file to store all functions for Spotify API requests
 
 // global variables
 const scope = "user-read-private playlist-read-private";
 // keep adding to scope where neccessary (depends on endpoints)
+
 const redirectUri = "http://localhost:3000/";
 const clientId = "00e6229ed59a4bd8a0e3e91a99deb1f7";
 const clientSecret = "9e703c3ab9fc4decb9cc97067890ada7";
-const base64EncodeString = btoa(clientId + ":" + clientSecret);
+// DELETE? const base64EncodeString = btoa(clientId + ":" + clientSecret);
 
-// link provided for the Spotify sign in button so user can authenticate and get a code
-export const spotifyAuthenticationLink = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&scope=${scope}`;
+// DELETE? link provided for the Spotify sign in button so user can authenticate and get a code
+// DELETE? export const spotifyAuthenticationLink = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&scope=${scope}`;
 
-// gets access token following user authentication and code retrieval.
+// open the spotify auth link (Auth Code PKCE flow) programmatically because need to ensure code verifier
+// is set at this point and therefore will be the same when getting it from storage for the
+// fetchAccessToken function.
+export async function openSpotifyAuthenticationLink() {
+
+  setCodeVerifier(); // creates the code verifier value
+  
+  let codeChallenge = await createCodeChallange(); // includes the same code verifier value
+  
+
+  const spotifyAuthenticationLink = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&scope=${scope}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
+
+  window.open(spotifyAuthenticationLink, "_self")
+};
+
+
+// DELETE? Authorization Code with PKCE Flow
+// Request User Authorization
+// export async function fetchUserAuthentication() {
+//   const queryParams = new URLSearchParams({
+//     response_type: "code",
+//     client_id: clientId,
+//     scope: scope,
+//     code_challenge_method: "S256",
+//     code_challenge: codeChallenge,
+//     redirect_uri: redirectUri,
+//   });
+//   console.log(queryParams);
+
+//   const response = await fetch(
+//     "https://accounts.spotify.com/authorize?" + queryParams,
+//     {
+//       method: "GET",
+//     }
+//   );
+
+//   if (!response.ok) {
+//     const error = new Error("An error occurred during user authentication");
+//     error.code = response.status;
+//     error.info = await response.json();
+//     throw error;
+//   }
+
+//   const responseJson = await response.json();
+
+//   return responseJson;
+//   // doesn't need to return anything
+// }
+
+// gets access token following user authentication and code retrieval (see Authentication.jsx).
 export async function fetchAccessToken() {
   let authCode = getLocalAuthCode();
-
+  let codeVerifier = getCodeVerifier(); // ensures this value is the same when it was created during user auth link
+  
   const response = await fetch("https://accounts.spotify.com/api/token", {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
-      Authorization: "Basic " + base64EncodeString,
     },
-    body: `grant_type=authorization_code&code=${authCode}&redirect_uri=${redirectUri}`,
+    body: `grant_type=authorization_code&code=${authCode}&redirect_uri=${redirectUri}&client_id=${clientId}&code_verifier=${codeVerifier}`,
   });
 
   if (!response.ok) {
@@ -60,9 +110,8 @@ export async function fetchRefreshToken() {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
-      Authorization: "Basic " + base64EncodeString,
     },
-    body: `grant_type=refresh_token&refresh_token=${refreshToken}`,
+    body: `grant_type=refresh_token&refresh_token=${refreshToken}&client_id=${clientId}`,
   });
 
   if (!response.ok) {
@@ -102,15 +151,17 @@ export async function fetchUserDetails() {
 
   const userDetails = await response.json();
 
-  console.log(userDetails);
-
   return userDetails;
 }
 
-export async function fetchUserPlaylists(limit = 20, offset = 0) {
+export async function fetchUserPlaylists() {
   let accessToken = getLocalAccessToken();
 
-  const response = await fetch("https://api.spotify.com/v1/me/playlists", {
+  const queryParams = new URLSearchParams({
+    limit: 50,
+  });
+
+  const response = await fetch("https://api.spotify.com/v1/me/playlists?" + queryParams, {
     method: "GET",
     headers: { Authorization: `Bearer ${accessToken}` },
   });
@@ -126,7 +177,30 @@ export async function fetchUserPlaylists(limit = 20, offset = 0) {
 
   const userPlaylists = await response.json();
 
-  // console.log(userPlaylists);
-
   return userPlaylists;
+  // need to figure out how loop to the next page of results if 'next' has a value
 }
+
+export async function fetchPlaylistTracks(playlistTracksHref) {
+  let accessToken = getLocalAccessToken();
+
+  const response = await fetch(playlistTracksHref, {
+    method: "GET",
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+
+  if (!response.ok) {
+    const error = new Error(
+      "An error occurred while fetching playlist tracks"
+    );
+    error.code = response.status;
+    error.info = await response.json();
+    throw error;
+  }
+
+  const playlistTracks = await response.json();
+
+  console.log(playlistTracks)
+
+  return playlistTracks;
+};

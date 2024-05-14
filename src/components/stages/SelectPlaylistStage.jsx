@@ -3,7 +3,7 @@ import { useOutletContext } from "react-router-dom";
 
 import { checkAuth } from "../../util/authentication";
 import LoadingIndicator from "../LoadingIndicator";
-import { fetchUserPlaylists } from "../../util/spotify-api";
+import { fetchUserPlaylists, fetchPlaylistTracks } from "../../util/spotify-api";
 import { useEffect } from "react";
 
 export default function SelectPlaylistStage() {
@@ -34,6 +34,8 @@ export default function SelectPlaylistStage() {
     staleTime: 60000, // every 60 secs
   });
 
+  const handleOnClick = (playlistTracksHref) => fetchPlaylistTracks(playlistTracksHref);
+
   if (userPlaylistIsLoading) {
     return <LoadingIndicator />;
   }
@@ -51,7 +53,7 @@ export default function SelectPlaylistStage() {
         <ul>
           {userPlaylistData.items.map((item) => (
             <li key={item.id}>
-              {item.name}
+              <button onClick={() => handleOnClick(item.tracks.href)}>{item.name}</button>
               <span> / {item.tracks.total}</span>
             </li>
           ))}
