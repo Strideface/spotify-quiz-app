@@ -2,6 +2,8 @@ import { Outlet } from "react-router-dom";
 import Header from "./Header";
 import { useState } from "react";
 
+import { checkAuth } from "../util/authentication";
+
 export default function Root() {
   // create state to manage where a user is in the app 'flow'. Default is
   // the game tiles stage where user picks the game type.
@@ -11,7 +13,8 @@ export default function Root() {
     playQuizStage: false,
   });
   // to control what the user sees on the app, e.g. sign in with spotify
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(checkAuth());
+  console.log(`isAuthenticated from Root.jsx = ${isAuthenticated}`)
 
   return (
     <>

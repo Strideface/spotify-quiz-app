@@ -12,7 +12,6 @@ export const setExpirationTimestamp = () => {
 export const getExpirationTimestamp = () =>
   localStorage.getItem("spotify_expiration_timestamp");
 
-
 export const setLocalAuthCode = (authCode) => {
   localStorage.setItem("spotify_auth_code", authCode);
   // to do: handle a 'QuotaExceededError'
@@ -26,34 +25,35 @@ export const setLocalAccessToken = (accessToken) => {
   // to do: handle a 'QuotaExceededError'
 };
 
-export const getLocalAccessToken = () =>
-  localStorage.getItem("spotify_access_token");
+// function to ensure a valid access token for Spotify API requests
+export const getLocalAccessToken = async () => {
+  // check if current token is expired
+  if (new Date().getTime() > getExpirationTimestamp()) {
+    let accessToken = await fetchRefreshToken(); // Token has expired, get new one
+    return accessToken;
+  } else {
+    return localStorage.getItem("spotify_access_token");
+  }
+};
 
 export const setLocalRefreshToken = (refreshToken) => {
   localStorage.setItem("spotify_refresh_token", refreshToken);
 };
 
 export const getLocalRefreshToken = () => {
-  localStorage.getItem("spotify_refresh_token");
+  return localStorage.getItem("spotify_refresh_token");
 };
 
-
-// function to ensure a valid access token for Spotify API requests and to determine if
-// user is authenticated or not.
-export const checkAuth = async () => {
-  if (!getLocalAccessToken()) {
+// determine if user is authenticated or not.
+export const checkAuth = () => {
+  if (!localStorage.getItem("spotify_access_token")) {
     return false; // No access token in storage
-  }
-
-  if (new Date().getTime() > getExpirationTimestamp()) {
-    console.log("fetchRefreshToken executed from inside checkAuth");
-    await fetchRefreshToken(); // Token has expired, get new one
   } else {
-    return true; // access token present and not expired
+    return true; // access token present
   }
 };
 
-// helper functions to create code verifier and code challange used in Spotify Authorization Code with PKCE Flow 
+// helper functions to create code verifier and code challange used in Spotify Authorization Code with PKCE Flow
 
 const generateRandomString = (length) => {
   const possible =

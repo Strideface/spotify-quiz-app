@@ -1,6 +1,6 @@
 import { useOutletContext } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import SignInButton from "../components/SignInButton";
@@ -13,7 +13,7 @@ export default function Authentication() {
 
   const [searchParams, setSearchParams] = useSearchParams();
   let currentParams = Object.fromEntries([...searchParams]);
-  const authError = null; //   to log if error after user auth link. Temp placeholder.
+  let authError = useRef(null); //   to log if error after user auth link. Temp placeholder.
 
   // set the current url to state and use effect to monitor any changes.
   // handle if query is either 'code' or 'error' from the Spotify auth process.
@@ -23,7 +23,6 @@ export default function Authentication() {
   // set up functions to call Spotify API
   // disabled auto refetching and 'enabled' so it doesn't fire upon rendering of component
   const {
-    data: accessData,
     isFetching: accessIsFetching,
     isSuccess: accessIsSuccess,
     isError: accessIsError,
@@ -36,20 +35,16 @@ export default function Authentication() {
     enabled: false,
   });
 
-  //   let userIsEnabled = accessIsSuccess
+
 
   const {
     data: userData,
     isFetching: userIsFetching,
-    isError: userIsError,
-    error: userError,
     refetch: userRefetch,
-    status: userStatus,
   } = useQuery({
     queryKey: ["fetchUserDetails"],
     queryFn: () => fetchUserDetails(),
     staleTime: Infinity, // Only get user details once. Data is never considered old so no auto refetches.
-    // enabled: userIsEnabled,
     enabled: false,
   });
 
@@ -62,27 +57,38 @@ export default function Authentication() {
       setSearchParams(""); // clear parameter from URL
     }
     if (currentParams.error) {
-      authError = currentParams.error;
+      authError.current = currentParams.error;
+      setSearchParams("");
     }
-  }, [searchParams]);
+    // clean up function resets any previous authentication error to null
+    return () => {
+      authError.current = null;
+    }
+  }, [accessRefetch, currentParams.code, currentParams.error, searchParams, setSearchParams]);
 
   useEffect(() => {
+    // fetch user details if fetchAccessToken is a success. Only runs one time after sign in
+    // set isAuthenticated to true
     if (accessIsSuccess) {
       setIsAuthenticated(checkAuth());
-      userRefetch(); // fetch user details if fetchAccessToken is a success
+      userRefetch(); 
+      console.log("userRefetch from accessIsSuccess")
+      // also fetch user details if user remains authenticated and has not just signed in.
+      // handles case where user might refresh browser
+    } else if (isAuthenticated) {
+      userRefetch();
+      console.log("userRefetch from isAuthenticated")
     }
-  }, [accessIsSuccess]);
-
-
-  
+  }, [accessIsSuccess, isAuthenticated, setIsAuthenticated, userRefetch]);
 
   return (
     <div>
       {accessIsFetching && <p>Authenticating...</p>}
       {accessIsError && <p>An error has occured: {accessError.message}</p>}
-      {authError && (
+      {/* only show auth error if it has a current value. Clears when auth is a success. */}
+      {authError.current && (
         <p>
-          It looks like you did not give authorization, or there was an error.
+          Error: {authError.current} - It looks like you did not give authorization, or there was an error.
           Please try again.
         </p>
       )}

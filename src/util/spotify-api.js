@@ -17,7 +17,6 @@ const scope = "user-read-private playlist-read-private";
 
 const redirectUri = "http://localhost:3000/";
 const clientId = "00e6229ed59a4bd8a0e3e91a99deb1f7";
-const clientSecret = "9e703c3ab9fc4decb9cc97067890ada7";
 // DELETE? const base64EncodeString = btoa(clientId + ":" + clientSecret);
 
 // DELETE? link provided for the Spotify sign in button so user can authenticate and get a code
@@ -120,7 +119,7 @@ export async function fetchRefreshToken() {
     );
     error.code = response.status;
     error.info = await response.json();
-    throw error + ": " + error.info;
+    throw error;
   }
 
   const responseJson = await response.json();
@@ -129,11 +128,11 @@ export async function fetchRefreshToken() {
   setLocalRefreshToken(responseJson.refresh_token);
 
   return responseJson.access_token;
-  // doesn't need to return access token as already stores it.
+
 }
 
 export async function fetchUserDetails() {
-  let accessToken = getLocalAccessToken();
+  let accessToken = await getLocalAccessToken();
 
   const response = await fetch("https://api.spotify.com/v1/me", {
     method: "GET",
@@ -155,7 +154,7 @@ export async function fetchUserDetails() {
 }
 
 export async function fetchUserPlaylists() {
-  let accessToken = getLocalAccessToken();
+  let accessToken = await getLocalAccessToken();
 
   const queryParams = new URLSearchParams({
     limit: 50,
@@ -182,7 +181,7 @@ export async function fetchUserPlaylists() {
 }
 
 export async function fetchPlaylistTracks(playlistTracksHref) {
-  let accessToken = getLocalAccessToken();
+  let accessToken = await getLocalAccessToken();
 
   const response = await fetch(playlistTracksHref, {
     method: "GET",

@@ -1,19 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { useOutletContext } from "react-router-dom";
 
-import { checkAuth } from "../../util/authentication";
 import LoadingIndicator from "../LoadingIndicator";
-import { fetchUserPlaylists, fetchPlaylistTracks } from "../../util/spotify-api";
-import { useEffect } from "react";
+import {
+  fetchUserPlaylists,
+  fetchPlaylistTracks,
+} from "../../util/spotify-api";
 
 export default function SelectPlaylistStage() {
-  const { isAuthenticated, setIsAuthenticated, setQuizStage } =
-    useOutletContext();
-
-  useEffect(() => {
-    setIsAuthenticated(checkAuth());
-  }, [])
-
+  const { isAuthenticated, setQuizStage } = useOutletContext();
 
   if (!isAuthenticated) {
     setQuizStage((prevState) => ({
@@ -34,7 +29,8 @@ export default function SelectPlaylistStage() {
     staleTime: 60000, // every 60 secs
   });
 
-  const handleOnClick = (playlistTracksHref) => fetchPlaylistTracks(playlistTracksHref);
+  const handleOnClick = (playlistTracksHref) =>
+    fetchPlaylistTracks(playlistTracksHref);
 
   if (userPlaylistIsLoading) {
     return <LoadingIndicator />;
@@ -53,7 +49,9 @@ export default function SelectPlaylistStage() {
         <ul>
           {userPlaylistData.items.map((item) => (
             <li key={item.id}>
-              <button onClick={() => handleOnClick(item.tracks.href)}>{item.name}</button>
+              <button onClick={() => handleOnClick(item.tracks.href)}>
+                {item.name}
+              </button>
               <span> / {item.tracks.total}</span>
             </li>
           ))}
