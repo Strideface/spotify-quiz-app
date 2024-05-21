@@ -9,7 +9,14 @@ module.exports = {
       "spotify-white": "#FFFFFF",
       "spotify-black": "#191414"
     },
-    extend: {},
+    extend: {
+      width: {
+        "playlist-card": "300px"
+      },
+      height:{
+        "playlist-card": "300px"
+      }
+    },
   },
   plugins: [],
 }

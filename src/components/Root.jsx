@@ -12,7 +12,7 @@ export default function Root() {
     selectPlaylistStage: false,
     playQuizStage: false,
   });
-  // to control what the user sees on the app, e.g. sign in with spotify
+  // to control what the user sees on the app, e.g. sign in button
   const [isAuthenticated, setIsAuthenticated] = useState(checkAuth());
   console.log(`isAuthenticated from Root.jsx = ${isAuthenticated}`)
 

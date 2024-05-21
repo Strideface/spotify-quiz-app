@@ -180,6 +180,35 @@ export async function fetchUserPlaylists() {
   // need to figure out how loop to the next page of results if 'next' has a value
 }
 
+export async function fetchSearchedPlaylists(searchTerm) {
+  let accessToken = await getLocalAccessToken();
+
+  const queryParams = new URLSearchParams({
+    q: searchTerm,
+    type: "playlist",
+    limit: 10,
+  });
+
+  const response = await fetch("https://api.spotify.com/v1/search?" + queryParams, {
+    method: "GET",
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+
+  if (!response.ok) {
+    const error = new Error(
+      "An error occurred while fetching searched playlists"
+    );
+    error.code = response.status;
+    error.info = await response.json();
+    throw error;
+  }
+
+  const searchedPlaylists = await response.json();
+
+  return searchedPlaylists;
+  // need to figure out how loop to the next page of results if 'next' has a value
+}
+
 export async function fetchPlaylistTracks(playlistTracksHref) {
   let accessToken = await getLocalAccessToken();
 
