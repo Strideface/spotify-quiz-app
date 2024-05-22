@@ -2,10 +2,9 @@
 import PlaylistCard from "./PlaylistCard"
 
 export default function PlaylistRow({playlistData}) {
-  console.log(`playlist row data: ${playlistData}`)
   return (
     <div className=" flex flex-nowrap overflow-auto ">
-      {playlistData.items.map((item) => (
+      {playlistData.map((item) => (
         <PlaylistCard
           key={item.id}
           name={item.name}

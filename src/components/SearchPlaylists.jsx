@@ -28,8 +28,6 @@ export default function SearchPlaylists() {
     }
   }, [searchTerm, searchedPlaylistRefetch]);
 
-  console.log(`searchedPlaylistData: ${searchedPlaylistData}`);
-
   return (
     <>
       <div className=" flex p-10 justify-center">
@@ -38,7 +36,7 @@ export default function SearchPlaylists() {
       <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       {searchedPlaylistIsLoading && <LoadingIndicator />}
       {searchedPlaylistData && (
-        <PlaylistRow playlistData={searchedPlaylistData.playlists} />
+        <PlaylistRow playlistData={searchedPlaylistData} />
       )}
       {searchedPlaylistIsError && <p>Error: {searchedPlaylistError.message}</p>}
     </>

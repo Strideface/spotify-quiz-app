@@ -26,17 +26,14 @@ const clientId = "00e6229ed59a4bd8a0e3e91a99deb1f7";
 // is set at this point and therefore will be the same when getting it from storage for the
 // fetchAccessToken function.
 export async function openSpotifyAuthenticationLink() {
-
   setCodeVerifier(); // creates the code verifier value
-  
+
   let codeChallenge = await createCodeChallange(); // includes the same code verifier value
-  
 
   const spotifyAuthenticationLink = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&scope=${scope}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
 
-  window.open(spotifyAuthenticationLink, "_self")
-};
-
+  window.open(spotifyAuthenticationLink, "_self");
+}
 
 // DELETE? Authorization Code with PKCE Flow
 // Request User Authorization
@@ -75,7 +72,7 @@ export async function openSpotifyAuthenticationLink() {
 export async function fetchAccessToken() {
   let authCode = getLocalAuthCode();
   let codeVerifier = getCodeVerifier(); // ensures this value is the same when it was created during user auth link
-  
+
   const response = await fetch("https://accounts.spotify.com/api/token", {
     method: "POST",
     headers: {
@@ -128,7 +125,6 @@ export async function fetchRefreshToken() {
   setLocalRefreshToken(responseJson.refresh_token);
 
   return responseJson.access_token;
-
 }
 
 export async function fetchUserDetails() {
@@ -155,29 +151,54 @@ export async function fetchUserDetails() {
 
 export async function fetchUserPlaylists() {
   let accessToken = await getLocalAccessToken();
-
+  
   const queryParams = new URLSearchParams({
-    limit: 50,
+    limit: 50, // max limit allowed
+    offset: 0,
   });
+// following while loop handles cases where a user may have more than 50 playlists
+  const userPlaylists = [];
 
-  const response = await fetch("https://api.spotify.com/v1/me/playlists?" + queryParams, {
-    method: "GET",
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
+  let getNext = true;
 
-  if (!response.ok) {
-    const error = new Error(
-      "An error occurred while fetching spotify user Playlists"
+  while (getNext) {
+    const response = await fetch(
+      "https://api.spotify.com/v1/me/playlists?" + queryParams,
+      {
+        method: "GET",
+        headers: { Authorization: `Bearer ${accessToken}` },
+      }
     );
-    error.code = response.status;
-    error.info = await response.json();
-    throw error;
+
+    if (!response.ok) {
+      const error = new Error(
+        "An error occurred while fetching spotify user Playlists"
+      );
+      error.code = response.status;
+      error.info = await response.json();
+      throw error;
+    }
+
+    let responseJson = await response.json();
+
+    userPlaylists.push(responseJson);
+    // get next batch of playlists if 'next' is not 'null'
+    if (responseJson.next) {
+      let newOffset =
+        parseInt(queryParams.get("offset")) +
+        parseInt(queryParams.get("limit"));
+      queryParams.set("offset", newOffset);
+    } else {
+      getNext = false;
+    }
   }
-
-  const userPlaylists = await response.json();
-
-  return userPlaylists;
-  // need to figure out how loop to the next page of results if 'next' has a value
+  // return an array of playlist items
+  let userPlaylistItems = [];
+  for (let playlistsObj of userPlaylists) {
+    userPlaylistItems.push(...playlistsObj.items);
+  }
+  console.log(userPlaylistItems)
+  return userPlaylistItems;
 }
 
 export async function fetchSearchedPlaylists(searchTerm) {
@@ -189,10 +210,13 @@ export async function fetchSearchedPlaylists(searchTerm) {
     limit: 10,
   });
 
-  const response = await fetch("https://api.spotify.com/v1/search?" + queryParams, {
-    method: "GET",
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
+  const response = await fetch(
+    "https://api.spotify.com/v1/search?" + queryParams,
+    {
+      method: "GET",
+      headers: { Authorization: `Bearer ${accessToken}` },
+    }
+  );
 
   if (!response.ok) {
     const error = new Error(
@@ -205,8 +229,13 @@ export async function fetchSearchedPlaylists(searchTerm) {
 
   const searchedPlaylists = await response.json();
 
-  return searchedPlaylists;
-  // need to figure out how loop to the next page of results if 'next' has a value
+  // return an array of playlist items
+  let searchedPlaylistsItems = [];
+ 
+  searchedPlaylistsItems.push(...searchedPlaylists.playlists.items);
+  console.log(searchedPlaylistsItems)
+
+  return searchedPlaylistsItems;
 }
 
 export async function fetchPlaylistTracks(playlistTracksHref) {
@@ -218,9 +247,7 @@ export async function fetchPlaylistTracks(playlistTracksHref) {
   });
 
   if (!response.ok) {
-    const error = new Error(
-      "An error occurred while fetching playlist tracks"
-    );
+    const error = new Error("An error occurred while fetching playlist tracks");
     error.code = response.status;
     error.info = await response.json();
     throw error;
@@ -228,7 +255,5 @@ export async function fetchPlaylistTracks(playlistTracksHref) {
 
   const playlistTracks = await response.json();
 
-  console.log(playlistTracks)
-
   return playlistTracks;
-};
+}

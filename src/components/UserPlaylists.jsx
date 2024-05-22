@@ -13,10 +13,9 @@ export default function UserPlaylists() {
   } = useQuery({
     queryKey: ["fetchUserPlaylists"],
     queryFn: fetchUserPlaylists,
-    staleTime: 60000, // every 60 secs
+    staleTime: 60000, // every 60 secs, refetch data. Aribitrary but to reduce API calls
   });
 
-  console.log(`userPlaylistData: ${userPlaylistData}`);
 
   if (userPlaylistIsLoading) {
     return <LoadingIndicator />;
