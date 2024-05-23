@@ -4,7 +4,7 @@ import LoadingIndicator from "./LoadingIndicator";
 import { fetchUserPlaylists } from "../util/spotify-api";
 import PlaylistRow from "./PlaylistRow";
 
-export default function UserPlaylists() {
+export default function UserPlaylists({ setShowModal }) {
   const {
     data: userPlaylistData,
     error: userPlaylistError,
@@ -15,7 +15,6 @@ export default function UserPlaylists() {
     queryFn: fetchUserPlaylists,
     staleTime: 60000, // every 60 secs, refetch data. Aribitrary but to reduce API calls
   });
-
 
   if (userPlaylistIsLoading) {
     return <LoadingIndicator />;
@@ -31,7 +30,7 @@ export default function UserPlaylists() {
         <div className=" flex p-10 justify-center">
           <h1>Your Playlists</h1>
         </div>
-        <PlaylistRow playlistData={userPlaylistData} />
+        <PlaylistRow setShowModal={setShowModal} playlistData={userPlaylistData} />
       </>
     );
   }

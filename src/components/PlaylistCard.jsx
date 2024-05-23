@@ -1,8 +1,17 @@
 import { fetchPlaylistTracks } from "../util/spotify-api";
 
-export default function PlaylistCard({ name, tracks, totalTracks, image }) {
-  const handleOnClick = (playlistTracksHref) =>
+export default function PlaylistCard({
+  name,
+  tracks,
+  totalTracks,
+  image,
+  setShowModal,
+}) {
+
+  const handleOnClick = (playlistTracksHref) => {
     fetchPlaylistTracks(playlistTracksHref);
+    setShowModal(true);
+  };
 
   return (
     <div className="flex flex-none w-playlist-card border m-5">

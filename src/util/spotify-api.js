@@ -151,12 +151,12 @@ export async function fetchUserDetails() {
 
 export async function fetchUserPlaylists() {
   let accessToken = await getLocalAccessToken();
-  
+
   const queryParams = new URLSearchParams({
     limit: 50, // max limit allowed
     offset: 0,
   });
-// following while loop handles cases where a user may have more than 50 playlists
+  // following while loop handles cases where a user may have more than 50 playlists
   const userPlaylists = [];
 
   let getNext = true;
@@ -197,7 +197,7 @@ export async function fetchUserPlaylists() {
   for (let playlistsObj of userPlaylists) {
     userPlaylistItems.push(...playlistsObj.items);
   }
-  console.log(userPlaylistItems)
+
   return userPlaylistItems;
 }
 
@@ -231,9 +231,8 @@ export async function fetchSearchedPlaylists(searchTerm) {
 
   // return an array of playlist items
   let searchedPlaylistsItems = [];
- 
+
   searchedPlaylistsItems.push(...searchedPlaylists.playlists.items);
-  console.log(searchedPlaylistsItems)
 
   return searchedPlaylistsItems;
 }
@@ -241,19 +240,49 @@ export async function fetchSearchedPlaylists(searchTerm) {
 export async function fetchPlaylistTracks(playlistTracksHref) {
   let accessToken = await getLocalAccessToken();
 
-  const response = await fetch(playlistTracksHref, {
-    method: "GET",
-    headers: { Authorization: `Bearer ${accessToken}` },
+  const queryParams = new URLSearchParams({
+    limit: 100, // max limit allowed
+    offset: 0,
   });
 
-  if (!response.ok) {
-    const error = new Error("An error occurred while fetching playlist tracks");
-    error.code = response.status;
-    error.info = await response.json();
-    throw error;
+  // following while loop handles cases where a playlist has more than 100 tracks
+  const playlistTracks = [];
+
+  let getNext = true;
+
+  while (getNext) {
+    const response = await fetch(playlistTracksHref + "?" + queryParams, {
+      method: "GET",
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+
+    if (!response.ok) {
+      const error = new Error(
+        "An error occurred while fetching playlist tracks"
+      );
+      error.code = response.status;
+      error.info = await response.json();
+      throw error;
+    }
+
+    let responseJson = await response.json();
+
+    playlistTracks.push(responseJson);
+    // get next batch of tracks if 'next' is not 'null'
+    if (responseJson.next) {
+      let newOffset =
+        parseInt(queryParams.get("offset")) +
+        parseInt(queryParams.get("limit"));
+      queryParams.set("offset", newOffset);
+    } else {
+      getNext = false;
+    }
+  }
+  // return an array of track items
+  let playlistTracksItems = [];
+  for (let playlistTracksObj of playlistTracks) {
+    playlistTracksItems.push(...playlistTracksObj.items);
   }
 
-  const playlistTracks = await response.json();
-
-  return playlistTracks;
+  return playlistTracksItems;
 }

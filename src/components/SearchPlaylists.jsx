@@ -6,7 +6,7 @@ import SearchBar from "./SearchBar";
 import { fetchSearchedPlaylists } from "../util/spotify-api";
 import LoadingIndicator from "./LoadingIndicator";
 
-export default function SearchPlaylists() {
+export default function SearchPlaylists({ setShowModal }) {
   const [searchTerm, setSearchTerm] = useState("");
 
   const {
@@ -36,7 +36,7 @@ export default function SearchPlaylists() {
       <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       {searchedPlaylistIsLoading && <LoadingIndicator />}
       {searchedPlaylistData && (
-        <PlaylistRow playlistData={searchedPlaylistData} />
+        <PlaylistRow setShowModal={setShowModal} playlistData={searchedPlaylistData} />
       )}
       {searchedPlaylistIsError && <p>Error: {searchedPlaylistError.message}</p>}
     </>

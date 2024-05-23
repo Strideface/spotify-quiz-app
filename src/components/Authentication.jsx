@@ -72,12 +72,12 @@ export default function Authentication() {
     if (accessIsSuccess) {
       setIsAuthenticated(checkAuth());
       userRefetch(); 
-      console.log("userRefetch from accessIsSuccess")
+      // console.log("userRefetch from accessIsSuccess")
       // also fetch user details if user remains authenticated and has not just signed in.
       // handles case where user might refresh browser
     } else if (isAuthenticated) {
       userRefetch();
-      console.log("userRefetch from isAuthenticated")
+      // console.log("userRefetch from isAuthenticated")
     }
   }, [accessIsSuccess, isAuthenticated, setIsAuthenticated, userRefetch]);
 
