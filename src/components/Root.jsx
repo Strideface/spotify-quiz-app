@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import Header from "./Header";
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 import { checkAuth } from "../util/authentication";
 
@@ -14,7 +14,19 @@ export default function Root() {
   });
   // to control what the user sees on the app, e.g. sign in button
   const [isAuthenticated, setIsAuthenticated] = useState(checkAuth());
-  console.log(`isAuthenticated from Root.jsx = ${isAuthenticated}`)
+  // to control if a modal is shown or hidden. As there will be more than one modal in the app, add a prop for each modal instance.
+  // specific modal can then be set in whichever component it is needed and advoids prop drilling.
+  const [showModal, setShowModal] = useState({
+    selectDifficultyModal: false,
+  });
+  
+  // IMPORTANT: note the 'expectations' of using useRef in this way, from React doc:
+  // 'Do not write or read ref.current during rendering...You can read or write refs from event handlers or effects'
+
+  const quizData = useRef({// to control values that will effect the quiz stage  
+    playlistTracksHref: null,
+    difficulty: null,
+  });
 
   return (
     <>
@@ -25,6 +37,9 @@ export default function Root() {
           setQuizStage,
           isAuthenticated,
           setIsAuthenticated,
+          showModal,
+          setShowModal,
+          quizData,
         }}
       />
       {/* Outlet acts like the children prop and renders any child elements of this route */}

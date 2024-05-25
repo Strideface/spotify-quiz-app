@@ -1,23 +1,26 @@
-import { fetchPlaylistTracks } from "../util/spotify-api";
+import { useOutletContext } from "react-router-dom";
 
 export default function PlaylistCard({
   name,
-  tracks,
+  playlistTracksHref,
   totalTracks,
   image,
-  setShowModal,
 }) {
+  const { setShowModal, quizData } = useOutletContext();
 
   const handleOnClick = (playlistTracksHref) => {
-    fetchPlaylistTracks(playlistTracksHref);
-    setShowModal(true);
+    quizData.current.playlistTracksHref = playlistTracksHref;
+    setShowModal((prevState) => ({
+      ...prevState,
+      selectDifficultyModal: true,
+    }));
   };
 
   return (
     <div className="flex flex-none w-playlist-card border m-5">
       <button
         className=" hover:bg-spotify-green "
-        onClick={() => handleOnClick(tracks)}
+        onClick={() => handleOnClick(playlistTracksHref)}
       >
         <h1>{name}</h1>
         <p>{totalTracks}</p>

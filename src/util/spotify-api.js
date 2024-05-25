@@ -238,6 +238,7 @@ export async function fetchSearchedPlaylists(searchTerm) {
 }
 
 export async function fetchPlaylistTracks(playlistTracksHref) {
+
   let accessToken = await getLocalAccessToken();
 
   const queryParams = new URLSearchParams({
@@ -283,6 +284,7 @@ export async function fetchPlaylistTracks(playlistTracksHref) {
   for (let playlistTracksObj of playlistTracks) {
     playlistTracksItems.push(...playlistTracksObj.items);
   }
-
+  
+  console.log(playlistTracksItems)
   return playlistTracksItems;
 }

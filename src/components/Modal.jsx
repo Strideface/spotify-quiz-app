@@ -4,7 +4,7 @@ import { createPortal } from "react-dom";
 // A configurable dialog element that should be adjustable for any modal required to be shown in the app
 
 const Modal = forwardRef(function Modal(
-  { title, message, children, onSubmit, onClose },
+  { title, message, children, onClose },
   ref
 ) {
   const dialog = useRef();
@@ -14,19 +14,14 @@ const Modal = forwardRef(function Modal(
       open() {
         dialog.current.showModal();
       },
+      close() {
+        dialog.current.close()
+      }
     };
   });
   // onClose prop is only neccessarry when you need a function to trigger (in an inheriting component) upon a dialog being
-  // closed via the escape key (onClose attribute), and/or when user clicks cancel (handleCancel).
-  // E.g. trigger the same function as onSubmit if user presses cancel and/or escapes.
-  const handleCancel = () => {
-    // closing the dialog upon cancel button is standard
-    dialog.current.close();
-    // also call any onClose function if this prop is passed in
-    if (onClose) {
-      onClose();
-    }
-  };
+  // closed via the escape key (onClose attribute) e.g. trigger the same function as onSubmit if user escapes.
+
   // portal inserts the dialog at the point in the DOM corresponding to its id, in this case
   // a div element with 'modal' as id, at the highest point in the DON (see index.html)
   return createPortal(
@@ -36,12 +31,6 @@ const Modal = forwardRef(function Modal(
         <p>{message}</p>
       </div>
       <div>{children}</div>
-      <form method="dialog" onSubmit={onSubmit}>
-        <button type="reset" onClick={handleCancel}>
-          Cancel
-        </button>
-        <button type="submit">Confirm</button>
-      </form>
     </dialog>,
     document.getElementById("modal")
   );

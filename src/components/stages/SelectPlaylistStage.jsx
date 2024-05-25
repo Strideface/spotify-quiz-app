@@ -2,12 +2,16 @@ import { useOutletContext } from "react-router-dom";
 import SearchPlaylists from "../SearchPlaylists";
 import UserPlaylists from "../UserPlaylists";
 import Modal from "../Modal";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 
 export default function SelectPlaylistStage() {
-  const { isAuthenticated, setQuizStage } = useOutletContext();
-  const [showModal, setShowModal] = useState(false);
-  const setDifficultyModal = useRef();
+  const { isAuthenticated, setQuizStage, showModal, setShowModal, quizData } =
+    useOutletContext();
+  // refs to connect with elements
+  const selectDifficultyModal = useRef();
+  const easy = useRef();
+  const medium = useRef();
+  const hard = useRef();
 
   if (!isAuthenticated) {
     setQuizStage((prevState) => ({
@@ -17,40 +21,90 @@ export default function SelectPlaylistStage() {
     }));
   }
 
-  if (showModal) {
-    setDifficultyModal.current.open();
+  if (showModal.selectDifficultyModal) {
+    selectDifficultyModal.current.open();
   }
 
-  const handleOnSubmit = () => {
-    setShowModal(false);
-    console.log("form submitted");
-    // what type of data should be created when playlistCard is clicked (playlistTracksItems)?
-  };
-  const handleOnClose = () => setShowModal(false);
+  const handleOnSubmit = (event) => {
+    event.preventDefault(); // prevents form submission to server
 
-  // continue watching https://www.udemy.com/course/react-the-complete-guide-incl-redux/learn/lecture/39836354#questions/21203546/
+    // assign selected difficulty level
+    if (easy.current.checked) {
+      quizData.current.difficultySelection = easy.current.value;
+    } else if (medium.current.checked) {
+      quizData.current.difficultySelection = medium.current.value;
+    } else if (hard.current.checked) {
+      quizData.current.difficultySelection = hard.current.value;
+    }
+
+    selectDifficultyModal.current.close();
+
+    setShowModal((prevState) => ({
+      ...prevState,
+      selectDifficultyModal: false,
+    }));
+
+    setQuizStage((prevState) => ({
+      ...prevState,
+      selectPlaylistStage: false,
+      playQuizStage: true,
+    }));
+  };
+
+  const handleOnClose = () => {
+    selectDifficultyModal.current.close();
+    setShowModal((prevState) => ({
+      ...prevState,
+      selectDifficultyModal: false,
+    }));
+  };
+
   return (
     <>
       <Modal
-        onClose={handleOnClose}
-        onSubmit={handleOnSubmit}
-        ref={setDifficultyModal}
+        ref={selectDifficultyModal}
         title="Select Difficulty"
         message="Choose the difficulty level of the quiz"
       >
-        <input type="checkbox" id="easy" name="easy" value="Easy" />
-        <label for="easy">Easy</label>
-        <br />
-        <input type="checkbox" id="medium" name="medium" value="Medium" />
-        <label for="medium">Medium</label>
-        <br />
-        <input type="checkbox" id="hard" name="hard" value="Hard" />
-        <label for="hard">Hard</label>
-        <br />
+        <form method="dialog" onSubmit={handleOnSubmit}>
+          <input
+            ref={easy}
+            type="radio"
+            id="easy"
+            name="difficulty"
+            value="easy"
+          />
+          <label htmlFor="easy">Easy</label>
+          <br />
+          <input
+            ref={medium}
+            type="radio"
+            id="medium"
+            name="difficulty"
+            value="medium"
+            checked="readOnly"
+          />
+          <label htmlFor="medium">Medium</label>
+          <br />
+          <input
+            ref={hard}
+            type="radio"
+            id="hard"
+            name="difficulty"
+            value="hard"
+          />
+          <label htmlFor="hard">Hard</label>
+          <br />
+
+          <button type="reset" onClick={handleOnClose}>
+            Cancel
+          </button>
+          <button type="submit">Confirm</button>
+        </form>
       </Modal>
-{/* to review: not a fan of prop drilling with setShowModal through 3 or 4 components. Find a better way! */}
-      <SearchPlaylists setShowModal={setShowModal} />
-      <UserPlaylists setShowModal={setShowModal} />
+
+      <SearchPlaylists />
+      <UserPlaylists />
     </>
   );
 }
