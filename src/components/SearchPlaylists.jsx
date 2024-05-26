@@ -8,6 +8,7 @@ import LoadingIndicator from "./LoadingIndicator";
 
 export default function SearchPlaylists() {
   const [searchTerm, setSearchTerm] = useState("");
+  // set to "" instead of null or undefined as otherwise searchTerm.trim() in useEffect throws error
 
   const {
     data: searchedPlaylistData,
@@ -17,13 +18,15 @@ export default function SearchPlaylists() {
     refetch: searchedPlaylistRefetch,
   } = useQuery({
     queryFn: () => fetchSearchedPlaylists(searchTerm),
-    queryKey: ["fetchSearchedPlaylists"],
+    queryKey: ["fetchSearchedPlaylists", { search: searchTerm }], // cache each unique search term
     refetchOnWindowFocus: false,
     enabled: false,
   });
 
   useEffect(() => {
-    if (searchTerm) {
+    // don't send a request if the searchTerm value contains an empty string ("  ")
+    // e.g. user only presses space or tab. This would result in a 400 error response from Spotify API.
+    if (searchTerm.trim().length !== 0) {
       searchedPlaylistRefetch();
     }
   }, [searchTerm, searchedPlaylistRefetch]);

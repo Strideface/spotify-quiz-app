@@ -23,10 +23,15 @@ export default function Root() {
   // IMPORTANT: note the 'expectations' of using useRef in this way, from React doc:
   // 'Do not write or read ref.current during rendering...You can read or write refs from event handlers or effects'
 
-  const quizData = useRef({// to control values that will effect the quiz stage  
-    playlistTracksHref: null,
+  const quizData = useRef({
+    userDetails: {
+      name: "hello",
+      country: null,
+    },
+    playlistTracksHref: "hi",
     difficulty: null,
   });
+  
 
   return (
     <>

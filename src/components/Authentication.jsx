@@ -9,7 +9,7 @@ import { fetchAccessToken, fetchUserDetails } from "../util/spotify-api.js";
 
 export default function Authentication() {
   // STATE
-  const { isAuthenticated, setIsAuthenticated } = useOutletContext();
+  const { isAuthenticated, setIsAuthenticated, quizData } = useOutletContext();
 
   const [searchParams, setSearchParams] = useSearchParams();
   let currentParams = Object.fromEntries([...searchParams]);
@@ -35,17 +35,18 @@ export default function Authentication() {
     enabled: false,
   });
 
-
-
   const {
     data: userData,
-    isFetching: userIsFetching,
-    refetch: userRefetch,
+    isLoading: userIsLoading,
+    isSuccess: userIsSuccess,
   } = useQuery({
     queryKey: ["fetchUserDetails"],
     queryFn: () => fetchUserDetails(),
     staleTime: Infinity, // Only get user details once. Data is never considered old so no auto refetches.
-    enabled: false,
+    cacheTime: Infinity, // Cache user details infinitely as this is not expected to change during average usage of the app.
+    // data is never collected by garbage. See: https://tanstack.com/query/v4/docs/framework/react/guides/caching
+    enabled: isAuthenticated,
+    // Derived. Once isAuthentication is true following 'accessIsSuccess', fetchUserDetails will run.
   });
 
   // SIDE EFFECTS
@@ -63,23 +64,31 @@ export default function Authentication() {
     // clean up function resets any previous authentication error to null
     return () => {
       authError.current = null;
-    }
-  }, [accessRefetch, currentParams.code, currentParams.error, searchParams, setSearchParams]);
+    };
+  }, [
+    accessRefetch,
+    currentParams.code,
+    currentParams.error,
+    searchParams,
+    setSearchParams,
+  ]);
 
   useEffect(() => {
-    // fetch user details if fetchAccessToken is a success. Only runs one time after sign in
-    // set isAuthenticated to true
+    // If fetchAccessToken is a success, set isAuthenticated to true.
+    // This effect only runs one time after sign in
     if (accessIsSuccess) {
       setIsAuthenticated(checkAuth());
-      userRefetch(); 
-      // console.log("userRefetch from accessIsSuccess")
-      // also fetch user details if user remains authenticated and has not just signed in.
-      // handles case where user might refresh browser
-    } else if (isAuthenticated) {
-      userRefetch();
-      // console.log("userRefetch from isAuthenticated")
     }
-  }, [accessIsSuccess, isAuthenticated, setIsAuthenticated, userRefetch]);
+  }, [accessIsSuccess, setIsAuthenticated]);
+
+  useEffect(() => {
+    // if user details data is present as a result of calling userRefetch in previous useEffect code,
+    // store details
+    if (userIsSuccess) {
+      quizData.current.userDetails.name = userData.display_name;
+      quizData.current.userDetails.country = userData.country;
+    }
+  }, [quizData, userData, userIsSuccess]);
 
   return (
     <div>
@@ -88,13 +97,13 @@ export default function Authentication() {
       {/* only show auth error if it has a current value. Clears when auth is a success. */}
       {authError.current && (
         <p>
-          Error: {authError.current} - It looks like you did not give authorization, or there was an error.
-          Please try again.
+          Error: {authError.current} - It looks like you did not give
+          authorization, or there was an error. Please try again.
         </p>
       )}
-      {/* show display name (if available) if authenticated else show sign in button */}
+      {/* show display name (if available - might be null) if authenticated else show sign in button */}
       {isAuthenticated ? (
-        <p>Let's play {userIsFetching ? "..." : userData?.display_name}</p>
+        <p>Let's Play {userIsLoading && "..."}{userData?.display_name}</p>
       ) : (
         <SignInButton />
       )}
