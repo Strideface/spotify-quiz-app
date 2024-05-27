@@ -31,11 +31,11 @@ export default function SelectPlaylistStage() {
 
     // assign selected difficulty level
     if (easy.current.checked) {
-      quizData.current.difficultySelection = easy.current.value;
+      quizData.current.difficulty = easy.current.value;
     } else if (medium.current.checked) {
-      quizData.current.difficultySelection = medium.current.value;
+      quizData.current.difficulty = medium.current.value;
     } else if (hard.current.checked) {
-      quizData.current.difficultySelection = hard.current.value;
+      quizData.current.difficulty = hard.current.value;
     }
 
     selectDifficultyModal.current.close();

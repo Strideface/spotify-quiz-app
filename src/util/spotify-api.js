@@ -239,7 +239,6 @@ export async function fetchSearchedPlaylists(searchTerm, market) {
 }
 
 export async function fetchPlaylistTracks(playlistTracksHref, market) {
-
   let accessToken = await getLocalAccessToken();
 
   const queryParams = new URLSearchParams({
@@ -281,13 +280,30 @@ export async function fetchPlaylistTracks(playlistTracksHref, market) {
       getNext = false;
     }
   }
-  // return an array of track items
-  let playlistTracksItems = [];
+  // return an array of track objects
+
+  let quizTracksData = [];
+
   for (let playlistTracksObj of playlistTracks) {
-    playlistTracksItems.push(...playlistTracksObj.items);
+ 
+    quizTracksData.push(
+      playlistTracksObj.items.map((item) => ({
+        artist: item.track.artists,
+        album: {
+          name: item.track.album.name,
+          href: item.track.album.href,
+          images: item.track.album.images,
+        },
+        track: {
+          name: item.track.name,
+          href: item.track.href,
+          id: item.track.id,
+          isPlayable: item.track.is_playable,
+          preview: item.track.preview_url,
+        },
+      }))
+    );
   }
-  // CHANGE WHAT YOU RETURN FROM THIS SO THAT IT SORTS OUT ALREADY WHAT YOU NEED IN QUIZDATA.DATA ARRAY NEEDED FOR THE QUIZ.
-  // AN ARRAY OF OBJECTS WITH THE ARTIST, ALBUM NAME, ALBUM IMAGE DETAILS, TRACK NAME, TRACK ID/HREF, PREVIEW_URL (FOR EASY MODE)
-  console.log(playlistTracksItems)
-  return playlistTracksItems;
+
+  return quizTracksData;
 }
