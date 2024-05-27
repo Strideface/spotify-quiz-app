@@ -1,7 +1,8 @@
 import { useOutletContext } from "react-router-dom";
-import GameTilesStage from "../components/stages/GameTilesStage";
-import SelectPlaylistStage from "../components/stages/SelectPlaylistStage";
-import PlayQuizStage from "../components/stages/PlayQuizStage";
+
+import PlayQuizStage from "../components/stages/play-quiz-stage/PlayQuizStage";
+import GameTilesStage from "../components/stages/game-tiles-stage/GameTilesStage";
+import SelectPlaylistStage from "../components/stages/select-playlist-stage/SelectPlaylistStage";
 
 export default function MainPage() {
   const { quizStage } = useOutletContext();
@@ -14,6 +15,6 @@ export default function MainPage() {
     return <SelectPlaylistStage />;
   }
   if (quizStage.playQuizStage) {
-    return <PlayQuizStage />;
+    return <PlayQuizStage />
   }
 }

@@ -201,13 +201,14 @@ export async function fetchUserPlaylists() {
   return userPlaylistItems;
 }
 
-export async function fetchSearchedPlaylists(searchTerm) {
+export async function fetchSearchedPlaylists(searchTerm, market) {
   let accessToken = await getLocalAccessToken();
 
   const queryParams = new URLSearchParams({
     q: searchTerm,
     type: "playlist",
     limit: 10,
+    market: market,
   });
 
   const response = await fetch(
@@ -237,13 +238,14 @@ export async function fetchSearchedPlaylists(searchTerm) {
   return searchedPlaylistsItems;
 }
 
-export async function fetchPlaylistTracks(playlistTracksHref) {
+export async function fetchPlaylistTracks(playlistTracksHref, market) {
 
   let accessToken = await getLocalAccessToken();
 
   const queryParams = new URLSearchParams({
     limit: 100, // max limit allowed
     offset: 0,
+    market: market,
   });
 
   // following while loop handles cases where a playlist has more than 100 tracks
@@ -284,7 +286,8 @@ export async function fetchPlaylistTracks(playlistTracksHref) {
   for (let playlistTracksObj of playlistTracks) {
     playlistTracksItems.push(...playlistTracksObj.items);
   }
-  
+  // CHANGE WHAT YOU RETURN FROM THIS SO THAT IT SORTS OUT ALREADY WHAT YOU NEED IN QUIZDATA.DATA ARRAY NEEDED FOR THE QUIZ.
+  // AN ARRAY OF OBJECTS WITH THE ARTIST, ALBUM NAME, ALBUM IMAGE DETAILS, TRACK NAME, TRACK ID/HREF, PREVIEW_URL (FOR EASY MODE)
   console.log(playlistTracksItems)
   return playlistTracksItems;
 }

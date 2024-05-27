@@ -1,7 +1,7 @@
 import { useOutletContext } from "react-router-dom";
-import SearchPlaylists from "../SearchPlaylists";
-import UserPlaylists from "../UserPlaylists";
-import Modal from "../Modal";
+import SearchPlaylists from "./components/SearchPlaylists";
+import UserPlaylists from "./components/UserPlaylists";
+import Modal from "../../Modal";
 import { useRef } from "react";
 
 export default function SelectPlaylistStage() {
@@ -24,6 +24,7 @@ export default function SelectPlaylistStage() {
   if (showModal.selectDifficultyModal) {
     selectDifficultyModal.current.open();
   }
+  
 
   const handleOnSubmit = (event) => {
     event.preventDefault(); // prevents form submission to server

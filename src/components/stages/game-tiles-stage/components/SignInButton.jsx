@@ -1,4 +1,4 @@
-import { openSpotifyAuthenticationLink } from "../util/spotify-api";
+import { openSpotifyAuthenticationLink } from "../../../../util/spotify-api";
 
 export default function SignInButton() {
   const handleOnClick = () => openSpotifyAuthenticationLink();

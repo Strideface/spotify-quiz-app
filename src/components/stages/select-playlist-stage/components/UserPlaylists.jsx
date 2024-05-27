@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
-import LoadingIndicator from "./LoadingIndicator";
-import { fetchUserPlaylists } from "../util/spotify-api";
+import LoadingIndicator from "../../../LoadingIndicator";
+import { fetchUserPlaylists } from "../../../../util/spotify-api";
 import PlaylistRow from "./PlaylistRow";
 
 export default function UserPlaylists() {
@@ -13,7 +13,8 @@ export default function UserPlaylists() {
   } = useQuery({
     queryKey: ["fetchUserPlaylists"],
     queryFn: fetchUserPlaylists,
-    staleTime: 60000, // every 60 secs, refetch data. Aribitrary but to reduce API calls
+    staleTime: 60000, // every 60 secs, refetch data. Aribitrary but to reduce API calls.
+    // could have a situation where a user creates a new playlist and  wants to use it for the quiz.
   });
 
   if (userPlaylistIsLoading) {

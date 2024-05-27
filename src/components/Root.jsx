@@ -24,12 +24,14 @@ export default function Root() {
   // 'Do not write or read ref.current during rendering...You can read or write refs from event handlers or effects'
 
   const quizData = useRef({
+    difficulty: null,
+    gameId: null,
+    playlistTracksHref: null,
+    quiz: [],
     userDetails: {
-      name: "hello",
+      name: null,
       country: null,
     },
-    playlistTracksHref: "hi",
-    difficulty: null,
   });
   
 

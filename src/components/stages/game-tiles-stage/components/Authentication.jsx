@@ -3,9 +3,15 @@ import { useSearchParams } from "react-router-dom";
 import { useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 
-import SignInButton from "../components/SignInButton";
-import { setLocalAuthCode, checkAuth } from "../util/authentication.js";
-import { fetchAccessToken, fetchUserDetails } from "../util/spotify-api.js";
+import SignInButton from "./SignInButton.jsx";
+import {
+  setLocalAuthCode,
+  checkAuth,
+} from "../../../../util/authentication.js";
+import {
+  fetchAccessToken,
+  fetchUserDetails,
+} from "../../../../util/spotify-api.js";
 
 export default function Authentication() {
   // STATE
@@ -103,7 +109,10 @@ export default function Authentication() {
       )}
       {/* show display name (if available - might be null) if authenticated else show sign in button */}
       {isAuthenticated ? (
-        <p>Let's Play {userIsLoading && "..."}{userData?.display_name}</p>
+        <p>
+          Let's Play {userIsLoading && "..."}
+          {userData?.display_name}
+        </p>
       ) : (
         <SignInButton />
       )}
