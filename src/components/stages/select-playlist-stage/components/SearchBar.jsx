@@ -16,7 +16,6 @@ export default function SearchBar({ searchTerm, setSearchTerm }) {
       setSearchTerm(value);
     }, 2000);
 
-    // needs a useRef for the input element
   };
 
   return (
