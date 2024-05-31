@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import PlaylistRow from "./PlaylistRow";
 import SearchBar from "./SearchBar";
-import { fetchSearchedPlaylists } from "../../../../util/spotify-api";
+import { fetchSearchedItems } from "../../../../util/spotify-api";
 import LoadingIndicator from "../../../LoadingIndicator";
 import { useOutletContext } from "react-router-dom";
 
@@ -16,11 +16,11 @@ export default function SearchPlaylists() {
     error: searchedPlaylistError,
     isError: searchedPlaylistIsError,
     isLoading: searchedPlaylistIsLoading,
-    refetch: searchedPlaylistRefetch,
+    refetch: searchedItemsRefetch,
   } = useQuery({
     queryFn: () =>
-      fetchSearchedPlaylists(searchTerm, quizData.current.userDetails.country),
-    queryKey: ["fetchSearchedPlaylists", { search: searchTerm }], // cache each unique search term
+      fetchSearchedItems(searchTerm, quizData.current.userDetails.country, "playlist", 10),
+    queryKey: ["fetchSearchedPlaylistItems", { search: searchTerm }], // cache each unique search term
     refetchOnWindowFocus: false,
     enabled: searchTerm !== undefined, // enable when a searchTerm has a value so that caching queries work
   });
@@ -33,10 +33,10 @@ export default function SearchPlaylists() {
     // e.g. user only presses space or tab. This would result in a 400 error response from Spotify API.
     if (searchTerm) {
       if (searchTerm.trim().length !== 0) {
-        searchedPlaylistRefetch();
+        searchedItemsRefetch();
       }
     }
-  }, [searchTerm, searchedPlaylistRefetch]);
+  }, [searchTerm, searchedItemsRefetch]);
 
   return (
     <>

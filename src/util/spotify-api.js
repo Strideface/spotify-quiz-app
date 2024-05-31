@@ -201,13 +201,13 @@ export async function fetchUserPlaylists() {
   return userPlaylistItems;
 }
 
-export async function fetchSearchedPlaylists(searchTerm, market) {
+export async function fetchSearchedItems(searchTerm, market, type, limit ) {
   let accessToken = await getLocalAccessToken();
 
   const queryParams = new URLSearchParams({
     q: searchTerm,
-    type: "playlist",
-    limit: 10,
+    type: type,
+    limit: limit,
     market: market,
   });
 
@@ -221,21 +221,29 @@ export async function fetchSearchedPlaylists(searchTerm, market) {
 
   if (!response.ok) {
     const error = new Error(
-      "An error occurred while fetching searched playlists"
+      "An error occurred while fetching searched items"
     );
     error.code = response.status;
     error.info = await response.json();
     throw error;
   }
 
-  const searchedPlaylists = await response.json();
+  const searchResults = await response.json();
 
   // return an array of playlist items
-  let searchedPlaylistsItems = [];
+  let searchResultsItems = [];
 
-  searchedPlaylistsItems.push(...searchedPlaylists.playlists.items);
+  if (searchResults.playlists) {
+    searchResultsItems.push(...searchResults.playlists.items);
+  } else if (searchResults.artists) {
+    searchResultsItems.push(...searchResults.artists.items);
+  } else if (searchResults.tracks) {
+    searchResultsItems.push(...searchResults.tracks.items);
+  }
 
-  return searchedPlaylistsItems;
+  
+
+  return searchResultsItems;
 }
 
 export async function fetchPlaylistTracks(playlistTracksHref, market) {
@@ -306,4 +314,9 @@ export async function fetchPlaylistTracks(playlistTracksHref, market) {
   }
 
   return quizTracksData;
+}
+
+
+export async function fetchTracks() {
+
 }
