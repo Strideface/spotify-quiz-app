@@ -2,20 +2,29 @@ import AsyncSelect from "react-select/async";
 import { useRef, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 
-import { fetchSearchedItems } from "../../../../util/spotify-api";
+import {
+  fetchArtistTopTracks,
+  fetchSearchedItems,
+} from "../../../../util/spotify-api";
+import { shuffleArray } from "../../../../util/util";
 
-export default function SearchBar({ type }) {
+export default function SearchBar({ activeTrackIndex }) {
   const { quizData } = useOutletContext();
-  const [selectedValue, setSelectedValue] = useState();
+  const [selectedValue, setSelectedValue] = useState({
+    artist: null,
+    track: null,
+  });
   const lastChange = useRef();
-  const searchBar = useRef();
-  const error = useRef(); // could change this to state to ensure component gets rid of error message on re-render, unless there will be other state...
+  const artistSearchBar = useRef();
+  const trackSelector = useRef();
+  const error = useRef();
 
   // https://www.dhiwise.com/post/how-to-implement-a-react-search-bar-with-dropdown
   // https://react-select.com/home
 
   // function must return a promise
-  const loadOptions = (inputValue) => {
+  // artist search bar
+  const searchloadOptions = (inputValue) => {
     if (lastChange.current) {
       clearTimeout(lastChange.current);
     }
@@ -30,23 +39,19 @@ export default function SearchBar({ type }) {
             fetchSearchedItems(
               inputValue,
               quizData.current.userDetails.country,
-              type,
-              5
+              "artist",
+              10
             )
               .then((searchItemsData) => {
                 error.current = null;
                 searchItemsData.map((item) =>
                   options.push({
-                    // put the first artist's name next to the track name if returning a track item. This is to distinguish when there are multiple tracks with the same name.
-                    label: item.artists
-                      ? item.name + ` (${item.artists[0].name})`
-                      : item.name,
-                    value: item.artists
-                      ? item.name + ` (${item.artists[0].name})`
-                      : item.name,
+                    label: item.name,
+                    value: item.name,
                     id: item.id,
                   })
                 );
+                // return an array of artist options for the user to select following a search
                 return options;
               })
               .catch((err) => {
@@ -59,25 +64,128 @@ export default function SearchBar({ type }) {
     }
   };
 
-  const handleOnChange = (value) => {
-    // setSelectedValue(value);
-    console.log(value)
+  // handles the changing of a selection from the artist search
+  const handleSearchOnChange = (value, actionType) => {
+    console.log(actionType)
+    if (actionType.action === "select-option") {
+      setSelectedValue((prevState) => ({
+        artist: value,
+        track: null,
+      }));
+    } else if (actionType.action === "clear") {
+      setSelectedValue((prevState) => ({
+        artist: null,
+        track: null,
+      }));
+    }
   };
+
+  // track selector 
+  const trackSelectorLoadOptions = () => {
+    let options = [];
+
+    return new Promise((resolve) => {
+      resolve(
+        fetchArtistTopTracks(
+          selectedValue.artist.id,
+          quizData.current.userDetails.country
+        )
+          .then((artistTrackItemsData) => {
+            error.current = null;
+            artistTrackItemsData.map((item) =>
+              options.push({
+                label: item.name,
+                value: item.name,
+                id: item.id,
+              })
+            );
+            // if the artist selected in the artist search bar matches the artist in the currently playing track
+            if (
+              quizData.current.quizTracks[activeTrackIndex.current].artist[0]
+                .id === selectedValue.artist.id
+            ) {
+              // then, if the currently playing track by that artist is not in the list of top tracks being returned, add it.
+              // so that the user has the possibility of selecting the right answer (top tracks won't neccessarily contain the track currently playing)
+              let idMatch = options.filter(
+                (track) =>
+                  track.id ===
+                  quizData.current.quizTracks[activeTrackIndex.current].track.id
+              );
+              if (idMatch.length === 0) {
+                options.push({
+                  label:
+                    quizData.current.quizTracks[activeTrackIndex.current].track
+                      .name,
+                  value:
+                    quizData.current.quizTracks[activeTrackIndex.current].track
+                      .name,
+                  id: quizData.current.quizTracks[activeTrackIndex.current]
+                    .track.id,
+                });
+              }
+            }
+            // always return the list of options in random order, oherwise the added correct option will always be in the same position.
+            shuffleArray(options);
+            return options;
+          })
+          .catch((err) => {
+            error.current = err;
+            return options;
+          })
+      );
+    });
+  };
+
+  // handles the changing of a selection from the track selector
+  const handleTrackSelectorOnChange = (value, actionType) => {
+    if (actionType.action === "select-option") {
+      setSelectedValue((prevState) => ({
+        ...prevState,
+        track: value,
+      }));
+    } else if (actionType.action === "clear") {
+      setSelectedValue((prevState) => ({
+        ...prevState,
+        track: null,
+      }));
+    }
+  };
+
+  const handleSubmitAnswer = () => console.log(selectedValue);
 
   return (
     <>
       <AsyncSelect
-        ref={searchBar}
+        ref={artistSearchBar}
+        isSearchable={!selectedValue.artist}
         cacheOptions
         isClearable
         placeholder="search..."
         noOptionsMessage={() => "search for options"}
-        loadOptions={loadOptions}
-        onChange={(value) => handleOnChange(value)}
-
-        // onInputChange={handleOnChange}
+        loadOptions={searchloadOptions}
+        onChange={(value, action) => handleSearchOnChange(value, action)}
       />
       {error.current && <p>{error.current.message}</p>}
+
+      {selectedValue.artist && (
+        <AsyncSelect
+          ref={trackSelector}
+          isSearchable={false}
+          cacheOptions
+          isClearable
+          placeholder="select..."
+          defaultOptions
+          loadOptions={trackSelectorLoadOptions}
+          onChange={(value, action) =>
+            handleTrackSelectorOnChange(value, action)
+          }
+        />
+      )}
+      {/* {!!selectedValue & error.current && <p>{error.current.message}</p>} */}
+
+      {selectedValue.track && (
+        <button onClick={handleSubmitAnswer}>Submit Answer</button>
+      )}
     </>
   );
 }

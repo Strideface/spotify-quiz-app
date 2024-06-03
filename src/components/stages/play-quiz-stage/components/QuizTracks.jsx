@@ -1,15 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useOutletContext } from "react-router-dom";
 import { fetchPlaylistTracks } from "../../../../util/spotify-api";
 import { useQuery } from "@tanstack/react-query";
 import LoadingIndicator from "../../../LoadingIndicator";
-import ArtistSearch from "./ArtistSearch";
-import TrackSearch from "./TrackSearch";
+import SearchBar from "./SearchBar";
 
 export default function QuizTracks() {
+  const activeTrackIndex = useRef();
   const [userResponse, setUserResponse] = useState([]);
 
-  const activeTrackIndex = userResponse.length;
+  activeTrackIndex.current = userResponse.length;
 
   const { quizData } = useOutletContext();
 
@@ -36,26 +36,24 @@ export default function QuizTracks() {
 
   useEffect(() => {
     if (playlistTracksData) {
-      quizData.current.quizTracks.push(...playlistTracksData);
+      quizData.current.quizTracks = playlistTracksData;
+      console.log(quizData.current);
     }
   }, [playlistTracksData, quizData]);
 
-  console.log(quizData);
-
   return (
-    <>
-      <div className=" flex p-10 justify-center">
-        {playlistTracksIsLoading && <LoadingIndicator />}
-        {playlistTracksData && <h2>Quiz Tracks Ready</h2>}
-        {playlistTracksIsError && <p>Error: {playlistTracksError.message}</p>}
-      </div>
-
-      {quizData.current.quizTracks && (
-        <div className=" flex flex-col p-10 justify-center border">
-          <ArtistSearch setUserResponse={setUserResponse}/>
-          <TrackSearch setUserResponse={setUserResponse}/>
-        </div>
+    <div className=" flex p-10 justify-center">
+      {playlistTracksIsLoading && <LoadingIndicator />}
+      {playlistTracksData && (
+        <div className=" flex flex-col p-10 justify-center">
+          <h2>Quiz Tracks Ready</h2>
+          <div className=" flex flex-col p-10 justify-center border">
+            <SearchBar activeTrackIndex={activeTrackIndex} />
+          </div>
+          </div>
       )}
-    </>
+
+      {playlistTracksIsError && <p>Error: {playlistTracksError.message}</p>}
+    </div>
   );
 }

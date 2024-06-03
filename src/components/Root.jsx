@@ -27,7 +27,7 @@ export default function Root() {
     difficulty: null,
     gameId: null,
     playlistTracksHref: null,
-    quizTracks: [],
+    quizTracks: null,
     userDetails: {
       name: null,
       country: null,

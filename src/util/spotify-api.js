@@ -201,7 +201,7 @@ export async function fetchUserPlaylists() {
   return userPlaylistItems;
 }
 
-export async function fetchSearchedItems(searchTerm, market, type, limit ) {
+export async function fetchSearchedItems(searchTerm, market, type, limit) {
   let accessToken = await getLocalAccessToken();
 
   const queryParams = new URLSearchParams({
@@ -220,9 +220,7 @@ export async function fetchSearchedItems(searchTerm, market, type, limit ) {
   );
 
   if (!response.ok) {
-    const error = new Error(
-      "An error occurred while fetching searched items"
-    );
+    const error = new Error("An error occurred while fetching searched items");
     error.code = response.status;
     error.info = await response.json();
     throw error;
@@ -240,8 +238,6 @@ export async function fetchSearchedItems(searchTerm, market, type, limit ) {
   } else if (searchResults.tracks) {
     searchResultsItems.push(...searchResults.tracks.items);
   }
-
-  
 
   return searchResultsItems;
 }
@@ -290,12 +286,10 @@ export async function fetchPlaylistTracks(playlistTracksHref, market) {
   }
   // return an array of track objects
 
-  let quizTracksData = [];
+  let quizTracksData = null;
 
   for (let playlistTracksObj of playlistTracks) {
- 
-    quizTracksData.push(
-      playlistTracksObj.items.map((item) => ({
+     quizTracksData = playlistTracksObj.items.map((item) => ({
         artist: item.track.artists,
         album: {
           name: item.track.album.name,
@@ -310,13 +304,40 @@ export async function fetchPlaylistTracks(playlistTracksHref, market) {
           preview: item.track.preview_url,
         },
       }))
-    );
   }
 
   return quizTracksData;
 }
 
+export async function fetchArtistTopTracks(id, market) {
+  let accessToken = await getLocalAccessToken();
 
-export async function fetchTracks() {
+  const queryParams = new URLSearchParams({
+    market: market,
+  });
 
+  const response = await fetch(
+    "https://api.spotify.com/v1/artists/" + id + "/top-tracks?" + queryParams,
+    {
+      method: "GET",
+      headers: { Authorization: `Bearer ${accessToken}` },
+    }
+  );
+
+  if (!response.ok) {
+    const error = new Error(
+      "An error occurred while fetching artist top tracks"
+    );
+    error.code = response.status;
+    error.info = await response.json();
+    throw error;
+  }
+
+  const searchResults = await response.json();
+
+  // return an array of track items
+
+  const artistTrackItems = searchResults.tracks;
+
+  return artistTrackItems;
 }
