@@ -12,7 +12,8 @@ import {
 // A file to store all functions for Spotify API requests
 
 // global variables
-const scope = "user-read-private playlist-read-private";
+const scope =
+  "user-read-private playlist-read-private user-modify-playback-state user-read-playback-state";
 // keep adding to scope where neccessary (depends on endpoints)
 
 const redirectUri = "http://localhost:3000/";
@@ -216,6 +217,7 @@ export async function fetchSearchedItems(searchTerm, market, type, limit) {
     {
       method: "GET",
       headers: { Authorization: `Bearer ${accessToken}` },
+      "Content-Type": "application/json",
     }
   );
 
@@ -286,24 +288,30 @@ export async function fetchPlaylistTracks(playlistTracksHref, market) {
   }
   // return an array of track objects
 
-  let quizTracksData = null;
+  let quizTracksData = { quizTracks: null, quizTracksUri: null };
 
   for (let playlistTracksObj of playlistTracks) {
-     quizTracksData = playlistTracksObj.items.map((item) => ({
-        artist: item.track.artists,
-        album: {
-          name: item.track.album.name,
-          href: item.track.album.href,
-          images: item.track.album.images,
-        },
-        track: {
-          name: item.track.name,
-          href: item.track.href,
-          id: item.track.id,
-          isPlayable: item.track.is_playable,
-          preview: item.track.preview_url,
-        },
-      }))
+    quizTracksData.quizTracks = playlistTracksObj.items.map((item) => ({
+      artist: item.track.artists,
+      album: {
+        name: item.track.album.name,
+        href: item.track.album.href,
+        images: item.track.album.images,
+      },
+      track: {
+        name: item.track.name,
+        href: item.track.href,
+        id: item.track.id,
+        isPlayable: item.track.is_playable,
+        preview: item.track.preview_url,
+      },
+    }));
+  }
+
+  for (let playlistTracksObj of playlistTracks) {
+    quizTracksData.quizTracksUri = playlistTracksObj.items.map(
+      (item) => item.track.uri
+    );
   }
 
   return quizTracksData;
@@ -340,4 +348,71 @@ export async function fetchArtistTopTracks(id, market) {
   const artistTrackItems = searchResults.tracks;
 
   return artistTrackItems;
+}
+
+async function fetchActiveDevice() {
+  let accessToken = await getLocalAccessToken();
+
+  const response = await fetch("https://api.spotify.com/v1/me/player/devices", {
+    method: "GET",
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+
+  if (!response.ok) {
+    const error = new Error("An error occurred while fetching active device");
+    error.code = response.status;
+    error.info = await response.json();
+    throw error;
+  }
+
+  const devicesArray = await response.json();
+  let activeDevice = null;
+
+  console.log(devicesArray);
+
+  for (const device of devicesArray.devices) {
+    if (device.is_active) {
+      activeDevice = device;
+    }
+  }
+
+  return activeDevice;
+}
+
+export async function resume(trackUri) {
+  const activeDevice = fetchActiveDevice();
+
+  if (!activeDevice) {
+    const error = new Error(
+      "You do not have an active device. Please play content from Spotify on your preffered device and try again"
+    );
+    throw error;
+  }
+
+  let accessToken = await getLocalAccessToken();
+
+  const queryParams = new URLSearchParams({
+    device_id: activeDevice.id,
+  });
+
+  const response = await fetch(
+    "https://api.spotify.com/v1/me/player/play?" + queryParams,
+    {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: { uris: trackUri },
+    }
+  );
+
+  if (!response.ok) {
+    const error = new Error("An error occurred when attempting playback");
+    error.code = response.status;
+    error.info = await response.json();
+    throw error;
+  }
+
+  await console.log(response.json());
 }

@@ -4,12 +4,15 @@ import { fetchPlaylistTracks } from "../../../../util/spotify-api";
 import { useQuery } from "@tanstack/react-query";
 import LoadingIndicator from "../../../LoadingIndicator";
 import SearchBar from "./SearchBar";
+import PlayerControl from "./player/PlayerControl";
 
-export default function QuizTracks() {
+export default function Quiz() {
   const activeTrackIndex = useRef();
   const [userResponse, setUserResponse] = useState([]);
 
   activeTrackIndex.current = userResponse.length;
+  console.log(activeTrackIndex.current);
+  console.log(userResponse);
 
   const { quizData } = useOutletContext();
 
@@ -36,24 +39,36 @@ export default function QuizTracks() {
 
   useEffect(() => {
     if (playlistTracksData) {
-      quizData.current.quizTracks = playlistTracksData;
+      quizData.current.quizTracks = playlistTracksData.quizTracks;
+      quizData.current.quizTracksUri = playlistTracksData.quizTracksUri;
       console.log(quizData.current);
     }
   }, [playlistTracksData, quizData]);
 
   return (
-    <div className=" flex p-10 justify-center">
-      {playlistTracksIsLoading && <LoadingIndicator />}
-      {playlistTracksData && (
-        <div className=" flex flex-col p-10 justify-center">
+   
+      <div className=" flex p-10 justify-center">
+        {playlistTracksIsLoading && <LoadingIndicator />}
+        {playlistTracksData && (
+          <>
+          <div className=" flex flex-col p-10 justify-center">
           <h2>Quiz Tracks Ready</h2>
-          <div className=" flex flex-col p-10 justify-center border">
-            <SearchBar activeTrackIndex={activeTrackIndex} />
+        </div>
+        <div className=" flex flex-col p-10 justify-center border">
+            <SearchBar
+              key={activeTrackIndex.current}
+              activeTrackIndex={activeTrackIndex}
+              setUserResponse={setUserResponse} />
           </div>
-          </div>
-      )}
+          <PlayerControl
+            key={activeTrackIndex.current}
+            activeTrackIndex={activeTrackIndex} />
+            </>
+        )}
 
-      {playlistTracksIsError && <p>Error: {playlistTracksError.message}</p>}
-    </div>
+        {playlistTracksIsError && <p>Error: {playlistTracksError.message}</p>}
+      </div>
+      
+
   );
 }

@@ -8,7 +8,7 @@ import {
 } from "../../../../util/spotify-api";
 import { shuffleArray } from "../../../../util/util";
 
-export default function SearchBar({ activeTrackIndex }) {
+export default function SearchBar({ activeTrackIndex, setUserResponse }) {
   const { quizData } = useOutletContext();
   const [selectedValue, setSelectedValue] = useState({
     artist: null,
@@ -66,7 +66,7 @@ export default function SearchBar({ activeTrackIndex }) {
 
   // handles the changing of a selection from the artist search
   const handleSearchOnChange = (value, actionType) => {
-    console.log(actionType)
+    console.log(actionType);
     if (actionType.action === "select-option") {
       setSelectedValue((prevState) => ({
         artist: value,
@@ -80,7 +80,7 @@ export default function SearchBar({ activeTrackIndex }) {
     }
   };
 
-  // track selector 
+  // track selector
   const trackSelectorLoadOptions = () => {
     let options = [];
 
@@ -151,7 +151,11 @@ export default function SearchBar({ activeTrackIndex }) {
     }
   };
 
-  const handleSubmitAnswer = () => console.log(selectedValue);
+  const handleSubmitAnswer = async () => {
+    setUserResponse((prevState) => {
+      return [...prevState, selectedValue];
+    });
+  };
 
   return (
     <>
