@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { resume } from "../../../../../util/spotify-api";
 import { useOutletContext } from "react-router-dom";
 
@@ -21,26 +21,46 @@ export default function PlayPauseButton({
     error: resumeError,
     refetch: refetchResume,
     isSuccess: resumeIsSuccess,
+    status: resumeStatus,
   } = useQuery({
-    queryFn: () => resume((quizData.current.quizTracksUri && quizData.current.quizTracksUri[activeTrackIndex])),
+    // need to pass in track uri conditionally because the value being there depends on the data being loaded in Quiz.jsx
+    queryFn: () =>
+      resume(
+        quizData.current.quizTracksUri &&
+          quizData.current.quizTracksUri[activeTrackIndex.current]
+      ),
     queryKey: [
       "resume",
-      { track: (quizData.current.quizTracksUri && quizData.current.quizTracksUri[activeTrackIndex]) },
+      {
+        track:
+          quizData.current.quizTracksUri &&
+          quizData.current.quizTracksUri[activeTrackIndex.current],
+      },
     ],
     enabled: false,
     refetchOnWindowFocus: false,
+    retry: 1,
   });
 
-  const handlePlayOnClick = () => {
-    refetchResume()
+  console.log(
+    `track uri inside PlayPauseButton = ${
+      quizData.current.quizTracksUri &&
+      quizData.current.quizTracksUri[activeTrackIndex.current]
+    }`
+  );
 
-    if (resumeIsSuccess) {
-      setIsPlay((prevState) => {
-        return !prevState;
-      });
-    }
-    
+  // MAY NEED TO USE USEEFFECT HERE
+  const handlePlayOnClick = () => {
+    refetchResume();
   };
+
+  useEffect(() => {
+    console.log(`resumeStatus = ${resumeStatus}`)
+    console.log(`resumeData = ${resumeData}`)
+    if (resumeData === "RESUME") {
+      setIsPlay(true);
+    }
+  }, [resumeData, resumeStatus, setIsPlay]);
 
   const handlePauseOnClick = () => {
     setIsPlay((prevState) => {
@@ -84,10 +104,13 @@ export default function PlayPauseButton({
     </button>
   );
 
-  return(<>
-  {isPlay ? pauseButton : playButton}
-  {resumeIsError && <p>{resumeError}</p>}
-  </>
-  )
-}
+  // eslint-disable-next-line no-lone-blocks
+  {resumeIsError && console.log(`resumeError = ${resumeError}`)};
 
+  return (
+    <>
+      {isPlay ? pauseButton : playButton}
+      {resumeIsError && <p>{resumeError}</p>}
+    </>
+  );
+}

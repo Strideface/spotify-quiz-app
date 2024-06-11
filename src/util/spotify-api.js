@@ -217,7 +217,6 @@ export async function fetchSearchedItems(searchTerm, market, type, limit) {
     {
       method: "GET",
       headers: { Authorization: `Bearer ${accessToken}` },
-      "Content-Type": "application/json",
     }
   );
 
@@ -380,7 +379,9 @@ async function fetchActiveDevice() {
 }
 
 export async function resume(trackUri) {
-  const activeDevice = fetchActiveDevice();
+  console.log(`trackUri inside resume = ${trackUri}`);
+  const activeDevice = await fetchActiveDevice();
+  console.log(`active device = ${activeDevice}`);
 
   if (!activeDevice) {
     const error = new Error(
@@ -403,7 +404,7 @@ export async function resume(trackUri) {
         Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
       },
-      body: { uris: trackUri },
+      body: JSON.stringify({ uris: [trackUri] }),
     }
   );
 
@@ -414,5 +415,8 @@ export async function resume(trackUri) {
     throw error;
   }
 
-  await console.log(response.json());
+// returning 'null' because if request is successful it will return a 204 which is OK but no response body.
+// because tanstack query data must have a value, I'm returning 'null'.
+
+  return "RESUME";
 }

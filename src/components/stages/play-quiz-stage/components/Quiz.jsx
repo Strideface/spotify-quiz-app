@@ -11,8 +11,6 @@ export default function Quiz() {
   const [userResponse, setUserResponse] = useState([]);
 
   activeTrackIndex.current = userResponse.length;
-  console.log(activeTrackIndex.current);
-  console.log(userResponse);
 
   const { quizData } = useOutletContext();
 
