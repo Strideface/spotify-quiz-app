@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useRef } from "react";
-import { resume } from "../../../../../util/spotify-api";
+import { useEffect, useRef, useState } from "react";
+import { resumePlayback, pausePlayback } from "../../../../../util/spotify-api";
 import { useOutletContext } from "react-router-dom";
 
 export default function PlayPauseButton({
@@ -13,34 +13,49 @@ export default function PlayPauseButton({
   const { quizData } = useOutletContext();
   const play = useRef();
   const pause = useRef();
+  const [error, setError] = useState("");
 
-  const {
-    data: resumeData,
-    isLoading: resumeIsLoading,
-    isError: resumeIsError,
-    error: resumeError,
-    refetch: refetchResume,
-    isSuccess: resumeIsSuccess,
-    status: resumeStatus,
-  } = useQuery({
-    // need to pass in track uri conditionally because the value being there depends on the data being loaded in Quiz.jsx
-    queryFn: () =>
-      resume(
-        quizData.current.quizTracksUri &&
-          quizData.current.quizTracksUri[activeTrackIndex.current]
-      ),
-    queryKey: [
-      "resume",
-      {
-        track:
-          quizData.current.quizTracksUri &&
-          quizData.current.quizTracksUri[activeTrackIndex.current],
-      },
-    ],
-    enabled: false,
-    refetchOnWindowFocus: false,
-    retry: 1,
-  });
+  // const {
+  //   data: resumeData,
+  //   isLoading: resumeIsLoading,
+  //   isError: resumeIsError,
+  //   error: resumeError,
+  //   refetch: refetchResume,
+  //   isSuccess: resumeIsSuccess,
+  //   status: resumeStatus,
+  // } = useQuery({
+  //   // need to pass in track uri conditionally because the value being there depends on the data being loaded in Quiz.jsx
+  //   queryFn: () =>
+  //     resume(
+  //       quizData.current.quizTracksUri &&
+  //         quizData.current.quizTracksUri[activeTrackIndex.current]
+  //     ),
+  //   queryKey: [
+  //     "resume",
+  //     {
+  //       track:
+  //         quizData.current.quizTracksUri &&
+  //         quizData.current.quizTracksUri[activeTrackIndex.current],
+  //     },
+  //   ],
+  //   enabled: false,
+  //   refetchOnWindowFocus: false,
+  //   retry: 1,
+  // });
+
+  // const {
+  //   data: pauseData,
+  //   isError: pauseIsError,
+  //   error: pauseError,
+  //   refetch: refetchPause,
+  //   status: pauseStatus,
+  // } = useQuery({
+  //   queryFn: () => pause(),
+  //   queryKey: ["pause"],
+  //   enabled: false,
+  //   refetchOnWindowFocus: false,
+  //   retry: 1,
+  // });
 
   console.log(
     `track uri inside PlayPauseButton = ${
@@ -50,23 +65,48 @@ export default function PlayPauseButton({
   );
 
   // MAY NEED TO USE USEEFFECT HERE
-  const handlePlayOnClick = () => {
-    refetchResume();
-  };
-
-  useEffect(() => {
-    console.log(`resumeStatus = ${resumeStatus}`)
-    console.log(`resumeData = ${resumeData}`)
-    if (resumeData === "RESUME") {
-      setIsPlay(true);
+  const handlePlayOnClick = async () => {
+    try {
+      await resumePlayback(
+        quizData.current.quizTracksUri &&
+          quizData.current.quizTracksUri[activeTrackIndex.current]
+      );
+      setError("");
+      setIsPlay((prevState) => {
+        return !prevState;
+      });
+    } catch (error) {
+      setError(error);
     }
-  }, [resumeData, resumeStatus, setIsPlay]);
-
-  const handlePauseOnClick = () => {
-    setIsPlay((prevState) => {
-      return !prevState;
-    });
   };
+
+  const handlePauseOnClick = async () => {
+    try {
+      await pausePlayback();
+      setError("");
+      setIsPlay((prevState) => {
+        return !prevState;
+      });
+    } catch (error) {
+      setError(error);
+    }
+  };
+
+  // useEffect(() => {
+  //   console.log(`resumeStatus = ${resumeStatus}`);
+  //   console.log(`resumeData = ${resumeData}`);
+  //   if (resumeStatus === "success") {
+  //     setIsPlay((prevState) => {
+  //       return !prevState;
+  //     });
+  //   }
+
+  //   if (pauseStatus === "success") {
+  //     setIsPlay((prevState) => {
+  //       return !prevState;
+  //     });
+  //   }
+  // }, [pauseStatus, resumeData, resumeStatus, setIsPlay]);
 
   const playButton = (
     <button ref={play} type="button" value="play" onClick={handlePlayOnClick}>
@@ -105,12 +145,14 @@ export default function PlayPauseButton({
   );
 
   // eslint-disable-next-line no-lone-blocks
-  {resumeIsError && console.log(`resumeError = ${resumeError}`)};
+  // {
+  //   resumeIsError && console.log(`resumeError = ${resumeError}`);
+  // }
 
   return (
     <>
       {isPlay ? pauseButton : playButton}
-      {resumeIsError && <p>{resumeError}</p>}
+      {error && <p>{error.message}</p>}
     </>
   );
 }

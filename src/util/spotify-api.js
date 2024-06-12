@@ -349,51 +349,97 @@ export async function fetchArtistTopTracks(id, market) {
   return artistTrackItems;
 }
 
-async function fetchActiveDevice() {
+// async function fetchActiveDevice() {
+//   let accessToken = await getLocalAccessToken();
+
+//   const response = await fetch("https://api.spotify.com/v1/me/player/devices", {
+//     method: "GET",
+//     headers: { Authorization: `Bearer ${accessToken}` },
+//   });
+
+//   if (!response.ok) {
+//     const error = new Error("An error occurred while fetching active device");
+//     error.code = response.status;
+//     error.info = await response.json();
+//     throw error;
+//   }
+
+//   const devicesArray = await response.json();
+//   let activeDevice = null;
+
+//   console.log(devicesArray);
+
+//   for (const device of devicesArray.devices) {
+//     if (device.is_active) {
+//       activeDevice = device;
+//     }
+//   }
+
+//   return activeDevice;
+// }
+
+
+async function fetchPlaybackState() {
+
   let accessToken = await getLocalAccessToken();
 
-  const response = await fetch("https://api.spotify.com/v1/me/player/devices", {
+  const response = await fetch("https://api.spotify.com/v1/me/player", {
     method: "GET",
     headers: { Authorization: `Bearer ${accessToken}` },
   });
 
   if (!response.ok) {
-    const error = new Error("An error occurred while fetching active device");
+    const error = new Error("An error occurred while fetching playback state");
     error.code = response.status;
     error.info = await response.json();
     throw error;
   }
 
-  const devicesArray = await response.json();
-  let activeDevice = null;
+  let results = null
+// if no playback state is detected then endpoint returns a 204 (OK but empty response)
+// therefore, create a response by returning null
+  if (response.status === 204) {
+    return results;
+  }
+// playback state detected and retruns a 200 with response data
+  const responseJson = await response.json();
 
-  console.log(devicesArray);
+  const activeDevice = responseJson.device;
+  const currentTrackUri = responseJson.item ? responseJson.item.uri : null;
+  const progress = responseJson.progress_ms;
 
-  for (const device of devicesArray.devices) {
-    if (device.is_active) {
-      activeDevice = device;
-    }
+  results = {
+    activeDevice: activeDevice,
+    currentTrackUri: currentTrackUri,
+    progress: progress
   }
 
-  return activeDevice;
+  console.log(`results = ${results}`)
+
+  return results;
 }
 
-export async function resume(trackUri) {
-  console.log(`trackUri inside resume = ${trackUri}`);
-  const activeDevice = await fetchActiveDevice();
-  console.log(`active device = ${activeDevice}`);
+export async function resumePlayback(trackUri) {
 
-  if (!activeDevice) {
+  const playbackStateResults = await fetchPlaybackState();
+  console.log(`playbackStateResults = ${playbackStateResults}`)
+
+  if (!playbackStateResults) {
     const error = new Error(
       "You do not have an active device. Please play content from Spotify on your preffered device and try again"
     );
     throw error;
   }
+// if the trackUri being passed in does not equal the trackUri in playback state data
+// set progress to 0 so it plays from start, as it must be a new track.
+  if (trackUri !== playbackStateResults.currentTrackUri) {
+    playbackStateResults.progress = 0;
+  }
 
   let accessToken = await getLocalAccessToken();
 
   const queryParams = new URLSearchParams({
-    device_id: activeDevice.id,
+    device_id: playbackStateResults.activeDevice.id,
   });
 
   const response = await fetch(
@@ -404,7 +450,7 @@ export async function resume(trackUri) {
         Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ uris: [trackUri] }),
+      body: JSON.stringify({ uris: [trackUri], position_ms: playbackStateResults.progress, }),
     }
   );
 
@@ -415,8 +461,25 @@ export async function resume(trackUri) {
     throw error;
   }
 
-// returning 'null' because if request is successful it will return a 204 which is OK but no response body.
-// because tanstack query data must have a value, I'm returning 'null'.
+  return "resume playback success";
+}
 
-  return "RESUME";
+export async function pausePlayback() {
+  let accessToken = await getLocalAccessToken();
+
+  const response = await fetch("https://api.spotify.com/v1/me/player/pause", {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  if (!response.ok) {
+    const error = new Error("An error occurred when attempting to pause");
+    error.code = response.status;
+    error.info = await response.json();
+    throw error;
+  }
+
+  return "pause playback success";
 }
