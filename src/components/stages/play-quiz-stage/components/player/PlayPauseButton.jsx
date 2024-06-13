@@ -7,69 +7,21 @@ export default function PlayPauseButton({
   isPlay,
   setIsPlay,
   activeTrackIndex,
+  error,
+  setError,
 }) {
   // https://icons.getbootstrap.com/icons/play-circle-fill/
   // https://icons.getbootstrap.com/icons/pause-circle/
   const { quizData } = useOutletContext();
   const play = useRef();
   const pause = useRef();
-  const [error, setError] = useState("");
 
-  // const {
-  //   data: resumeData,
-  //   isLoading: resumeIsLoading,
-  //   isError: resumeIsError,
-  //   error: resumeError,
-  //   refetch: refetchResume,
-  //   isSuccess: resumeIsSuccess,
-  //   status: resumeStatus,
-  // } = useQuery({
-  //   // need to pass in track uri conditionally because the value being there depends on the data being loaded in Quiz.jsx
-  //   queryFn: () =>
-  //     resume(
-  //       quizData.current.quizTracksUri &&
-  //         quizData.current.quizTracksUri[activeTrackIndex.current]
-  //     ),
-  //   queryKey: [
-  //     "resume",
-  //     {
-  //       track:
-  //         quizData.current.quizTracksUri &&
-  //         quizData.current.quizTracksUri[activeTrackIndex.current],
-  //     },
-  //   ],
-  //   enabled: false,
-  //   refetchOnWindowFocus: false,
-  //   retry: 1,
-  // });
-
-  // const {
-  //   data: pauseData,
-  //   isError: pauseIsError,
-  //   error: pauseError,
-  //   refetch: refetchPause,
-  //   status: pauseStatus,
-  // } = useQuery({
-  //   queryFn: () => pause(),
-  //   queryKey: ["pause"],
-  //   enabled: false,
-  //   refetchOnWindowFocus: false,
-  //   retry: 1,
-  // });
-
-  console.log(
-    `track uri inside PlayPauseButton = ${
-      quizData.current.quizTracksUri &&
-      quizData.current.quizTracksUri[activeTrackIndex.current]
-    }`
-  );
-
-  // MAY NEED TO USE USEEFFECT HERE
   const handlePlayOnClick = async () => {
     try {
       await resumePlayback(
         quizData.current.quizTracksUri &&
-          quizData.current.quizTracksUri[activeTrackIndex.current]
+          quizData.current.quizTracksUri[activeTrackIndex.current],
+        false
       );
       setError("");
       setIsPlay((prevState) => {
@@ -91,22 +43,6 @@ export default function PlayPauseButton({
       setError(error);
     }
   };
-
-  // useEffect(() => {
-  //   console.log(`resumeStatus = ${resumeStatus}`);
-  //   console.log(`resumeData = ${resumeData}`);
-  //   if (resumeStatus === "success") {
-  //     setIsPlay((prevState) => {
-  //       return !prevState;
-  //     });
-  //   }
-
-  //   if (pauseStatus === "success") {
-  //     setIsPlay((prevState) => {
-  //       return !prevState;
-  //     });
-  //   }
-  // }, [pauseStatus, resumeData, resumeStatus, setIsPlay]);
 
   const playButton = (
     <button ref={play} type="button" value="play" onClick={handlePlayOnClick}>
@@ -143,11 +79,6 @@ export default function PlayPauseButton({
       </svg>
     </button>
   );
-
-  // eslint-disable-next-line no-lone-blocks
-  // {
-  //   resumeIsError && console.log(`resumeError = ${resumeError}`);
-  // }
 
   return (
     <>

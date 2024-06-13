@@ -419,7 +419,7 @@ async function fetchPlaybackState() {
   return results;
 }
 
-export async function resumePlayback(trackUri) {
+export async function resumePlayback(trackUri, resumeFromStart) {
 
   const playbackStateResults = await fetchPlaybackState();
   console.log(`playbackStateResults = ${playbackStateResults}`)
@@ -432,9 +432,11 @@ export async function resumePlayback(trackUri) {
   }
 // if the trackUri being passed in does not equal the trackUri in playback state data
 // set progress to 0 so it plays from start, as it must be a new track.
-  if (trackUri !== playbackStateResults.currentTrackUri) {
+// or if the optional resumeFromStart value is true, set progress to 0 (for the repeat button)
+  if (trackUri !== playbackStateResults.currentTrackUri || resumeFromStart) {
     playbackStateResults.progress = 0;
   }
+
 
   let accessToken = await getLocalAccessToken();
 

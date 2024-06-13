@@ -1,13 +1,26 @@
 import { useRef } from "react";
+import { resumePlayback } from "../../../../../util/spotify-api";
+import { useOutletContext } from "react-router-dom";
 
-export default function RepeatButton({ isPlay, setIsPlay, activeTrackIndex }) {
+export default function RepeatButton({ isPlay, setIsPlay, activeTrackIndex, setError }) {
   // https://icons.getbootstrap.com/icons/arrow-repeat/
   const repeat = useRef();
+  const { quizData } = useOutletContext();
 
-  const handleRepeatOnClick = () => {
-    if (!isPlay) {
-      setIsPlay(true);
+  const handleRepeatOnClick = async () => {
+    try {
+      await resumePlayback(
+        quizData.current.quizTracksUri &&
+          quizData.current.quizTracksUri[activeTrackIndex.current], true
+      );
+      setError("");
+      if (!isPlay) {
+        setIsPlay(true);
+      }
+    } catch (error) {
+      setError(error);
     }
+
   };
 
   return (

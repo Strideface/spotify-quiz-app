@@ -44,29 +44,30 @@ export default function Quiz() {
   }, [playlistTracksData, quizData]);
 
   return (
-   
-      <div className=" flex p-10 justify-center">
-        {playlistTracksIsLoading && <LoadingIndicator />}
-        {playlistTracksData && (
-          <>
-          <div className=" flex flex-col p-10 justify-center">
-          <h2>Quiz Tracks Ready</h2>
-        </div>
-        <div className=" flex flex-col p-10 justify-center border">
+    <div className=" flex flex-col p-10 justify-center space-y-10">
+      {playlistTracksIsLoading && <LoadingIndicator />}
+      {playlistTracksData && (
+        <>
+          <div className=" flex p-10 justify-center">
+            <h2>Quiz Tracks Ready</h2>
+          </div>
+          <div className=" flex flex-col p-10 justify-center border">
             <SearchBar
               key={activeTrackIndex.current}
               activeTrackIndex={activeTrackIndex}
-              setUserResponse={setUserResponse} />
+              setUserResponse={setUserResponse}
+            />
           </div>
-          <PlayerControl
-            key={activeTrackIndex.current}
-            activeTrackIndex={activeTrackIndex} />
-            </>
-        )}
+          <div className=" flex flex-col p-10 justify-center border">
+            <PlayerControl
+              key={activeTrackIndex.current}
+              activeTrackIndex={activeTrackIndex}
+            />
+          </div>
+        </>
+      )}
 
-        {playlistTracksIsError && <p>Error: {playlistTracksError.message}</p>}
-      </div>
-      
-
+      {playlistTracksIsError && <p>Error: {playlistTracksError.message}</p>}
+    </div>
   );
 }
