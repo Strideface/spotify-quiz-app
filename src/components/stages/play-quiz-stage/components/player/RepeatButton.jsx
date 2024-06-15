@@ -2,7 +2,15 @@ import { useRef } from "react";
 import { resumePlayback } from "../../../../../util/spotify-api";
 import { useOutletContext } from "react-router-dom";
 
-export default function RepeatButton({ isPlay, setIsPlay, activeTrackIndex, setError }) {
+export default function RepeatButton({
+  isPlay,
+  setIsPlay,
+  activeTrackIndex,
+  error,
+  setError,
+  handleProgress,
+  intervalId,
+}) {
   // https://icons.getbootstrap.com/icons/arrow-repeat/
   const repeat = useRef();
   const { quizData } = useOutletContext();
@@ -11,16 +19,22 @@ export default function RepeatButton({ isPlay, setIsPlay, activeTrackIndex, setE
     try {
       await resumePlayback(
         quizData.current.quizTracksUri &&
-          quizData.current.quizTracksUri[activeTrackIndex.current], true
+          quizData.current.quizTracksUri[activeTrackIndex.current],
+        true
       );
-      setError("");
+      if (intervalId.current) {
+        clearInterval(intervalId.current);
+      }
+      handleProgress();
       if (!isPlay) {
         setIsPlay(true);
+      }
+      if (error) {
+        setError("");
       }
     } catch (error) {
       setError(error);
     }
-
   };
 
   return (

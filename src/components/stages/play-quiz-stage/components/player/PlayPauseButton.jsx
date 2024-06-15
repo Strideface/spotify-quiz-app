@@ -1,5 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { resumePlayback, pausePlayback } from "../../../../../util/spotify-api";
 import { useOutletContext } from "react-router-dom";
 
@@ -9,6 +8,9 @@ export default function PlayPauseButton({
   activeTrackIndex,
   error,
   setError,
+  setProgressMax,
+  handleProgress,
+  intervalId,
 }) {
   // https://icons.getbootstrap.com/icons/play-circle-fill/
   // https://icons.getbootstrap.com/icons/pause-circle/
@@ -18,15 +20,19 @@ export default function PlayPauseButton({
 
   const handlePlayOnClick = async () => {
     try {
-      await resumePlayback(
+      let trackDuration = await resumePlayback(
         quizData.current.quizTracksUri &&
           quizData.current.quizTracksUri[activeTrackIndex.current],
         false
       );
-      setError("");
+      setProgressMax(trackDuration);
+      handleProgress();
       setIsPlay((prevState) => {
         return !prevState;
       });
+      if (error) {
+        setError("");
+      }
     } catch (error) {
       setError(error);
     }
@@ -35,10 +41,13 @@ export default function PlayPauseButton({
   const handlePauseOnClick = async () => {
     try {
       await pausePlayback();
-      setError("");
       setIsPlay((prevState) => {
         return !prevState;
       });
+      clearInterval(intervalId.current)
+      if (error) {
+        setError("");
+      }
     } catch (error) {
       setError(error);
     }

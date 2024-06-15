@@ -303,6 +303,7 @@ export async function fetchPlaylistTracks(playlistTracksHref, market) {
         id: item.track.id,
         isPlayable: item.track.is_playable,
         preview: item.track.preview_url,
+        duration: item.track.duration_ms,
       },
     }));
   }
@@ -312,6 +313,7 @@ export async function fetchPlaylistTracks(playlistTracksHref, market) {
       (item) => item.track.uri
     );
   }
+
 
   return quizTracksData;
 }
@@ -349,35 +351,6 @@ export async function fetchArtistTopTracks(id, market) {
   return artistTrackItems;
 }
 
-// async function fetchActiveDevice() {
-//   let accessToken = await getLocalAccessToken();
-
-//   const response = await fetch("https://api.spotify.com/v1/me/player/devices", {
-//     method: "GET",
-//     headers: { Authorization: `Bearer ${accessToken}` },
-//   });
-
-//   if (!response.ok) {
-//     const error = new Error("An error occurred while fetching active device");
-//     error.code = response.status;
-//     error.info = await response.json();
-//     throw error;
-//   }
-
-//   const devicesArray = await response.json();
-//   let activeDevice = null;
-
-//   console.log(devicesArray);
-
-//   for (const device of devicesArray.devices) {
-//     if (device.is_active) {
-//       activeDevice = device;
-//     }
-//   }
-
-//   return activeDevice;
-// }
-
 
 async function fetchPlaybackState() {
 
@@ -407,14 +380,14 @@ async function fetchPlaybackState() {
   const activeDevice = responseJson.device;
   const currentTrackUri = responseJson.item ? responseJson.item.uri : null;
   const progress = responseJson.progress_ms;
+  const duration = responseJson.item.duration_ms;
 
   results = {
     activeDevice: activeDevice,
     currentTrackUri: currentTrackUri,
-    progress: progress
+    progress: progress,
+    duration: duration,
   }
-
-  console.log(`results = ${results}`)
 
   return results;
 }
@@ -422,7 +395,6 @@ async function fetchPlaybackState() {
 export async function resumePlayback(trackUri, resumeFromStart) {
 
   const playbackStateResults = await fetchPlaybackState();
-  console.log(`playbackStateResults = ${playbackStateResults}`)
 
   if (!playbackStateResults) {
     const error = new Error(
@@ -462,8 +434,8 @@ export async function resumePlayback(trackUri, resumeFromStart) {
     error.info = await response.json();
     throw error;
   }
-
-  return "resume playback success";
+// return duration of track to update max value of progress bar state
+  return playbackStateResults.duration;
 }
 
 export async function pausePlayback() {

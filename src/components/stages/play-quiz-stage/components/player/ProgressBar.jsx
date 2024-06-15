@@ -1,5 +1,4 @@
-export default function ProgressBar() {
-  return (
-    <p>Progress Bar</p>
-  )
+export default function ProgressBar({ progressMax, progressValue }) {
+
+  return <progress max={progressMax} value={progressValue}></progress>;
 }
