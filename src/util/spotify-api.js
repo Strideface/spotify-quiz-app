@@ -314,7 +314,6 @@ export async function fetchPlaylistTracks(playlistTracksHref, market) {
     );
   }
 
-
   return quizTracksData;
 }
 
@@ -351,9 +350,7 @@ export async function fetchArtistTopTracks(id, market) {
   return artistTrackItems;
 }
 
-
 async function fetchPlaybackState() {
-
   let accessToken = await getLocalAccessToken();
 
   const response = await fetch("https://api.spotify.com/v1/me/player", {
@@ -368,32 +365,29 @@ async function fetchPlaybackState() {
     throw error;
   }
 
-  let results = null
-// if no playback state is detected then endpoint returns a 204 (OK but empty response)
-// therefore, create a response by returning null
+  let results = null;
+  // if no playback state is detected then endpoint returns a 204 (OK but empty response)
+  // therefore, create a response by returning null
   if (response.status === 204) {
     return results;
   }
-// playback state detected and retruns a 200 with response data
+  // playback state detected and retruns a 200 with response data
   const responseJson = await response.json();
 
   const activeDevice = responseJson.device;
   const currentTrackUri = responseJson.item ? responseJson.item.uri : null;
   const progress = responseJson.progress_ms;
-  const duration = responseJson.item.duration_ms;
 
   results = {
     activeDevice: activeDevice,
     currentTrackUri: currentTrackUri,
     progress: progress,
-    duration: duration,
-  }
+  };
 
   return results;
 }
 
 export async function resumePlayback(trackUri, resumeFromStart) {
-
   const playbackStateResults = await fetchPlaybackState();
 
   if (!playbackStateResults) {
@@ -402,13 +396,12 @@ export async function resumePlayback(trackUri, resumeFromStart) {
     );
     throw error;
   }
-// if the trackUri being passed in does not equal the trackUri in playback state data
-// set progress to 0 so it plays from start, as it must be a new track.
-// or if the optional resumeFromStart value is true, set progress to 0 (for the repeat button)
+  // if the trackUri being passed in does not equal the trackUri in playback state data
+  // set progress to 0 so it plays from start, as it must be a new track.
+  // or if the optional resumeFromStart value is true, set progress to 0 (for the repeat button)
   if (trackUri !== playbackStateResults.currentTrackUri || resumeFromStart) {
     playbackStateResults.progress = 0;
   }
-
 
   let accessToken = await getLocalAccessToken();
 
@@ -424,7 +417,10 @@ export async function resumePlayback(trackUri, resumeFromStart) {
         Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ uris: [trackUri], position_ms: playbackStateResults.progress, }),
+      body: JSON.stringify({
+        uris: [trackUri],
+        position_ms: playbackStateResults.progress,
+      }),
     }
   );
 
@@ -434,8 +430,8 @@ export async function resumePlayback(trackUri, resumeFromStart) {
     error.info = await response.json();
     throw error;
   }
-// return duration of track to update max value of progress bar state
-  return playbackStateResults.duration;
+
+  return "pause playback success";
 }
 
 export async function pausePlayback() {

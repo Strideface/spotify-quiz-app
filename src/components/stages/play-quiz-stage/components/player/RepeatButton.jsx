@@ -8,7 +8,7 @@ export default function RepeatButton({
   activeTrackIndex,
   error,
   setError,
-  handleProgress,
+  setProgressValue,
   intervalId,
 }) {
   // https://icons.getbootstrap.com/icons/arrow-repeat/
@@ -22,10 +22,7 @@ export default function RepeatButton({
           quizData.current.quizTracksUri[activeTrackIndex.current],
         true
       );
-      if (intervalId.current) {
-        clearInterval(intervalId.current);
-      }
-      handleProgress();
+      setProgressValue(0);
       if (!isPlay) {
         setIsPlay(true);
       }

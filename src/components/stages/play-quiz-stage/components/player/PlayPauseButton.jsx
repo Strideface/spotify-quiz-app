@@ -8,8 +8,9 @@ export default function PlayPauseButton({
   activeTrackIndex,
   error,
   setError,
-  setProgressMax,
-  handleProgress,
+  progressMax,
+  progressValue,
+  setProgressValue,
   intervalId,
 }) {
   // https://icons.getbootstrap.com/icons/play-circle-fill/
@@ -20,13 +21,14 @@ export default function PlayPauseButton({
 
   const handlePlayOnClick = async () => {
     try {
-      let trackDuration = await resumePlayback(
+      await resumePlayback(
         quizData.current.quizTracksUri &&
           quizData.current.quizTracksUri[activeTrackIndex.current],
         false
       );
-      setProgressMax(trackDuration);
-      handleProgress();
+      if (progressValue === progressMax) {
+        setProgressValue(0);             
+      }
       setIsPlay((prevState) => {
         return !prevState;
       });
