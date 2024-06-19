@@ -26,8 +26,8 @@ export default function PlayPauseButton({
           quizData.current.quizTracksUri[activeTrackIndex.current],
         false
       );
-      if (progressValue === progressMax) {
-        setProgressValue(0);             
+      if (progressValue >= progressMax) {
+        setProgressValue(0);
       }
       setIsPlay((prevState) => {
         return !prevState;
@@ -46,7 +46,6 @@ export default function PlayPauseButton({
       setIsPlay((prevState) => {
         return !prevState;
       });
-      clearInterval(intervalId.current)
       if (error) {
         setError("");
       }

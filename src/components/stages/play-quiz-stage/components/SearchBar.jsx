@@ -66,7 +66,6 @@ export default function SearchBar({ activeTrackIndex, setUserResponse }) {
 
   // handles the changing of a selection from the artist search
   const handleSearchOnChange = (value, actionType) => {
-    console.log(actionType);
     if (actionType.action === "select-option") {
       setSelectedValue((prevState) => ({
         artist: value,
@@ -151,7 +150,7 @@ export default function SearchBar({ activeTrackIndex, setUserResponse }) {
     }
   };
 
-  const handleSubmitAnswer = async () => {
+  const handleSubmitAnswer = () => {
     setUserResponse((prevState) => {
       return [...prevState, selectedValue];
     });

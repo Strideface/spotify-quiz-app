@@ -26,11 +26,11 @@ const Modal = forwardRef(function Modal(
   // a div element with 'modal' as id, at the highest point in the DON (see index.html)
   return createPortal(
     <dialog ref={dialog} onClose={onClose} className=" border">
-      <div>
+      <div className=" flex justify-center space-y-2">
         <h1>{title}</h1>
         <p>{message}</p>
       </div>
-      <div>{children}</div>
+      {children}
     </dialog>,
     document.getElementById("modal")
   );

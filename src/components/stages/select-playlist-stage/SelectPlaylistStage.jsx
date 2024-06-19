@@ -67,6 +67,7 @@ export default function SelectPlaylistStage() {
         title="Select Difficulty"
         message="Choose the difficulty level of the quiz"
       >
+        <div className=" flex p-5 justify-center space-y-2">
         <form method="dialog" onSubmit={handleOnSubmit}>
           <input
             ref={easy}
@@ -102,6 +103,7 @@ export default function SelectPlaylistStage() {
           </button>
           <button type="submit">Confirm</button>
         </form>
+        </div>
       </Modal>
 
       <SearchPlaylists />

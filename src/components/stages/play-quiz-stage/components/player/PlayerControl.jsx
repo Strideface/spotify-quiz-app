@@ -12,73 +12,44 @@ export default function PlayerControl({ activeTrackIndex }) {
   const intervalId = useRef();
   const { quizData } = useOutletContext();
 
+  // This useEffect gets the tracks data once it is ready, as it is dependant on an async fetch call in Quiz.jsx (playlistTracksData)
   useEffect(() => {
     if (quizData.current.quizTracks) {
       setProgressMax(
         quizData.current.quizTracks[activeTrackIndex.current]?.track?.duration
       );
-      console.log(
-        `duration within useEffect ${
-          quizData.current?.quizTracks[activeTrackIndex.current]?.track
-            ?.duration
-        }`
-      );
     }
-    console.log(`progress max within useEffect ${progressMax}`);
   }, [activeTrackIndex, quizData, quizData.current.quizTracks]);
 
   // This useEffect controls the progress bar value, when it runs, when it stops, when it resets.
   // although progressValue should change and cause a re-render every second,
   // useEffect function only runs if isPlay is true.
   useEffect(() => {
-    console.log(`progress value within progress useEffect = ${progressValue}`);
     if (isPlay) {
-
-      if (progressValue === progressMax) {
-        // clearInterval(intervalId.current);
-        console.log("Track finished");
+      if (progressValue >= progressMax) {
         setIsPlay((prevState) => {
           return !prevState;
-        });            
+        });
       } else {
-
         intervalId.current = setInterval(() => {
           setProgressValue((prevState) => {
             return prevState + 1000;
           });
         }, 1000);
-
       }
-
-     
-      
     }
 
     //The clearInterval method is used inside the useEffect cleanup function
     //to stop the interval when the component unmounts.
+    //this means a new interval function is being set on every render which prevents 'Memory leaks'
+    //see: https://www.geeksforgeeks.org/how-to-use-setinterval-method-inside-react-components/
 
     return () => {
       if (intervalId.current) {
         clearInterval(intervalId.current);
       }
-      }
-
-    
-
-  }, [isPlay, progressMax, progressValue])
-
-
-  
-
-  // const handleProgress = () => {
-  //   console.log(`progress value within handleProgress = ${progressValue}`);
-
-  //   intervalId.current = setInterval(() => {
-  //     setProgressValue((prevState) => {
-  //       return prevState + 1000;
-  //     });
-  //   }, 1000);
-  // };
+    };
+  }, [isPlay, progressMax, progressValue]);
 
   return (
     <div className=" flex flex-col p-5 justify-center">
@@ -101,7 +72,6 @@ export default function PlayerControl({ activeTrackIndex }) {
           progressMax={progressMax}
           progressValue={progressValue}
           setProgressValue={setProgressValue}
-
           // handleProgress={handleProgress}
           intervalId={intervalId}
         />
