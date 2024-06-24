@@ -9,7 +9,6 @@ export default function RepeatButton({
   error,
   setError,
   setProgressValue,
-  intervalId,
 }) {
   // https://icons.getbootstrap.com/icons/arrow-repeat/
   const repeat = useRef();

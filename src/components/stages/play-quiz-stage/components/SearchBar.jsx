@@ -1,3 +1,4 @@
+// THIS COMPONENT NEEDS BREAKING OUT INTO SEVERAL OTHER COMPONENTS AS IT IS TOO LARGE NOW AND ITS NAME DOES NOT RELATE TO ALL THE FUNCTIONALITY
 import AsyncSelect from "react-select/async";
 import { useRef, useState } from "react";
 import { useOutletContext } from "react-router-dom";
@@ -8,7 +9,13 @@ import {
 } from "../../../../util/spotify-api";
 import { shuffleArray } from "../../../../util/util";
 
-export default function SearchBar({ activeTrackIndex, setUserResponse }) {
+export default function SearchBar({
+  activeTrackIndex,
+  setUserResponse,
+  artistIsCorrect,
+  trackIsCorrect,
+  totalPoints,
+}) {
   const { quizData } = useOutletContext();
   const [selectedValue, setSelectedValue] = useState({
     artist: null,
@@ -151,8 +158,39 @@ export default function SearchBar({ activeTrackIndex, setUserResponse }) {
   };
 
   const handleSubmitAnswer = () => {
+    if (
+      selectedValue.artist.id ===
+      quizData.current.quizTracks[activeTrackIndex.current].artist[0].id
+    ) {
+      artistIsCorrect.current = true;
+      quizData.current.quizResults.totalPoints += 1;
+      quizData.current.quizResults.totalCorrectArtists += 1;
+    } else {
+      artistIsCorrect.current = false;
+    }
+
+    if (
+      selectedValue.track.id ===
+      quizData.current.quizTracks[activeTrackIndex.current].track.id
+    ) {
+      trackIsCorrect.current = true;
+      quizData.current.quizResults.totalPoints += 1;
+      quizData.current.quizResults.totalCorrectTracks = +1;
+    } else {
+      trackIsCorrect.current = false;
+    }
+
     setUserResponse((prevState) => {
       return [...prevState, selectedValue];
+    });
+  };
+
+  const handleSkip = () => {
+    quizData.current.quizResults.totalSkipped += 1;
+    artistIsCorrect.current = false;
+    trackIsCorrect.current = false;
+    setUserResponse((prevState) => {
+      return [...prevState, "SKIPPED"];
     });
   };
 
@@ -184,10 +222,11 @@ export default function SearchBar({ activeTrackIndex, setUserResponse }) {
           }
         />
       )}
-      {/* {!!selectedValue & error.current && <p>{error.current.message}</p>} */}
 
-      {selectedValue.track && (
+      {selectedValue.track ? (
         <button onClick={handleSubmitAnswer}>Submit Answer</button>
+      ) : (
+        <button onClick={handleSkip}>Skip</button>
       )}
     </>
   );

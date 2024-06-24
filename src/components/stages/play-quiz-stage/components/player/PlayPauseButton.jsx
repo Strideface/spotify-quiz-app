@@ -11,7 +11,6 @@ export default function PlayPauseButton({
   progressMax,
   progressValue,
   setProgressValue,
-  intervalId,
 }) {
   // https://icons.getbootstrap.com/icons/play-circle-fill/
   // https://icons.getbootstrap.com/icons/pause-circle/

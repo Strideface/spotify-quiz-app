@@ -11,6 +11,7 @@ export default function Root() {
     gameTilesStage: true,
     selectPlaylistStage: false,
     playQuizStage: false,
+    finalResultsStage: false,
   });
   // to control what the user sees on the app, e.g. sign in button
   const [isAuthenticated, setIsAuthenticated] = useState(checkAuth());
@@ -29,6 +30,12 @@ export default function Root() {
     playlistTracksHref: null,
     quizTracks: null,
     quizTracksUri: null,
+    quizResults: {
+      totalPoints: 0,
+      totalCorrectArtists: 0,
+      totalCorrectTracks: 0,
+      totalSkipped: 0,
+    },
     userDetails: {
       name: null,
       country: null,
@@ -38,7 +45,7 @@ export default function Root() {
 
   return (
     <>
-      <Header />
+      <Header quizStage={quizStage}/>
       <Outlet
         context={{
           quizStage,

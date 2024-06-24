@@ -15,6 +15,7 @@ export default function UserPlaylists() {
     queryFn: fetchUserPlaylists,
     staleTime: 60000, // every 60 secs, refetch data. Aribitrary but to reduce API calls.
     // could have a situation where a user creates a new playlist and  wants to use it for the quiz.
+    retry: 1,
   });
 
   if (userPlaylistIsLoading) {

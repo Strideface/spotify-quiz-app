@@ -193,10 +193,16 @@ export async function fetchUserPlaylists() {
       getNext = false;
     }
   }
-  // return an array of playlist items
+  // return an array of playlist items, only if the playlist contains tracks
   let userPlaylistItems = [];
   for (let playlistsObj of userPlaylists) {
-    userPlaylistItems.push(...playlistsObj.items);
+    for (let item of playlistsObj.items) {
+      if (item.tracks.total > 0) {
+        userPlaylistItems.push(item);
+    }
+    
+    }
+    
   }
 
   return userPlaylistItems;

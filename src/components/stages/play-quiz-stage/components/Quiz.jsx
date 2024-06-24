@@ -10,16 +10,15 @@ import Modal from "../../../Modal";
 export default function Quiz() {
   const activeTrackIndex = useRef();
   const [userResponse, setUserResponse] = useState([]);
-  const resultModal = useRef();
-  const totalPoints = useRef(0);
   const artistIsCorrect = useRef();
   const trackIsCorrect = useRef();
+  const resultModal = useRef();
 
   activeTrackIndex.current = userResponse.length;
-  console.log(activeTrackIndex.current);
-  console.log(`userResponse in Quiz.jsx = ${userResponse}`);
 
-  const { quizData } = useOutletContext();
+  console.log(activeTrackIndex.current);
+
+  const { quizData, setQuizStage } = useOutletContext();
 
   const {
     data: playlistTracksData,
@@ -50,75 +49,35 @@ export default function Quiz() {
     }
   }, [playlistTracksData, quizData]);
 
+  // this useEffect opens the results modal to show the result of the latest answer submission
   useEffect(() => {
     if (userResponse.length > 0) {
-
-      if (
-        userResponse[activeTrackIndex.current - 1].artist.id ===
-        quizData.current.quizTracks[activeTrackIndex.current - 1].artist[0].id
-      ) {
-        artistIsCorrect.current = true;
-        totalPoints.current += 1;
-      } else {
-        artistIsCorrect.current = false;
-      }
-  
-      if (
-        userResponse[activeTrackIndex.current - 1].track.id ===
-        quizData.current.quizTracks[activeTrackIndex.current - 1].track.id
-      ) {
-        trackIsCorrect.current = true;
-        totalPoints.current += 1;
-      } else {
-        trackIsCorrect.current = false;
-      }
-  
       resultModal.current.open();
-      
     }
-    
-  }, [quizData, userResponse]);
+  }, [userResponse]);
 
-  // const checkSubmittedAnswer = () => {
-  //   console.log(`userResponse in checkSubmittedAnswer = ${userResponse}`)
-  //   console.log(quizData.current.quizTracks[activeTrackIndex.current -1])
-
-  //   if (
-  //     userResponse[activeTrackIndex.current - 1].artist.id ===
-  //     quizData.current.quizTracks[activeTrackIndex.current - 1].artist[0]
-  //     .id
-  //   ) {
-  //     artistIsCorrect.current = true;
-  //     totalPoints.current += 1
-  //   } else {
-  //     artistIsCorrect.current = false;
-  //   }
-
-  //   if (
-  //     userResponse[activeTrackIndex.current - 1].track.id ===
-  //     quizData.current.quizTracks[activeTrackIndex.current - 1].track.id
-  //   ) {
-  //     trackIsCorrect.current = true;
-  //     totalPoints.current += 1
-  //   } else {
-  //     trackIsCorrect.current = false;
-  //   }
-
-  //   resultModal.current.open();
-  // };
-
-  const handleModalOnClick = () => resultModal.current.close();
+  const handleModalOnClick = () => {
+    resultModal.current.close();
+    // change UI to the final results stage once tracks are exhausted
+    if (userResponse.length === quizData.current.quizTracks.length) {
+      setQuizStage((prevState) => ({
+        ...prevState,
+        playQuizStage: false,
+        finalResultsStage: true,
+      }));
+    }
+  };
 
   return (
     <>
-      <Modal ref={resultModal} title="Results">
+      <Modal ref={resultModal} onClose={handleModalOnClick} title="Results">
         <div className=" flex p-5 justify-center space-y-5">
           <p
             className={
-              artistIsCorrect ? " text-spotify-green" : " text-red-500"
+              artistIsCorrect.current ? " text-spotify-green" : " text-red-500"
             }
           >
-            {artistIsCorrect ? "Correct!" : "Incorrect"}
+            {artistIsCorrect.current ? "Correct!" : "Incorrect"}
           </p>
           <p>
             Artist:
@@ -127,9 +86,11 @@ export default function Quiz() {
                 .artist[0].name}
           </p>
           <p
-            className={trackIsCorrect ? " text-spotify-green" : " text-red-500"}
+            className={
+              trackIsCorrect.current ? " text-spotify-green" : " text-red-500"
+            }
           >
-            {trackIsCorrect ? "Correct!" : "Incorrect"}
+            {trackIsCorrect.current ? "Correct!" : "Incorrect"}
           </p>
           <p>
             Track:
@@ -138,7 +99,12 @@ export default function Quiz() {
                 .name}
           </p>
           <div>
-            <button type="button" onClick={handleModalOnClick}>Next Track</button>
+            <button type="button" onClick={handleModalOnClick}>
+              {quizData.current.quizTracks &&
+              userResponse.length < quizData.current.quizTracks.length
+                ? "Next Track"
+                : "See Results"}
+            </button>
           </div>
         </div>
       </Modal>
@@ -154,6 +120,8 @@ export default function Quiz() {
                 key={activeTrackIndex.current}
                 activeTrackIndex={activeTrackIndex}
                 setUserResponse={setUserResponse}
+                artistIsCorrect={artistIsCorrect}
+                trackIsCorrect={trackIsCorrect}
               />
             </div>
             <div className=" flex flex-col p-10 justify-center border">
