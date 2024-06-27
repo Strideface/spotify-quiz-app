@@ -1,6 +1,5 @@
-// THIS COMPONENT NEEDS BREAKING OUT INTO SEVERAL OTHER COMPONENTS AS IT IS TOO LARGE NOW AND ITS NAME DOES NOT RELATE TO ALL THE FUNCTIONALITY
 import AsyncSelect from "react-select/async";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { useOutletContext } from "react-router-dom";
 
 import {
@@ -9,22 +8,42 @@ import {
 } from "../../../../util/spotify-api";
 import { shuffleArray } from "../../../../util/util";
 
-export default function SearchBar({
+export default function AnswerSelection({
   activeTrackIndex,
   setUserResponse,
   artistIsCorrect,
   trackIsCorrect,
   totalPoints,
+  timerIsFinished,
+  setTimerIsFinished
 }) {
   const { quizData } = useOutletContext();
   const [selectedValue, setSelectedValue] = useState({
     artist: null,
     track: null,
   });
+ 
   const lastChange = useRef();
   const artistSearchBar = useRef();
   const trackSelector = useRef();
   const error = useRef();
+
+  console.log(timerIsFinished)
+
+  const handleSkip = useCallback(() => {
+    quizData.current.quizResults.totalSkipped += 1;
+    artistIsCorrect.current = false;
+    trackIsCorrect.current = false;
+    setUserResponse((prevState) => {
+      return [...prevState, "SKIPPED"];
+    });
+  }, [artistIsCorrect, quizData, setUserResponse, trackIsCorrect]);
+
+  useEffect(() => {
+    if (timerIsFinished) {
+      handleSkip();
+    }
+  }, [handleSkip, timerIsFinished]);
 
   // https://www.dhiwise.com/post/how-to-implement-a-react-search-bar-with-dropdown
   // https://react-select.com/home
@@ -182,15 +201,6 @@ export default function SearchBar({
 
     setUserResponse((prevState) => {
       return [...prevState, selectedValue];
-    });
-  };
-
-  const handleSkip = () => {
-    quizData.current.quizResults.totalSkipped += 1;
-    artistIsCorrect.current = false;
-    trackIsCorrect.current = false;
-    setUserResponse((prevState) => {
-      return [...prevState, "SKIPPED"];
     });
   };
 

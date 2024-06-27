@@ -4,7 +4,7 @@ import RepeatButton from "./RepeatButton";
 import ProgressBar from "./ProgressBar";
 import { useOutletContext } from "react-router-dom";
 
-export default function PlayerControl({ activeTrackIndex}) {
+export default function PlayerControl({ activeTrackIndex }) {
   const [isPlay, setIsPlay] = useState(false);
   const [error, setError] = useState("");
   const [progressMax, setProgressMax] = useState();

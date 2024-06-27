@@ -21,12 +21,13 @@ const Modal = forwardRef(function Modal(
   });
   // onClose prop is only neccessarry when you need a function to trigger (in an inheriting component) upon a dialog being
   // closed via the escape key (onClose attribute) e.g. trigger the same function as onSubmit if user escapes.
+  // Similar for onOpen but if the modal is open.
 
   // portal inserts the dialog at the point in the DOM corresponding to its id, in this case
   // a div element with 'modal' as id, at the highest point in the DON (see index.html)
   return createPortal(
     <dialog ref={dialog} onClose={onClose} className=" border">
-      <div className=" flex justify-center space-y-2">
+      <div className=" flex-col justify-center space-x-2">
         <h1>{title}</h1>
         <p>{message}</p>
       </div>

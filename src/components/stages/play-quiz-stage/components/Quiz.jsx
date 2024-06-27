@@ -3,13 +3,15 @@ import { useOutletContext } from "react-router-dom";
 import { fetchPlaylistTracks } from "../../../../util/spotify-api";
 import { useQuery } from "@tanstack/react-query";
 import LoadingIndicator from "../../../LoadingIndicator";
-import SearchBar from "./SearchBar";
+import AnswerSelection from "./AnswerSelection";
 import PlayerControl from "./player/PlayerControl";
 import Modal from "../../../Modal";
+import CountdownTimer from "./CountdownTimer";
 
 export default function Quiz() {
   const activeTrackIndex = useRef();
   const [userResponse, setUserResponse] = useState([]);
+  const [timerIsFinished, setTimerIsFinished] = useState(false);
   const artistIsCorrect = useRef();
   const trackIsCorrect = useRef();
   const resultModal = useRef();
@@ -65,8 +67,11 @@ export default function Quiz() {
         playQuizStage: false,
         finalResultsStage: true,
       }));
+    } else {
+      setTimerIsFinished(false);
     }
   };
+
 
   return (
     <>
@@ -81,7 +86,7 @@ export default function Quiz() {
           </p>
           <p>
             Artist:
-            {quizData.current.quizTracks &&
+            {userResponse.length > 0 &&
               quizData.current.quizTracks[activeTrackIndex.current - 1]
                 .artist[0].name}
           </p>
@@ -94,13 +99,13 @@ export default function Quiz() {
           </p>
           <p>
             Track:
-            {quizData.current.quizTracks &&
+            {userResponse.length > 0 &&
               quizData.current?.quizTracks[activeTrackIndex.current - 1].track
                 .name}
           </p>
           <div>
             <button type="button" onClick={handleModalOnClick}>
-              {quizData.current.quizTracks &&
+              {userResponse.length > 0 &&
               userResponse.length < quizData.current.quizTracks.length
                 ? "Next Track"
                 : "See Results"}
@@ -112,16 +117,26 @@ export default function Quiz() {
         {playlistTracksIsLoading && <LoadingIndicator />}
         {playlistTracksData && (
           <>
-            <div className=" flex p-10 justify-center">
-              <h2>Quiz Tracks Ready</h2>
+            <div className=" flex p-10 justify-center space-y-5">
+              <h2>Track No: {activeTrackIndex.current + 1}</h2>
+              {quizData.current.difficulty !== "easy" &&
+                (!timerIsFinished ? (
+                  <CountdownTimer
+                    maxTimeLimit={5}
+                    /* maxTimeLimit set at 30 seconds because both medium and hard have a 30s timer. Can be configurable */
+                    setTimerIsFinished={setTimerIsFinished}
+                  />
+                ) : null)}
             </div>
             <div className=" flex flex-col p-10 justify-center border">
-              <SearchBar
+              <AnswerSelection
                 key={activeTrackIndex.current}
                 activeTrackIndex={activeTrackIndex}
                 setUserResponse={setUserResponse}
                 artistIsCorrect={artistIsCorrect}
                 trackIsCorrect={trackIsCorrect}
+                timerIsFinished={timerIsFinished}
+                setTimerIsFinished={setTimerIsFinished}
               />
             </div>
             <div className=" flex flex-col p-10 justify-center border">
