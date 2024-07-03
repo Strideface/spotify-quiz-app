@@ -13,8 +13,6 @@ export default function AnswerSelection({
   setUserResponse,
   artistIsCorrect,
   trackIsCorrect,
-  totalPoints,
-  timerIsFinished,
   setTimerIsFinished,
 }) {
   const { quizData } = useOutletContext();
@@ -177,10 +175,11 @@ export default function AnswerSelection({
     ) {
       trackIsCorrect.current = true;
       quizData.current.quizResults.totalPoints += 1;
-      quizData.current.quizResults.totalCorrectTracks = +1;
+      quizData.current.quizResults.totalCorrectTracks += 1;
     } else {
       trackIsCorrect.current = false;
     }
+    setTimerIsFinished(true);
 
     setUserResponse((prevState) => {
       return [...prevState, selectedValue];
@@ -191,10 +190,13 @@ export default function AnswerSelection({
     quizData.current.quizResults.totalSkipped += 1;
     artistIsCorrect.current = false;
     trackIsCorrect.current = false;
+
+    setTimerIsFinished(true);
+
     setUserResponse((prevState) => {
       return [...prevState, "SKIPPED"];
     });
-  }, [artistIsCorrect, quizData, setUserResponse, trackIsCorrect]);
+  }, [artistIsCorrect, quizData, setTimerIsFinished, setUserResponse, trackIsCorrect]);
 
   return (
     <>

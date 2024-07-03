@@ -61,7 +61,6 @@ export default function Quiz({ inPlay }) {
   useEffect(() => {
     if (userResponse.length > 0) {
       resultModal.current.open();
-      setTimerIsFinished(true);
     }
   }, [userResponse]);
 
@@ -86,6 +85,7 @@ export default function Quiz({ inPlay }) {
       }));
     } else {
       setTimerIsFinished(false);
+      console.log("setTimerIsFinished(false) from quiz handleModalOnClick")
     }
   };
 
@@ -153,7 +153,6 @@ export default function Quiz({ inPlay }) {
                 setUserResponse={setUserResponse}
                 artistIsCorrect={artistIsCorrect}
                 trackIsCorrect={trackIsCorrect}
-                timerIsFinished={timerIsFinished}
                 setTimerIsFinished={setTimerIsFinished}
               />
             </div>
@@ -161,6 +160,7 @@ export default function Quiz({ inPlay }) {
               <PlayerControl
                 key={activeTrackIndex.current}
                 activeTrackIndex={activeTrackIndex}
+                timerIsFinished={timerIsFinished}
               />
             </div>
           </>

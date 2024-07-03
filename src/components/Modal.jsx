@@ -16,6 +16,10 @@ const Modal = forwardRef(function Modal(
       },
       close() {
         dialog.current.close()
+      },
+      // custom method to check if a modal is currently open
+      isOpen() {
+        return dialog.current.open
       }
     };
   });

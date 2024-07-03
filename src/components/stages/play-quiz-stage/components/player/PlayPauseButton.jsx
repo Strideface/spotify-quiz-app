@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useRef, } from "react";
+import { useEffect, useRef } from "react";
 import { resumePlayback, pausePlayback } from "../../../../../util/spotify-api";
 import { useOutletContext } from "react-router-dom";
 
@@ -12,17 +12,15 @@ export default function PlayPauseButton({
   progressMax,
   progressValue,
   setProgressValue,
+  timerIsFinished,
 }) {
   // https://icons.getbootstrap.com/icons/play-circle-fill/
   // https://icons.getbootstrap.com/icons/pause-circle/
   const { quizData } = useOutletContext();
   const play = useRef();
   const pause = useRef();
-  
 
-
-
-  const handlePlayOnClick = (async () => {
+  const handlePlayOnClick = async () => {
     try {
       await resumePlayback(
         quizData.current.quizTracksUri &&
@@ -41,7 +39,7 @@ export default function PlayPauseButton({
     } catch (error) {
       setError(error);
     }
-  });
+  };
 
   const handlePauseOnClick = async () => {
     try {
@@ -57,6 +55,11 @@ export default function PlayPauseButton({
     }
   };
 
+  useEffect(() => {
+    if (!timerIsFinished) {
+      handlePlayOnClick();
+    }
+  }, [timerIsFinished]);
 
   const playButton = (
     <button ref={play} type="button" value="play" onClick={handlePlayOnClick}>
