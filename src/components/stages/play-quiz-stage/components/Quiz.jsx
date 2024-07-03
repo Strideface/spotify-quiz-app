@@ -8,10 +8,10 @@ import PlayerControl from "./player/PlayerControl";
 import Modal from "../../../Modal";
 import CountdownTimer from "./CountdownTimer";
 
-export default function Quiz() {
+export default function Quiz({ inPlay }) {
   const activeTrackIndex = useRef();
   const [userResponse, setUserResponse] = useState([]);
-  const [timerIsFinished, setTimerIsFinished] = useState(false);
+  const [timerIsFinished, setTimerIsFinished] = useState(true);
   const artistIsCorrect = useRef();
   const trackIsCorrect = useRef();
   const resultModal = useRef();
@@ -41,6 +41,7 @@ export default function Quiz() {
   // the query is not caching previous results, probably due to what's in the response header
   // 'Cache-Control: public, max-age=0'
 
+  // get quiz tracks result from fetchPlaylistTracks once available
   useEffect(() => {
     if (playlistTracksData) {
       quizData.current.quizTracks = playlistTracksData.quizTracks;
@@ -49,11 +50,18 @@ export default function Quiz() {
     }
   }, [playlistTracksData, quizData]);
 
+  // inPlay will only change once, when user closes modal in CustomQuiz. Set timer when inPlay changes.
+  useEffect(() => {
+    if (inPlay) {
+      setTimerIsFinished(false);
+    }
+  }, [inPlay, setTimerIsFinished]);
+
   // this useEffect opens the results modal to show the result of the latest answer submission
   useEffect(() => {
     if (userResponse.length > 0) {
       resultModal.current.open();
-      setTimerIsFinished(true)
+      setTimerIsFinished(true);
     }
   }, [userResponse]);
 
@@ -65,7 +73,7 @@ export default function Quiz() {
     setUserResponse((prevState) => {
       return [...prevState, "TIMER-FINISHED"];
     });
-  }
+  };
 
   const handleModalOnClick = () => {
     resultModal.current.close();
@@ -80,7 +88,6 @@ export default function Quiz() {
       setTimerIsFinished(false);
     }
   };
-
 
   return (
     <>

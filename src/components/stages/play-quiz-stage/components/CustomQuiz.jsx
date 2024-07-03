@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import Quiz from "./Quiz";
 import Modal from "../../../Modal";
 import { useOutletContext } from "react-router-dom";
@@ -10,11 +10,12 @@ import { useOutletContext } from "react-router-dom";
 export default function CustomQuiz() {
   const { quizData } = useOutletContext();
   const rulesModal = useRef();
+  const [inPlay, setInPlay] = useState(false);
 
   // only open this modal upon initialization, once
   useEffect(() => {
     rulesModal.current.open();
-  });
+  },[]);
 
   const easy = (
     <ul>
@@ -45,6 +46,7 @@ export default function CustomQuiz() {
 
   const handleOnClick = () => {
     rulesModal.current.close();
+    setInPlay(true);
   };
 
   return (
@@ -82,7 +84,7 @@ export default function CustomQuiz() {
           </button>
         </div>
       </Modal>
-      <Quiz/>
+      <Quiz inPlay={inPlay} />
     </>
   );
 }

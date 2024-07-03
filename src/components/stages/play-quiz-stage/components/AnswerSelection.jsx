@@ -15,30 +15,18 @@ export default function AnswerSelection({
   trackIsCorrect,
   totalPoints,
   timerIsFinished,
-  setTimerIsFinished
+  setTimerIsFinished,
 }) {
   const { quizData } = useOutletContext();
   const [selectedValue, setSelectedValue] = useState({
     artist: null,
     track: null,
   });
- 
+
   const lastChange = useRef();
   const artistSearchBar = useRef();
   const trackSelector = useRef();
   const error = useRef();
-
-  console.log(timerIsFinished)
-
-  const handleSkip = useCallback(() => {
-    quizData.current.quizResults.totalSkipped += 1;
-    artistIsCorrect.current = false;
-    trackIsCorrect.current = false;
-    setUserResponse((prevState) => {
-      return [...prevState, "SKIPPED"];
-    });
-  }, [artistIsCorrect, quizData, setUserResponse, trackIsCorrect]);
-
 
   // https://www.dhiwise.com/post/how-to-implement-a-react-search-bar-with-dropdown
   // https://react-select.com/home
@@ -198,6 +186,15 @@ export default function AnswerSelection({
       return [...prevState, selectedValue];
     });
   };
+
+  const handleSkip = useCallback(() => {
+    quizData.current.quizResults.totalSkipped += 1;
+    artistIsCorrect.current = false;
+    trackIsCorrect.current = false;
+    setUserResponse((prevState) => {
+      return [...prevState, "SKIPPED"];
+    });
+  }, [artistIsCorrect, quizData, setUserResponse, trackIsCorrect]);
 
   return (
     <>
