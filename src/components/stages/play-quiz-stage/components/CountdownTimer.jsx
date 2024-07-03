@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 
-export default function CountdownTimer({ maxTimeLimit, setTimerIsFinished }) {
+export default function CountdownTimer({ maxTimeLimit, setTimerIsFinished, handleTimerIsFinished }) {
   const [remainingTime, setRemainingTime] = useState(maxTimeLimit);
   const intervalId = useRef();
 
+  // check if time has run out else continue to decrease timer
   useEffect(() => {
     if (remainingTime === 0) {
-      setTimerIsFinished((prevState) => {
-        return !prevState;
-      });
+      setTimerIsFinished(true);
+      handleTimerIsFinished();
     } else {
       intervalId.current = setInterval(() => {
         setRemainingTime((prevState) => {
@@ -22,7 +22,7 @@ export default function CountdownTimer({ maxTimeLimit, setTimerIsFinished }) {
         clearInterval(intervalId.current);
       }
     };
-  }, [remainingTime, setRemainingTime, setTimerIsFinished]);
+  }, [handleTimerIsFinished, remainingTime, setRemainingTime, setTimerIsFinished]);
 
   return (
   <div className=" flex">

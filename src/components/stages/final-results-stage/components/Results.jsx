@@ -10,6 +10,7 @@ export default function Results() {
         <p>Total Correct Artists: {quizData.current.quizResults.totalCorrectArtists}</p>
         <p>Total Correct Tracks: {quizData.current.quizResults.totalCorrectTracks}</p>
         <p>Total Skiped: {quizData.current.quizResults.totalSkipped}</p>
+        <p>Total Timer Finished: {quizData.current.quizResults.totalTimerFinished}</p>
     </div>
   )    
 }

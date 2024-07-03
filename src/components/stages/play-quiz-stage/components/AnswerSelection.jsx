@@ -1,5 +1,5 @@
 import AsyncSelect from "react-select/async";
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback } from "react";
 import { useOutletContext } from "react-router-dom";
 
 import {
@@ -39,11 +39,6 @@ export default function AnswerSelection({
     });
   }, [artistIsCorrect, quizData, setUserResponse, trackIsCorrect]);
 
-  useEffect(() => {
-    if (timerIsFinished) {
-      handleSkip();
-    }
-  }, [handleSkip, timerIsFinished]);
 
   // https://www.dhiwise.com/post/how-to-implement-a-react-search-bar-with-dropdown
   // https://react-select.com/home

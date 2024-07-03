@@ -35,6 +35,7 @@ export default function Root() {
       totalCorrectArtists: 0,
       totalCorrectTracks: 0,
       totalSkipped: 0,
+      totalTimerFinished: 0,
     },
     userDetails: {
       name: null,

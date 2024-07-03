@@ -18,8 +18,6 @@ export default function Quiz() {
 
   activeTrackIndex.current = userResponse.length;
 
-  console.log(activeTrackIndex.current);
-
   const { quizData, setQuizStage } = useOutletContext();
 
   const {
@@ -55,8 +53,19 @@ export default function Quiz() {
   useEffect(() => {
     if (userResponse.length > 0) {
       resultModal.current.open();
+      setTimerIsFinished(true)
     }
   }, [userResponse]);
+
+  // handles scenario where timer runs out
+  const handleTimerIsFinished = () => {
+    quizData.current.quizResults.totalTimerFinished += 1;
+    artistIsCorrect.current = false;
+    trackIsCorrect.current = false;
+    setUserResponse((prevState) => {
+      return [...prevState, "TIMER-FINISHED"];
+    });
+  }
 
   const handleModalOnClick = () => {
     resultModal.current.close();
@@ -119,12 +128,14 @@ export default function Quiz() {
           <>
             <div className=" flex p-10 justify-center space-y-5">
               <h2>Track No: {activeTrackIndex.current + 1}</h2>
+              {/* only render timer if it's not on easy mode and if the quiz is in play with time on the clock */}
               {quizData.current.difficulty !== "easy" &&
                 (!timerIsFinished ? (
                   <CountdownTimer
-                    maxTimeLimit={5}
+                    maxTimeLimit={30}
                     /* maxTimeLimit set at 30 seconds because both medium and hard have a 30s timer. Can be configurable */
                     setTimerIsFinished={setTimerIsFinished}
+                    handleTimerIsFinished={handleTimerIsFinished}
                   />
                 ) : null)}
             </div>
