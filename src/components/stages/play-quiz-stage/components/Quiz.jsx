@@ -134,7 +134,8 @@ export default function Quiz({ inPlay }) {
         {playlistTracksData && (
           <>
             <div className=" flex p-10 justify-center space-y-5">
-              <h2>Track No: {activeTrackIndex.current + 1}</h2>
+              {/* show current track number as long as there's tracks left */}
+              {activeTrackIndex.current + 1 <= quizData.current?.quizTracks?.length && <h2>Track No: {activeTrackIndex.current + 1}</h2>}
               {/* only render timer if it's not on easy mode and if the quiz is in play with time on the clock */}
               {quizData.current.difficulty !== "easy" &&
                 (!timerIsFinished ? (
