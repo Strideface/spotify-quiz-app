@@ -12,12 +12,26 @@ export default function PlayerControl({ activeTrackIndex, timerIsFinished }) {
   const intervalId = useRef();
   const { quizData } = useOutletContext();
 
-  // This useEffect gets the tracks data once it is ready, as it is dependant on an async fetch call in Quiz.jsx (playlistTracksData)
+  // This useEffect queries the tracks data once it is ready, as it is dependant on an async fetch call in Quiz.jsx (playlistTracksData)
+  // it then sets the progressMax value (how long the track should play for) which can be configured here.
   useEffect(() => {
     if (quizData.current.quizTracks) {
-      setProgressMax(
-        quizData.current.quizTracks[activeTrackIndex.current]?.track?.duration
-      );
+      if (quizData.current.difficulty === "easy") {
+        setProgressMax(
+          quizData.current.quizTracks[activeTrackIndex.current]?.track?.duration
+        );
+      }
+      if (quizData.current.difficulty === "medium") {
+        setProgressMax(
+          30000
+        );
+      }
+      if (quizData.current.difficulty === "hard") {
+        setProgressMax(
+          10000
+        );
+      }
+      
     }
   }, [activeTrackIndex, quizData, quizData.current.quizTracks]);
 

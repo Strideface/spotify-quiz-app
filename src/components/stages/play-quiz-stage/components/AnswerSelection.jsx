@@ -158,6 +158,7 @@ export default function AnswerSelection({
   };
 
   const handleSubmitAnswer = () => {
+    console.log(selectedValue)
     if (
       selectedValue.artist.id ===
       quizData.current.quizTracks[activeTrackIndex.current].artist[0].id

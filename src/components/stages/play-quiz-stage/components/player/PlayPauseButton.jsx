@@ -25,7 +25,9 @@ export default function PlayPauseButton({
       await resumePlayback(
         quizData.current.quizTracksUri &&
           quizData.current.quizTracksUri[activeTrackIndex.current],
-        false
+          // resumeFromStart param true if track finished. This is to handle tracks shorter than their full lentgh 
+          // i.e. when progressMax is configured to a custom length. Effectively repeating the track.
+        (progressValue >= progressMax ? true : false)
       );
       if (progressValue >= progressMax) {
         setProgressValue(0);
@@ -55,11 +57,24 @@ export default function PlayPauseButton({
     }
   };
 
+  // this side effect plays the track automatically if timer has not run out, therefore the quiz is in play.
   useEffect(() => {
     if (!timerIsFinished) {
       handlePlayOnClick();
     }
   }, [timerIsFinished]);
+
+  // this side effect pauses the track after progressMax is reached, if difficulty is set to medium or hard.
+  // on these difficulty settings, a track should only be played for a limited amount of time 
+  // progressMax should reflect this custom length
+  useEffect(() => {
+    if (
+      quizData.current.difficulty !== "easy" &&
+      progressValue >= progressMax
+    ) {
+      handlePauseOnClick();
+    }
+  }, [progressValue]);
 
   const playButton = (
     <button ref={play} type="button" value="play" onClick={handlePlayOnClick}>

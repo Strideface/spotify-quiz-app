@@ -140,8 +140,8 @@ export default function Quiz({ inPlay }) {
               {quizData.current.difficulty !== "easy" &&
                 (!timerIsFinished ? (
                   <CountdownTimer
-                    maxTimeLimit={30}
-                    /* maxTimeLimit set at 30 seconds because both medium and hard have a 30s timer. Can be configurable */
+                    maxTimeLimit={(quizData.current.difficulty === "medium" ? 60 : 30)}
+                    /* maxTimeLimit changes depending if difficulty is medium or hard. Configured in this ternary statement */
                     setTimerIsFinished={setTimerIsFinished}
                     handleTimerIsFinished={handleTimerIsFinished}
                   />
