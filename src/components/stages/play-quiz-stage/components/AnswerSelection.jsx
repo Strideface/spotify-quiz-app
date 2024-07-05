@@ -105,6 +105,7 @@ export default function AnswerSelection({
                 id: item.id,
               })
             );
+            console.log(options)
             // if the artist selected in the artist search bar matches the artist in the currently playing track
             if (
               quizData.current.quizTracks[activeTrackIndex.current].artist[0]
@@ -112,6 +113,7 @@ export default function AnswerSelection({
             ) {
               // then, if the currently playing track by that artist is not in the list of top tracks being returned, add it.
               // so that the user has the possibility of selecting the right answer (top tracks won't neccessarily contain the track currently playing)
+
               let idMatch = options.filter(
                 (track) =>
                   track.id ===
@@ -129,7 +131,31 @@ export default function AnswerSelection({
                     .track.id,
                 });
               }
+              // also check if there is more than one track with the same name and remove the one that does not match the current track ID
+              // so that the user does not select the track that does not match the current track ID (i.e. remove duplicates)
+              let trackNameMatch = options.filter(
+                (track) =>
+                  track.value.toLowerCase() ===
+                  quizData.current.quizTracks[
+                    activeTrackIndex.current
+                  ].track.name.toLowerCase()
+              );
+              console.log(trackNameMatch)
+              // options should already contain the current track at this point so more than 1 match means duplicates
+              if (trackNameMatch.length > 1) {
+                let duplicates = trackNameMatch.filter(
+                  (track) =>
+                    track.id !==
+                    quizData.current.quizTracks[activeTrackIndex.current].track
+                      .id
+                );
+                for (let track of duplicates) {
+                  let itemIndex = options.indexOf(track);
+                  options.splice(itemIndex, 1);
+                }
+              }
             }
+
             // always return the list of options in random order, oherwise the added correct option will always be in the same position.
             shuffleArray(options);
             return options;
@@ -158,7 +184,7 @@ export default function AnswerSelection({
   };
 
   const handleSubmitAnswer = () => {
-    console.log(selectedValue)
+    console.log(selectedValue);
     if (
       selectedValue.artist.id ===
       quizData.current.quizTracks[activeTrackIndex.current].artist[0].id
@@ -197,7 +223,13 @@ export default function AnswerSelection({
     setUserResponse((prevState) => {
       return [...prevState, "SKIPPED"];
     });
-  }, [artistIsCorrect, quizData, setTimerIsFinished, setUserResponse, trackIsCorrect]);
+  }, [
+    artistIsCorrect,
+    quizData,
+    setTimerIsFinished,
+    setUserResponse,
+    trackIsCorrect,
+  ]);
 
   return (
     <>
