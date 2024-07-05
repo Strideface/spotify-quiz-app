@@ -105,54 +105,55 @@ export default function AnswerSelection({
                 id: item.id,
               })
             );
-            console.log(options)
-            // if the artist selected in the artist search bar matches the artist in the currently playing track
-            if (
-              quizData.current.quizTracks[activeTrackIndex.current].artist[0]
-                .id === selectedValue.artist.id
-            ) {
-              // then, if the currently playing track by that artist is not in the list of top tracks being returned, add it.
-              // so that the user has the possibility of selecting the right answer (top tracks won't neccessarily contain the track currently playing)
+            // for every artist credited to the current track, because some tracks have many artists
+            for (let artist of quizData.current.quizTracks[
+              activeTrackIndex.current
+            ].artist) {
+              // if the artist selected in the artist search bar matches the artist/s in the currently playing track
+              if (artist.id === selectedValue.artist.id) {
+                // then, if the currently playing track by that artist is not in the list of top tracks being returned, add it.
+                // so that the user has the possibility of selecting the right answer (top tracks won't neccessarily contain the track currently playing)
 
-              let idMatch = options.filter(
-                (track) =>
-                  track.id ===
-                  quizData.current.quizTracks[activeTrackIndex.current].track.id
-              );
-              if (idMatch.length === 0) {
-                options.push({
-                  label:
-                    quizData.current.quizTracks[activeTrackIndex.current].track
-                      .name,
-                  value:
-                    quizData.current.quizTracks[activeTrackIndex.current].track
-                      .name,
-                  id: quizData.current.quizTracks[activeTrackIndex.current]
-                    .track.id,
-                });
-              }
-              // also check if there is more than one track with the same name and remove the one that does not match the current track ID
-              // so that the user does not select the track that does not match the current track ID (i.e. remove duplicates)
-              let trackNameMatch = options.filter(
-                (track) =>
-                  track.value.toLowerCase() ===
-                  quizData.current.quizTracks[
-                    activeTrackIndex.current
-                  ].track.name.toLowerCase()
-              );
-              console.log(trackNameMatch)
-              // options should already contain the current track at this point so more than 1 match means duplicates
-              if (trackNameMatch.length > 1) {
-                let duplicates = trackNameMatch.filter(
+                let idMatch = options.filter(
                   (track) =>
-                    track.id !==
+                    track.id ===
                     quizData.current.quizTracks[activeTrackIndex.current].track
                       .id
                 );
-                for (let track of duplicates) {
-                  let itemIndex = options.indexOf(track);
-                  options.splice(itemIndex, 1);
+                if (idMatch.length === 0) {
+                  options.push({
+                    label:
+                      quizData.current.quizTracks[activeTrackIndex.current]
+                        .track.name,
+                    value:
+                      quizData.current.quizTracks[activeTrackIndex.current]
+                        .track.name,
+                    id: quizData.current.quizTracks[activeTrackIndex.current]
+                      .track.id,
+                  });
                 }
+              }
+            }
+
+            // also check if there is now more than one track with the same name in options and remove the one that does not match the current track ID
+            // so that the user does not select the track that does not match the current track ID (i.e. remove duplicates)
+            let trackNameMatch = options.filter(
+              (track) =>
+                track.value.toLowerCase() ===
+                quizData.current.quizTracks[
+                  activeTrackIndex.current
+                ].track.name.toLowerCase()
+            );
+            // options should already contain the current track at this point so more than 1 match means duplicates
+            if (trackNameMatch.length > 1) {
+              let duplicates = trackNameMatch.filter(
+                (track) =>
+                  track.id !==
+                  quizData.current.quizTracks[activeTrackIndex.current].track.id
+              );
+              for (let track of duplicates) {
+                let itemIndex = options.indexOf(track);
+                options.splice(itemIndex, 1);
               }
             }
 
@@ -184,18 +185,37 @@ export default function AnswerSelection({
   };
 
   const handleSubmitAnswer = () => {
-    console.log(selectedValue);
-    if (
-      selectedValue.artist.id ===
-      quizData.current.quizTracks[activeTrackIndex.current].artist[0].id
-    ) {
-      artistIsCorrect.current = true;
-      quizData.current.quizResults.totalPoints += 1;
-      quizData.current.quizResults.totalCorrectArtists += 1;
-    } else {
-      artistIsCorrect.current = false;
+    // this logic marks the answer
+    // May be more than one artist for track so loop through and check if answer matches any
+    for (let artist of quizData.current.quizTracks[activeTrackIndex.current]
+      .artist) {
+      if (selectedValue.artist.id === artist.id) {
+        artistIsCorrect.current = true;
+        quizData.current.quizResults.totalPoints += 1;
+        quizData.current.quizResults.totalCorrectArtists += 1;
+        // also mutate the artist array so that the selected artist appears in the first index (if more than one arist and that's not the case already)
+        // this is because results modal in Quiz displays artist in the first index.
+        if (
+          selectedValue.artist.id !==
+          quizData.current.quizTracks[activeTrackIndex.current].artist[0].id
+        ) {
+          let itemIndex =
+            quizData.current.quizTracks[
+              activeTrackIndex.current
+            ].artist.indexOf(artist);
+          quizData.current.quizTracks[activeTrackIndex.current].artist.splice(
+            itemIndex,
+            1
+          );
+          quizData.current.quizTracks[activeTrackIndex.current].artist.unshift(
+            artist
+          );
+        }
+      } else {
+        artistIsCorrect.current = false;
+      }
     }
-
+    // mark track
     if (
       selectedValue.track.id ===
       quizData.current.quizTracks[activeTrackIndex.current].track.id

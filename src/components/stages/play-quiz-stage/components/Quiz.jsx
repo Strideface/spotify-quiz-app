@@ -85,7 +85,6 @@ export default function Quiz({ inPlay }) {
       }));
     } else {
       setTimerIsFinished(false);
-      console.log("setTimerIsFinished(false) from quiz handleModalOnClick")
     }
   };
 
@@ -135,12 +134,17 @@ export default function Quiz({ inPlay }) {
           <>
             <div className=" flex p-10 justify-center space-y-5">
               {/* show current track number as long as there's tracks left */}
-              {activeTrackIndex.current + 1 <= quizData.current?.quizTracks?.length && <h2>Track No: {activeTrackIndex.current + 1}</h2>}
+              {activeTrackIndex.current + 1 <=
+                quizData.current?.quizTracks?.length && (
+                <h2>Track No: {activeTrackIndex.current + 1}</h2>
+              )}
               {/* only render timer if it's not on easy mode and if the quiz is in play with time on the clock */}
               {quizData.current.difficulty !== "easy" &&
                 (!timerIsFinished ? (
                   <CountdownTimer
-                    maxTimeLimit={(quizData.current.difficulty === "medium" ? 60 : 30)}
+                    maxTimeLimit={
+                      quizData.current.difficulty === "medium" ? 60 : 30
+                    }
                     /* maxTimeLimit changes depending if difficulty is medium or hard. Configured in this ternary statement */
                     setTimerIsFinished={setTimerIsFinished}
                     handleTimerIsFinished={handleTimerIsFinished}
