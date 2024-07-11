@@ -26,7 +26,6 @@ export default function Root() {
     playlistTotalTracks: null,
     quizTotalTracks: null,
     quizTracks: null,
-    quizTracksUri: null,
     quizResults: {
       totalPoints: 0,
       totalCorrectArtists: 0,

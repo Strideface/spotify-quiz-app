@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useOutletContext } from "react-router-dom";
 import { fetchPlaylistTracks } from "../../../../util/spotify-api";
 import { useQuery } from "@tanstack/react-query";
+import { shuffleArray } from "../../../../util/util";
 import LoadingIndicator from "../../../LoadingIndicator";
 import AnswerSelection from "./AnswerSelection";
 import PlayerControl from "./player/PlayerControl";
@@ -45,16 +46,16 @@ export default function Quiz({ inPlay, setTracksReady }) {
   // get quiz tracks result from fetchPlaylistTracks once available
   useEffect(() => {
     if (playlistTracksData) {
-      // SHUFFLE THE ORDER OF THE TRACKS
-      quizData.current.quizTracks = playlistTracksData.quizTracks;
-      quizData.current.quizTracksUri = playlistTracksData.quizTracksUri;
+      // shuffle order of tracks before assignment
+      shuffleArray(playlistTracksData);
+      quizData.current.quizTracks = playlistTracksData;
       console.log(quizData.current);
       // inform parent component that quiz can be started.
       setTracksReady(true);
     }
   }, [playlistTracksData, quizData, setTracksReady]);
 
-  // inPlay will only change once, when user closes modal in CustomQuiz. Set timer when inPlay changes.
+  // inPlay will only change once, when user closes modal in the parent component. Set timer when inPlay changes.
   useEffect(() => {
     if (inPlay) {
       setTimerIsFinished(false);

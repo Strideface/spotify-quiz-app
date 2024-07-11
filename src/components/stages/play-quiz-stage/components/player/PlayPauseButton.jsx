@@ -23,10 +23,10 @@ export default function PlayPauseButton({
   const handlePlayOnClick = async () => {
     try {
       await resumePlayback(
-        quizData.current.quizTracksUri &&
-          quizData.current.quizTracksUri[activeTrackIndex.current],
+        quizData.current.quizTracks &&
+          quizData.current.quizTracks[activeTrackIndex.current].track.uri,
           // resumeFromStart param true if track finished. This is to handle tracks shorter than their full lentgh 
-          // i.e. when progressMax is configured to a custom length. Effectively repeating the track.
+          // i.e. when progressMax is configured to a custom length (at time of writing, such as in medium or hard mode). Effectively repeating the track.
         (progressValue >= progressMax ? true : false)
       );
       if (progressValue >= progressMax) {

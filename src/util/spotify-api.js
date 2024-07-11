@@ -248,6 +248,8 @@ export async function fetchSearchedItems(searchTerm, market, type, limit) {
 }
 
 export async function fetchPlaylistTracks(playlistTracksHref, market, limit) {
+  // CREATE AN ALGORITHM TO ENSURE YOU GET TRACKS FROM A RANDOM POINT IN THE PLAYLIST, WHEN LIMIT IS LESS THAN PLAYLIST TRACK TOTAL.
+  // OTHERWISE, COULD GET A LOT OF TRACKS FROM ONE ARTIST IF OFFSET IS ALWAYS FROM THE START.
   let accessToken = await getLocalAccessToken();
 
   const queryParams = new URLSearchParams({
@@ -281,11 +283,9 @@ export async function fetchPlaylistTracks(playlistTracksHref, market, limit) {
     let responseJson = await response.json();
 
     playlistTracks.push(responseJson);
-    console.log(playlistTracks);
 
     // record how many tracks left to get (Irrelevant if limit param is less than 100).
     remainingLimit = remainingLimit - 100;
-    console.log(`remainig limit = ${remainingLimit}`);
 
     // get next batch of tracks if 'next' is not 'null', the initial limit is more than 100, and we haven't reached the final fetch yet.
     if (responseJson.next && limit >= 100 && !finalLimit) {
@@ -297,19 +297,18 @@ export async function fetchPlaylistTracks(playlistTracksHref, market, limit) {
       // determines whether this is the last fetch
       if (remainingLimit < 100) {
         finalLimit = remainingLimit;
-        console.log(`finalLimit = ${finalLimit}`);
         queryParams.set("limit", finalLimit);
       }
     } else {
       getNext = false;
     }
   }
-  // return an object with arrays of the track object details. Each Quiz track item will correspond to each track URI.
+  // return an 
 
-  let quizTracksData = { quizTracks: [], quizTracksUri: [] };
+  const quizTracks = []
 
   for (let playlistTracksObj of playlistTracks) {
-    quizTracksData.quizTracks.push(
+    quizTracks.push(
       ...playlistTracksObj.items.map((item) => ({
         artist: item.track.artists,
         album: {
@@ -321,6 +320,7 @@ export async function fetchPlaylistTracks(playlistTracksHref, market, limit) {
           name: item.track.name,
           href: item.track.href,
           id: item.track.id,
+          uri: item.track.uri,
           isPlayable: item.track.is_playable,
           preview: item.track.preview_url,
           duration: item.track.duration_ms,
@@ -329,13 +329,7 @@ export async function fetchPlaylistTracks(playlistTracksHref, market, limit) {
     );
   }
 
-  for (let playlistTracksObj of playlistTracks) {
-    quizTracksData.quizTracksUri.push(
-      ...playlistTracksObj.items.map((item) => item.track.uri)
-    );
-  }
-
-  return quizTracksData;
+  return quizTracks;
 }
 
 export async function fetchArtistTopTracks(id, market) {

@@ -6,7 +6,7 @@ export default function Results() {
 
   return (
     <div className=" flex flex-col justify-center space-y-2 p-10">
-        <p>Total Points Scored: {quizData.current.quizResults.totalPoints}</p>
+        <p>Total Points Scored: {quizData.current.quizResults.totalPoints} / {quizData.current.quizTotalTracks * 2}</p>
         <p>Total Correct Artists: {quizData.current.quizResults.totalCorrectArtists}</p>
         <p>Total Correct Tracks: {quizData.current.quizResults.totalCorrectTracks}</p>
         <p>Total Skiped: {quizData.current.quizResults.totalSkipped}</p>

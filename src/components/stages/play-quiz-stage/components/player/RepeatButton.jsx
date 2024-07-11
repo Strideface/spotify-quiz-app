@@ -17,8 +17,8 @@ export default function RepeatButton({
   const handleRepeatOnClick = async () => {
     try {
       await resumePlayback(
-        quizData.current.quizTracksUri &&
-          quizData.current.quizTracksUri[activeTrackIndex.current],
+        quizData.current.quizTracks &&
+          quizData.current.quizTracks[activeTrackIndex.current].track.uri,
         true
       );
       setProgressValue(0);
