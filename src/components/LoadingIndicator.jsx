@@ -1,7 +1,7 @@
-export default function LoadingIndicator() {
-    return (
-      <div >
-        <p>Loading...</p>
-      </div>
-    );
-  }
+export default function LoadingIndicator({ loadingMessage }) {
+  return (
+    <div>
+      <p>{loadingMessage ?  loadingMessage  : "Loading..."}</p>
+    </div>
+  );
+}

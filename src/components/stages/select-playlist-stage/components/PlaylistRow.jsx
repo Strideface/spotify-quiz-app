@@ -1,6 +1,6 @@
 import PlaylistCard from "./PlaylistCard";
 
-export default function PlaylistRow({ playlistData }) {
+export default function PlaylistRow({ playlistData, setPlaylistSelected }) {
   return (
     <div className=" flex flex-nowrap overflow-auto ">
       {playlistData.map((item) => (
@@ -10,6 +10,7 @@ export default function PlaylistRow({ playlistData }) {
           playlistTracksHref={item.tracks.href}
           totalTracks={item.tracks.total}
           image={item.images[0]}
+          setPlaylistSelected={setPlaylistSelected}
         />
       ))}
     </div>

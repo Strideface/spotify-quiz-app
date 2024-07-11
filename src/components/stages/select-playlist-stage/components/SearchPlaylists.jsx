@@ -7,7 +7,7 @@ import { fetchSearchedItems } from "../../../../util/spotify-api";
 import LoadingIndicator from "../../../LoadingIndicator";
 import { useOutletContext } from "react-router-dom";
 
-export default function SearchPlaylists() {
+export default function SearchPlaylists({ setPlaylistSelected }) {
   const [searchTerm, setSearchTerm] = useState();
   const { quizData } = useOutletContext();
 
@@ -19,7 +19,12 @@ export default function SearchPlaylists() {
     refetch: searchedItemsRefetch,
   } = useQuery({
     queryFn: () =>
-      fetchSearchedItems(searchTerm, quizData.current.userDetails.country, "playlist", 10),
+      fetchSearchedItems(
+        searchTerm,
+        quizData.current.userDetails.country,
+        "playlist",
+        10
+      ),
     queryKey: ["fetchSearchedPlaylistItems", { search: searchTerm }], // cache each unique search term
     refetchOnWindowFocus: false,
     enabled: searchTerm !== undefined, // enable when a searchTerm has a value so that caching queries work
@@ -46,7 +51,10 @@ export default function SearchPlaylists() {
       <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       {searchedPlaylistIsLoading && <LoadingIndicator />}
       {searchedPlaylistData && (
-        <PlaylistRow playlistData={searchedPlaylistData} />
+        <PlaylistRow
+          playlistData={searchedPlaylistData}
+          setPlaylistSelected={setPlaylistSelected}
+        />
       )}
       {searchedPlaylistIsError && <p>Error: {searchedPlaylistError.message}</p>}
     </>

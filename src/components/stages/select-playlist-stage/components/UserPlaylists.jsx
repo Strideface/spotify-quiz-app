@@ -4,7 +4,7 @@ import LoadingIndicator from "../../../LoadingIndicator";
 import { fetchUserPlaylists } from "../../../../util/spotify-api";
 import PlaylistRow from "./PlaylistRow";
 
-export default function UserPlaylists() {
+export default function UserPlaylists({ setPlaylistSelected }) {
   const {
     data: userPlaylistData,
     error: userPlaylistError,
@@ -32,7 +32,10 @@ export default function UserPlaylists() {
         <div className=" flex p-10 justify-center">
           <h1>Your Playlists</h1>
         </div>
-        <PlaylistRow playlistData={userPlaylistData} />
+        <PlaylistRow
+          playlistData={userPlaylistData}
+          setPlaylistSelected={setPlaylistSelected}
+        />
       </>
     );
   }

@@ -5,15 +5,14 @@ export default function PlaylistCard({
   playlistTracksHref,
   totalTracks,
   image,
+  setPlaylistSelected
 }) {
-  const { setShowModal, quizData } = useOutletContext();
+  const { quizData } = useOutletContext();
 
   const handleOnClick = (playlistTracksHref) => {
     quizData.current.playlistTracksHref = playlistTracksHref;
-    setShowModal((prevState) => ({
-      ...prevState,
-      selectDifficultyModal: true,
-    }));
+    quizData.current.playlistTotalTracks = totalTracks;
+    setPlaylistSelected(true)
   };
 
   return (

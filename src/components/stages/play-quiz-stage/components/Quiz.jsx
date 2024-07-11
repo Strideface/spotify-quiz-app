@@ -8,7 +8,7 @@ import PlayerControl from "./player/PlayerControl";
 import Modal from "../../../Modal";
 import CountdownTimer from "./CountdownTimer";
 
-export default function Quiz({ inPlay }) {
+export default function Quiz({ inPlay, setTracksReady }) {
   const activeTrackIndex = useRef();
   const [userResponse, setUserResponse] = useState([]);
   const [timerIsFinished, setTimerIsFinished] = useState(true);
@@ -29,7 +29,8 @@ export default function Quiz({ inPlay }) {
     queryFn: () =>
       fetchPlaylistTracks(
         quizData.current.playlistTracksHref,
-        quizData.current.userDetails.country
+        quizData.current.userDetails.country,
+        quizData.current.quizTotalTracks,
       ),
     queryKey: [
       "fetchPlaylistTracks",
@@ -44,11 +45,14 @@ export default function Quiz({ inPlay }) {
   // get quiz tracks result from fetchPlaylistTracks once available
   useEffect(() => {
     if (playlistTracksData) {
+      // SHUFFLE THE ORDER OF THE TRACKS
       quizData.current.quizTracks = playlistTracksData.quizTracks;
       quizData.current.quizTracksUri = playlistTracksData.quizTracksUri;
       console.log(quizData.current);
+      // inform parent component that quiz can be started.
+      setTracksReady(true);
     }
-  }, [playlistTracksData, quizData]);
+  }, [playlistTracksData, quizData, setTracksReady]);
 
   // inPlay will only change once, when user closes modal in CustomQuiz. Set timer when inPlay changes.
   useEffect(() => {

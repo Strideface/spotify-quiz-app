@@ -15,11 +15,6 @@ export default function Root() {
   });
   // to control what the user sees on the app, e.g. sign in button
   const [isAuthenticated, setIsAuthenticated] = useState(checkAuth());
-  // to control if a modal is shown or hidden. As there will be more than one modal in the app, add a prop for each modal instance.
-  // specific modal can then be set in whichever component it is needed and advoids prop drilling.
-  const [showModal, setShowModal] = useState({
-    selectDifficultyModal: false,
-  });
   
   // IMPORTANT: note the 'expectations' of using useRef in this way, from React doc:
   // 'Do not write or read ref.current during rendering...You can read or write refs from event handlers or effects'
@@ -28,6 +23,8 @@ export default function Root() {
     difficulty: null,
     gameId: null,
     playlistTracksHref: null,
+    playlistTotalTracks: null,
+    quizTotalTracks: null,
     quizTracks: null,
     quizTracksUri: null,
     quizResults: {
@@ -53,8 +50,6 @@ export default function Root() {
           setQuizStage,
           isAuthenticated,
           setIsAuthenticated,
-          showModal,
-          setShowModal,
           quizData,
         }}
       />

@@ -2,6 +2,7 @@ import { useRef, useEffect, useState } from "react";
 import Quiz from "./Quiz";
 import Modal from "../../../Modal";
 import { useOutletContext } from "react-router-dom";
+import LoadingIndicator from "../../../LoadingIndicator";
 
 // present an introductory modal when component is rendered initially that explains how to play.
 // Rules change depending on selected difficulty
@@ -11,11 +12,13 @@ export default function CustomQuiz() {
   const { quizData } = useOutletContext();
   const rulesModal = useRef();
   const [inPlay, setInPlay] = useState(false);
+  // eslint-disable-next-line no-unused-vars
+  const [tracksReady, setTracksReady] = useState(false);
 
   // only open this modal upon initialization, once
   useEffect(() => {
     rulesModal.current.open();
-  },[]);
+  }, []);
 
   const easy = (
     <ul>
@@ -79,12 +82,16 @@ export default function CustomQuiz() {
         </div>
         <div className="flex flex-col justify-center space-x-2">
           <p>The quiz will start as soon as you hit 'Play'!</p>
-          <button type="button" onClick={handleOnClick}>
-            Play
-          </button>
+          {tracksReady ? (
+            <button type="button" onClick={handleOnClick}>
+              Play
+            </button>
+          ) : (
+            <LoadingIndicator loadingMessage="Preparing Tracks..."/>
+          )}
         </div>
       </Modal>
-      <Quiz inPlay={inPlay} />
+      <Quiz inPlay={inPlay} setTracksReady={setTracksReady}/>
     </>
   );
 }

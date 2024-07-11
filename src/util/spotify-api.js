@@ -199,10 +199,8 @@ export async function fetchUserPlaylists() {
     for (let item of playlistsObj.items) {
       if (item.tracks.total > 0) {
         userPlaylistItems.push(item);
+      }
     }
-    
-    }
-    
   }
 
   return userPlaylistItems;
@@ -249,19 +247,21 @@ export async function fetchSearchedItems(searchTerm, market, type, limit) {
   return searchResultsItems;
 }
 
-export async function fetchPlaylistTracks(playlistTracksHref, market) {
+export async function fetchPlaylistTracks(playlistTracksHref, market, limit) {
   let accessToken = await getLocalAccessToken();
 
   const queryParams = new URLSearchParams({
-    limit: 100, // max limit allowed
+    // if limit param is less than 100 then use that value, otherwise get 100 at a time until limit is reached.
+    limit: limit < 100 ? limit : 100, // 100 is max limit allowed per fetch
     offset: 0,
     market: market,
   });
 
-  // following while loop handles cases where a playlist has more than 100 tracks
+  // while loop handles cases where a playlist (or the limit set) has more than 100 tracks
   const playlistTracks = [];
-
   let getNext = true;
+  let finalLimit = null;
+  let remainingLimit = limit;
 
   while (getNext) {
     const response = await fetch(playlistTracksHref + "?" + queryParams, {
@@ -281,42 +281,57 @@ export async function fetchPlaylistTracks(playlistTracksHref, market) {
     let responseJson = await response.json();
 
     playlistTracks.push(responseJson);
-    // get next batch of tracks if 'next' is not 'null'
-    if (responseJson.next) {
+    console.log(playlistTracks);
+
+    // record how many tracks left to get (Irrelevant if limit param is less than 100).
+    remainingLimit = remainingLimit - 100;
+    console.log(`remainig limit = ${remainingLimit}`);
+
+    // get next batch of tracks if 'next' is not 'null', the initial limit is more than 100, and we haven't reached the final fetch yet.
+    if (responseJson.next && limit >= 100 && !finalLimit) {
       let newOffset =
         parseInt(queryParams.get("offset")) +
         parseInt(queryParams.get("limit"));
       queryParams.set("offset", newOffset);
+
+      // determines whether this is the last fetch
+      if (remainingLimit < 100) {
+        finalLimit = remainingLimit;
+        console.log(`finalLimit = ${finalLimit}`);
+        queryParams.set("limit", finalLimit);
+      }
     } else {
       getNext = false;
     }
   }
-  // return an array of track objects
+  // return an object with arrays of the track object details. Each Quiz track item will correspond to each track URI.
 
-  let quizTracksData = { quizTracks: null, quizTracksUri: null };
+  let quizTracksData = { quizTracks: [], quizTracksUri: [] };
 
   for (let playlistTracksObj of playlistTracks) {
-    quizTracksData.quizTracks = playlistTracksObj.items.map((item) => ({
-      artist: item.track.artists,
-      album: {
-        name: item.track.album.name,
-        href: item.track.album.href,
-        images: item.track.album.images,
-      },
-      track: {
-        name: item.track.name,
-        href: item.track.href,
-        id: item.track.id,
-        isPlayable: item.track.is_playable,
-        preview: item.track.preview_url,
-        duration: item.track.duration_ms,
-      },
-    }));
+    quizTracksData.quizTracks.push(
+      ...playlistTracksObj.items.map((item) => ({
+        artist: item.track.artists,
+        album: {
+          name: item.track.album.name,
+          href: item.track.album.href,
+          images: item.track.album.images,
+        },
+        track: {
+          name: item.track.name,
+          href: item.track.href,
+          id: item.track.id,
+          isPlayable: item.track.is_playable,
+          preview: item.track.preview_url,
+          duration: item.track.duration_ms,
+        },
+      }))
+    );
   }
 
   for (let playlistTracksObj of playlistTracks) {
-    quizTracksData.quizTracksUri = playlistTracksObj.items.map(
-      (item) => item.track.uri
+    quizTracksData.quizTracksUri.push(
+      ...playlistTracksObj.items.map((item) => item.track.uri)
     );
   }
 
