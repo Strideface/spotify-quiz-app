@@ -1,6 +1,8 @@
+const {nextui} = require("@nextui-org/react");
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./src/**/*.{js,jsx,ts,tsx}"],
+  content: ["./node_modules/@nextui-org/theme/dist/components/(modal| popover).js",],
   theme: {
     extend: {
       colors: {
@@ -18,5 +20,6 @@ module.exports = {
       "playlist-card": "300px",
     },
   },
-  plugins: [],
+  darkMode: "class",
+  plugins: [nextui()],
 };

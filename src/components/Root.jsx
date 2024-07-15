@@ -15,7 +15,7 @@ export default function Root() {
   });
   // to control what the user sees on the app, e.g. sign in button
   const [isAuthenticated, setIsAuthenticated] = useState(checkAuth());
-  
+
   // IMPORTANT: note the 'expectations' of using useRef in this way, from React doc:
   // 'Do not write or read ref.current during rendering...You can read or write refs from event handlers or effects'
 
@@ -38,11 +38,10 @@ export default function Root() {
       country: null,
     },
   });
-  
 
   return (
     <>
-      <Header quizStage={quizStage}/>
+      <Header quizStage={quizStage} />
       <Outlet
         context={{
           quizStage,
@@ -52,6 +51,7 @@ export default function Root() {
           quizData,
         }}
       />
+
       {/* Outlet acts like the children prop and renders any child elements of this route */}
     </>
   );
