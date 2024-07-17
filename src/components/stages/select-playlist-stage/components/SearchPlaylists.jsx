@@ -6,6 +6,7 @@ import SearchBar from "./SearchBar";
 import { fetchSearchedItems } from "../../../../util/spotify-api";
 import LoadingIndicator from "../../../LoadingIndicator";
 import { useOutletContext } from "react-router-dom";
+import { Spinner } from "@nextui-org/spinner";
 
 export default function SearchPlaylists({ setPlaylistSelected }) {
   const [searchTerm, setSearchTerm] = useState();
@@ -49,7 +50,7 @@ export default function SearchPlaylists({ setPlaylistSelected }) {
         <h1>Search Playlists</h1>
       </div>
       <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-      {searchedPlaylistIsLoading && <LoadingIndicator />}
+      {searchedPlaylistIsLoading && <Spinner />}
       {searchedPlaylistData && (
         <PlaylistRow
           playlistData={searchedPlaylistData}

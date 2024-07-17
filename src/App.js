@@ -1,4 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { NextUIProvider } from "@nextui-org/system";
 
 import Root from "./components/Root";
 import MainPage from "./pages/MainPage";
@@ -23,7 +24,11 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
+      <NextUIProvider>
+        <main className="light text-foreground bg-background">
+          <RouterProvider router={router} />
+        </main>
+      </NextUIProvider>
     </QueryClientProvider>
   );
 }
