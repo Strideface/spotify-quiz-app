@@ -1,6 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-
-import LoadingIndicator from "../../../LoadingIndicator";
 import { fetchUserPlaylists } from "../../../../util/spotify-api";
 import PlaylistRow from "./PlaylistRow";
 import { Spinner } from "@nextui-org/spinner";
@@ -20,7 +18,7 @@ export default function UserPlaylists({ setPlaylistSelected }) {
   });
 
   if (userPlaylistIsLoading) {
-    return <Spinner />;
+    return <Spinner color="success"/>;
   }
 
   if (userPlaylistIsError) {

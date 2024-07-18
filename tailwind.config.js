@@ -30,9 +30,9 @@ module.exports = {
   darkMode: "class",
   plugins: [
     nextui({
-      prefix: "nextui", // prefix for themes variables
+      prefix: "spotify", // prefix for themes variables
       addCommonColors: false, // override common colors (e.g. "blue", "green", "pink").
-      defaultTheme: "light", // default theme from the themes object
+      defaultTheme: "spotify", // default theme from the themes object
       defaultExtendTheme: "light", // default theme to extend on custom themes
       layout: {}, // common layout tokens (applied to all themes)
       themes: {
@@ -47,7 +47,15 @@ module.exports = {
         // ... custom themes
         spotify: {
           layout: {},
-          colors: {},
+          colors: {
+            background: "#FFFFFF", // "spotify-white"
+            foreground: "#191414", // "spotify-black"
+            danger: 
+            {
+              DEFAULT: "#FFFFFF", // "spotify-white"
+              foreground: "#e01616", // dark red  
+            },
+          },
         },
       },
     }),

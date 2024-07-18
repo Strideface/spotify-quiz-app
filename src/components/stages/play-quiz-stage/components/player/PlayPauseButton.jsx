@@ -117,10 +117,11 @@ export default function PlayPauseButton({
     <>
       {isPlay ? (
         pauseButton
-      ) : (
+      ) : error ? (
         <Alert trigger={playButton} content={error.message} color="danger" />
+      ) : (
+        playButton
       )}
-      {/* {error && <p>{error.message}</p>} */}
     </>
   );
 }

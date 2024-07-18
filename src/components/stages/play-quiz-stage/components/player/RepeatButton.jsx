@@ -58,9 +58,9 @@ export default function RepeatButton({
     </button>
   );
 
-  return (
-    <>
-      <Alert trigger={repeatButton} content={error.message} color="danger" />
-    </>
+  return error ? (
+    <Alert trigger={repeatButton} content={error.message} color="danger" />
+  ) : (
+    repeatButton
   );
 }
