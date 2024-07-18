@@ -407,7 +407,7 @@ export async function resumePlayback(trackUri, resumeFromStart) {
 
   if (!playbackStateResults) {
     const error = new Error(
-      "You do not have an active device. Please play content from Spotify on your preffered device and try again"
+      "You do not have an active device. Please play content from Spotify on your preferred device and try again"
     );
     throw error;
   }

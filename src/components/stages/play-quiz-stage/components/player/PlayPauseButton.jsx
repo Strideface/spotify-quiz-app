@@ -2,6 +2,7 @@
 import { useEffect, useRef } from "react";
 import { resumePlayback, pausePlayback } from "../../../../../util/spotify-api";
 import { useOutletContext } from "react-router-dom";
+import Alert from "../../../../Alert";
 
 export default function PlayPauseButton({
   isPlay,
@@ -25,9 +26,9 @@ export default function PlayPauseButton({
       await resumePlayback(
         quizData.current.quizTracks &&
           quizData.current.quizTracks[activeTrackIndex.current].track.uri,
-          // resumeFromStart param true if track finished. This is to handle tracks shorter than their full lentgh 
-          // i.e. when progressMax is configured to a custom length (at time of writing, such as in medium or hard mode). Effectively repeating the track.
-        (progressValue >= progressMax ? true : false)
+        // resumeFromStart param true if track finished. This is to handle tracks shorter than their full lentgh
+        // i.e. when progressMax is configured to a custom length (at time of writing, such as in medium or hard mode). Effectively repeating the track.
+        progressValue >= progressMax ? true : false
       );
       if (progressValue >= progressMax) {
         setProgressValue(0);
@@ -65,7 +66,7 @@ export default function PlayPauseButton({
   }, [timerIsFinished]);
 
   // this side effect pauses the track after progressMax is reached, if difficulty is set to medium or hard.
-  // on these difficulty settings, a track should only be played for a limited amount of time 
+  // on these difficulty settings, a track should only be played for a limited amount of time
   // progressMax should reflect this custom length
   useEffect(() => {
     if (
@@ -114,8 +115,13 @@ export default function PlayPauseButton({
 
   return (
     <>
-      {isPlay ? pauseButton : playButton}
-      {error && <p>{error.message}</p>}
+      {isPlay ? (
+        pauseButton
+      ) : error ? (
+        <Alert trigger={playButton} content={error.message} color="danger" />
+      ) : (
+        playButton
+      )}
     </>
   );
 }

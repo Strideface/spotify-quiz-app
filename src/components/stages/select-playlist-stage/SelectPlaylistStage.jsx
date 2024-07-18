@@ -65,7 +65,7 @@ export default function SelectPlaylistStage() {
         <div className=" flex p-5 justify-center space-y-2">
           <form method="dialog" onSubmit={handleOnSubmit}>
             <div>
-              <label for="quantity">Number of tracks : </label>
+              <label htmlFor="quantity">Number of tracks : </label>
               <input
                 ref={quantity}
                 type="number"
@@ -97,8 +97,8 @@ export default function SelectPlaylistStage() {
               type="radio"
               id="medium"
               name="difficulty"
-              value="medium"
-              checked="readOnly"
+              defaultValue="medium"
+              defaultChecked="readOnly"
             />
             <label htmlFor="medium">Medium</label>
             <br />
