@@ -25,7 +25,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <NextUIProvider>
-        <main className="light text-foreground bg-background">
+        <main className="spotify text-foreground bg-background">
           <RouterProvider router={router} />
         </main>
       </NextUIProvider>
