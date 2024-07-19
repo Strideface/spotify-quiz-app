@@ -1,12 +1,15 @@
 const { nextui } = require("@nextui-org/theme");
 
+// useful reading:
+// concept of 'slots' to override styles - https://nextui.org/docs/customization/override-styles
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
     // Tailwind
     "./src/**/*.{js,jsx,ts,tsx}",
     // NextUI
-    "./node_modules/@nextui-org/theme/dist/components/(modal|popover|spinner).js",
+    "./node_modules/@nextui-org/theme/dist/components/(modal|popover|spinner|navbar).js",
   ],
   // Tailwind
   theme: {
@@ -46,7 +49,14 @@ module.exports = {
         },
         // ... custom themes
         spotify: {
-          layout: {},
+          layout: {
+            fontSize: {
+              tiny: "1rem", // text-tiny
+              small: "1.75rem", // text-small
+              medium: "2rem", // text-medium
+              large: "4rem", // text-large
+            },
+          },
           colors: {
             background: "#FFFFFF", // "spotify-white"
             foreground: "#191414", // "spotify-black"
@@ -55,6 +65,7 @@ module.exports = {
               DEFAULT: "#FFFFFF", // "spotify-white"
               foreground: "#e01616", // dark red  
             },
+            primary: "#1DB954", // "spotify-green"
           },
         },
       },

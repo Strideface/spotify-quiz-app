@@ -10,7 +10,7 @@ export default function SearchPlaylists({ setPlaylistSelected }) {
   const [searchTerm, setSearchTerm] = useState("");
   const { quizData } = useOutletContext();
 
-console.log(searchTerm.trim().length !== 0)
+  console.log(searchTerm.trim().length !== 0);
 
   const {
     data: searchedPlaylistData,
@@ -39,10 +39,9 @@ console.log(searchTerm.trim().length !== 0)
     // don't send a request if the searchTerm value contains an empty string ("  ")
     // e.g. user only presses space or tab. This would result in a 400 error response from Spotify API.
 
-      if (searchTerm.trim().length !== 0) {
-        searchedItemsRefetch();
-      }
-
+    if (searchTerm.trim().length !== 0) {
+      searchedItemsRefetch();
+    }
   }, [searchTerm, searchedItemsRefetch]);
 
   return (
@@ -51,7 +50,11 @@ console.log(searchTerm.trim().length !== 0)
         <h1>Search Playlists</h1>
       </div>
       <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-      {searchedPlaylistIsLoading && <Spinner color="success"/>}
+      {searchedPlaylistIsLoading && (
+        <div className=" flex p-10 justify-center">
+          <Spinner color="primary" />
+        </div>
+      )}
       {searchedPlaylistData && (
         <PlaylistRow
           playlistData={searchedPlaylistData}

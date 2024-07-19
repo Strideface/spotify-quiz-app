@@ -18,7 +18,11 @@ export default function UserPlaylists({ setPlaylistSelected }) {
   });
 
   if (userPlaylistIsLoading) {
-    return <Spinner color="success"/>;
+    return (
+      <div className=" flex p-10 justify-center">
+        <Spinner color="primary" label="Getting your playlists..." labelColor="primary"/>
+      </div>
+    );
   }
 
   if (userPlaylistIsError) {
