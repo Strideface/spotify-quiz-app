@@ -12,17 +12,20 @@ export default function NavBar({ quizStage }) {
   return (
     <NextuiNavBar
       isBordered
-      height="12rem"
+      height="20rem"
       maxWidth="full"
-      classNames={{ base: " bg-spotify-black " }}
+      position="static"
+      classNames={{ base: " sm:h-48 bg-spotify-black py-6", wrapper: " flex-col sm:flex-row", brand: " flex-none" }}
     >
-      <NavbarBrand>
-        <img src={icon} alt="" className=" w-1/6 h-1/6" />
-      </NavbarBrand>
       <NavbarContent justify="center">
-        <h1 className=" text-spotify-green text-large">Spotify Quiz App</h1>
+      <NavbarBrand>
+        <img src={icon} alt="" className=" w-24 h-24" />
+      </NavbarBrand>
       </NavbarContent>
-      <NavbarContent className="hidden sm:flex gap-4" justify="end">
+      <NavbarContent justify="center">
+        <h1 className=" text-spotify-green text-5xl">Spotify Quiz App</h1>
+      </NavbarContent>
+      <NavbarContent className=" flex-col" justify="center">
         {/* Don't show the leaderboard link option if at the quiz stage of the app, as clicking away and returning causes errors*/}
         {quizStage && !quizStage.playQuizStage && (
           <NavbarItem>
@@ -36,6 +39,7 @@ export default function NavBar({ quizStage }) {
             <h2 className=" text-spotify-white">Main Page</h2>
           </RouterLink>
         </NavbarItem>
+
       </NavbarContent>
     </NextuiNavBar>
   );

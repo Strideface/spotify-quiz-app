@@ -13,6 +13,14 @@ module.exports = {
   ],
   // Tailwind
   theme: {
+    // default screen sizes
+    screens: {
+      'sm': '640px',
+      'md': '768px',
+      'lg': '1024px',
+      'xl': '1280px',
+      '2xl': '1536px',
+    },
     extend: {
       colors: {
         "spotify-green": "#1DB954",
@@ -51,10 +59,10 @@ module.exports = {
         spotify: {
           layout: {
             fontSize: {
-              tiny: "1rem", // text-tiny
-              small: "1.75rem", // text-small
-              medium: "2rem", // text-medium
-              large: "4rem", // text-large
+              tiny: "0.75rem", // text-tiny
+              small: "0.875rem", // text-small
+              medium: "1rem", // text-medium
+              large: "1.125rem", // text-large
             },
           },
           colors: {
