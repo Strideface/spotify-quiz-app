@@ -1,3 +1,5 @@
+import { Card, CardBody, CardHeader } from "@nextui-org/card";
+import { Divider } from "@nextui-org/divider";
 import { useOutletContext } from "react-router-dom";
 
 export default function GameTile({ title, description, gameId }) {
@@ -22,27 +24,49 @@ export default function GameTile({ title, description, gameId }) {
     }
   };
 
-  const authenticatedButton = (
-    <button className=" hover:bg-spotify-green" onClick={handleOnClick}>
-      <div className=" flex-auto border">
-        <h1>{title}</h1>
-        <p>{description}</p>
-      </div>
-    </button>
+  return (
+    <>
+      <Card
+        isPressable
+        onPress={handleOnClick}
+        isHoverable
+        isDisabled={!isAuthenticated}
+        shadow="none"
+        classNames={{
+          base: " bg-slate-200 hover:bg-background flex-auto border",
+          body: " text-center bg-primary hover:bg-spotify-green-2",
+          header: " justify-center text-2xl"
+        }}
+        className=" font-medium "
+      >
+        <CardHeader>{title}</CardHeader>
+        <Divider />
+        <CardBody>{description}</CardBody>
+      </Card>
+    </>
   );
 
-  const unauthenticatedButton = (
-    <button>
-      <div className=" flex-auto border">
-        <h1>{title}</h1>
-        <p>{description}</p>
-      </div>
-    </button>
-  );
+  // const authenticatedButton = (
+  //   <button className=" hover:bg-spotify-green" onClick={handleOnClick}>
+  //     <div className=" flex-auto border">
+  //       <h1>{title}</h1>
+  //       <p>{description}</p>
+  //     </div>
+  //   </button>
+  // );
 
-  if (isAuthenticated) {
-    return authenticatedButton;
-  } else {
-    return unauthenticatedButton;
-  }
+  // const unauthenticatedButton = (
+  //   <button>
+  //     <div className=" flex-auto border">
+  //       <h1>{title}</h1>
+  //       <p>{description}</p>
+  //     </div>
+  //   </button>
+  // );
+
+  // if (isAuthenticated) {
+  //   return authenticatedButton;
+  // } else {
+  //   return unauthenticatedButton;
+  // }
 }

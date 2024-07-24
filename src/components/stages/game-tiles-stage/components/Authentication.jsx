@@ -12,6 +12,7 @@ import {
   fetchAccessToken,
   fetchUserDetails,
 } from "../../../../util/spotify-api.js";
+import { Card, CardBody } from "@nextui-org/card";
 
 export default function Authentication() {
   // STATE
@@ -97,25 +98,34 @@ export default function Authentication() {
   }, [quizData, userData, userIsSuccess]);
 
   return (
-    <div>
-      {accessIsFetching && <p>Authenticating...</p>}
-      {accessIsError && <p>An error has occured: {accessError.message}</p>}
-      {/* only show auth error if it has a current value. Clears when auth is a success. */}
-      {authError.current && (
-        <p>
-          Error: {authError.current} - It looks like you did not give
-          authorization, or there was an error. Please try again.
-        </p>
-      )}
-      {/* show display name (if available - might be null) if authenticated else show sign in button */}
-      {isAuthenticated ? (
-        <p>
-          Let's Play {userIsLoading && "..."}
-          {userData?.display_name}
-        </p>
-      ) : (
-        <SignInButton />
-      )}
+    <div className=" flex justify-center pt-20 px-10">
+      <Card
+        fullWidth
+        classNames={{
+          base: " bg-foreground text-primary justify-center",
+          body: " text-center",
+        }}
+      >
+        <CardBody className=" font-medium text-lg gap-4">
+          {accessIsError && <p>An error has occured: {accessError.message}</p>}
+          {/* only show auth error if it has a current value. Clears when auth is a success. */}
+          {authError.current && (
+            <p>
+              It looks like you did not give authorization, or there was an
+              error. Please try again.
+            </p>
+          )}
+          {/* show display name (if available - might be null) if authenticated else show sign in button */}
+          {isAuthenticated ? (
+            <p>
+              Let's Play {userIsLoading && "..."}
+              {userData?.display_name}
+            </p>
+          ) : (
+            <SignInButton isLoading={accessIsFetching} />
+          )}
+        </CardBody>
+      </Card>
     </div>
   );
 }

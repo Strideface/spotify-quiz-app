@@ -9,21 +9,22 @@ module.exports = {
     // Tailwind
     "./src/**/*.{js,jsx,ts,tsx}",
     // NextUI
-    "./node_modules/@nextui-org/theme/dist/components/(modal|popover|spinner|navbar).js",
+    "./node_modules/@nextui-org/theme/dist/components/(modal|popover|spinner|navbar|button|card|divider).js",
   ],
   // Tailwind
   theme: {
     // default screen sizes
     screens: {
-      'sm': '640px',
-      'md': '768px',
-      'lg': '1024px',
-      'xl': '1280px',
-      '2xl': '1536px',
+      sm: "640px",
+      md: "768px",
+      lg: "1024px",
+      xl: "1280px",
+      "2xl": "1536px",
     },
     extend: {
       colors: {
         "spotify-green": "#1DB954",
+        "spotify-green-2": "#1ed760",
         "spotify-white": "#FFFFFF",
         "spotify-black": "#191414",
       },
@@ -56,6 +57,7 @@ module.exports = {
           colors: {}, // dark theme colors
         },
         // ... custom themes
+        // Spotify colour palatte: https://www.pinterest.co.uk/pin/spotify-colors-palette-hex-colors-1db954-1ed760-ffffff-191414-brand-original-color-codes-colors-palette--816699713652575026/
         spotify: {
           layout: {
             fontSize: {
@@ -68,12 +70,12 @@ module.exports = {
           colors: {
             background: "#FFFFFF", // "spotify-white"
             foreground: "#191414", // "spotify-black"
-            danger: 
-            {
+            danger: {
               DEFAULT: "#FFFFFF", // "spotify-white"
-              foreground: "#e01616", // dark red  
+              foreground: "#e01616", // dark red
             },
-            primary: "#1DB954", // "spotify-green"
+            primary: "#1DB954", // "spotify-green",
+            secondary: "#FFFFFF", // "spotify-white"
           },
         },
       },
