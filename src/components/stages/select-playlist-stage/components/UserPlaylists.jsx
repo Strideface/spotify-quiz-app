@@ -32,9 +32,9 @@ export default function UserPlaylists({ setPlaylistSelected }) {
   if (userPlaylistData) {
     return (
       <>
-        <div className=" flex p-10 justify-center">
+        {/* <div className=" flex p-10 justify-center">
           <h1>Your Playlists</h1>
-        </div>
+        </div> */}
         <PlaylistRow
           playlistData={userPlaylistData}
           setPlaylistSelected={setPlaylistSelected}

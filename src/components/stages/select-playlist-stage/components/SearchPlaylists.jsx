@@ -46,9 +46,9 @@ export default function SearchPlaylists({ setPlaylistSelected }) {
 
   return (
     <>
-      <div className=" flex p-10 justify-center">
+      {/* <div className=" flex p-10 justify-center">
         <h1>Search Playlists</h1>
-      </div>
+      </div> */}
       <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       {searchedPlaylistIsLoading && (
         <div className=" flex p-10 justify-center">

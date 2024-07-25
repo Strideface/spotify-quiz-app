@@ -118,8 +118,8 @@ export default function Authentication() {
           {/* show display name (if available - might be null) if authenticated else show sign in button */}
           {isAuthenticated ? (
             <p>
-              Let's Play {userIsLoading && "..."}
-              {userData?.display_name}
+              Let's Play{userIsLoading && "..."}
+              {", "+userData?.display_name+"!"}
             </p>
           ) : (
             <SignInButton isLoading={accessIsFetching} />

@@ -1,6 +1,7 @@
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { Divider } from "@nextui-org/divider";
 import { useOutletContext } from "react-router-dom";
+import { motion } from "framer-motion";
 
 export default function GameTile({ title, description, gameId }) {
   const { setQuizStage, isAuthenticated, quizData } = useOutletContext();
@@ -25,7 +26,11 @@ export default function GameTile({ title, description, gameId }) {
   };
 
   return (
-    <>
+    <motion.div
+      animate={{ y: 20 }}
+      transition={{ duration: 1 }}
+      whileHover={{ scale: 1.05 }}
+    >
       <Card
         isPressable
         onPress={handleOnClick}
@@ -35,15 +40,15 @@ export default function GameTile({ title, description, gameId }) {
         classNames={{
           base: " bg-slate-200 hover:bg-background flex-auto border",
           body: " text-center bg-primary hover:bg-spotify-green-2",
-          header: " justify-center text-2xl"
+          header: " justify-center text-2xl",
         }}
-        className=" font-medium "
+        className=" font-medium"
       >
         <CardHeader>{title}</CardHeader>
         <Divider />
         <CardBody>{description}</CardBody>
       </Card>
-    </>
+    </motion.div>
   );
 
   // const authenticatedButton = (

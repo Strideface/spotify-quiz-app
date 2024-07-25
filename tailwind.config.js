@@ -9,7 +9,7 @@ module.exports = {
     // Tailwind
     "./src/**/*.{js,jsx,ts,tsx}",
     // NextUI
-    "./node_modules/@nextui-org/theme/dist/components/(modal|popover|spinner|navbar|button|card|divider).js",
+    "./node_modules/@nextui-org/theme/dist/components/(modal|popover|spinner|navbar|button|card|divider|image|accordion|spacer|input).js",
   ],
   // Tailwind
   theme: {
@@ -28,14 +28,6 @@ module.exports = {
         "spotify-white": "#FFFFFF",
         "spotify-black": "#191414",
       },
-    },
-  },
-  extend: {
-    width: {
-      "playlist-card": "300px",
-    },
-    height: {
-      "playlist-card": "300px",
     },
   },
   // NextUI

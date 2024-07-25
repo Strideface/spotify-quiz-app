@@ -7,6 +7,7 @@ import {
   NavbarItem,
 } from "@nextui-org/navbar";
 import { useLocation } from "react-router-dom";
+
 import icon from "../images/Spotify_Icon_RGB_Green.png";
 
 export default function NavBar({ quizStage }) {
@@ -44,7 +45,7 @@ export default function NavBar({ quizStage }) {
         </NavbarBrand>
       </NavbarContent>
       <NavbarContent justify="center">
-        <h1 className=" text-spotify-green text-5xl text-center">Spotify Quiz App</h1>
+        <h1 className=" text-spotify-green text-5xl text-center font-semibold">Spotify Quiz App</h1>
       </NavbarContent>
       <NavbarContent className=" flex-col" justify="center">
         {/* Don't show the leaderboard link option if at the quiz stage of the app, as clicking away and returning causes errors*/}

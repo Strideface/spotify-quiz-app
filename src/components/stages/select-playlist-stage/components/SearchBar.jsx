@@ -1,3 +1,4 @@
+import { Input } from "@nextui-org/input";
 import { useRef } from "react";
 
 export default function SearchBar({ searchTerm, setSearchTerm }) {
@@ -15,19 +16,29 @@ export default function SearchBar({ searchTerm, setSearchTerm }) {
       lastChange.current = null;
       setSearchTerm(value);
     }, 2000);
-
   };
 
   return (
-    <div className=" flex justify-center">
-      <input
-        ref={searchBar}
-        type="search"
-        name="search-form"
-        id="search-form"
-        onChange={(e) => handleOnChange(e.target.value)}
-        placeholder={searchTerm ? searchTerm : "Search Spotify..."}
-      />
-    </div>
+    <Input
+      ref={searchBar}
+      type="search"
+      name="search-form"
+      id="search-form"
+      onChange={(e) => handleOnChange(e.target.value)}
+      placeholder={searchTerm ? searchTerm : "Search Spotify..."}
+      fullWidth={false}
+      radius="full"
+    />
+
+    // <div className=" flex justify-center">
+    //   <input
+    //     ref={searchBar}
+    //     type="search"
+    //     name="search-form"
+    //     id="search-form"
+    //     onChange={(e) => handleOnChange(e.target.value)}
+    //     placeholder={searchTerm ? searchTerm : "Search Spotify..."}
+    //   />
+    // </div>
   );
 }

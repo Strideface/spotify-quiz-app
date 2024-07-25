@@ -3,6 +3,7 @@ import SearchPlaylists from "./components/SearchPlaylists";
 import UserPlaylists from "./components/UserPlaylists";
 import Modal from "../../Modal";
 import { useEffect, useRef, useState } from "react";
+import { Accordion, AccordionItem } from "@nextui-org/accordion";
 
 export default function SelectPlaylistStage() {
   const { isAuthenticated, setQuizStage, quizData } = useOutletContext();
@@ -31,7 +32,7 @@ export default function SelectPlaylistStage() {
   const handleOnSubmit = (event) => {
     event.preventDefault(); // prevents form submission to server
     // assign selected total tracks for quiz
-    quizData.current.quizTotalTracks = quantity.current.value
+    quizData.current.quizTotalTracks = quantity.current.value;
     // assign selected difficulty level
     if (easy.current.checked) {
       quizData.current.difficulty = easy.current.value;
@@ -120,8 +121,22 @@ export default function SelectPlaylistStage() {
         </div>
       </Modal>
 
-      <SearchPlaylists setPlaylistSelected={setPlaylistSelected} />
-      <UserPlaylists setPlaylistSelected={setPlaylistSelected} />
+      <Accordion defaultExpandedKeys={["2"]} selectionMode="multiple">
+        <AccordionItem
+          key="1"
+          title="Search Playlists"
+          aria-label="Search Playlists"
+        >
+          <SearchPlaylists setPlaylistSelected={setPlaylistSelected} />
+        </AccordionItem>
+        <AccordionItem
+          key="2"
+          title="Your Playlists"
+          aria-label="Your Playlists"
+        >
+          <UserPlaylists setPlaylistSelected={setPlaylistSelected} />
+        </AccordionItem>
+      </Accordion>
     </>
   );
 }

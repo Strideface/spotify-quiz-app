@@ -1,8 +1,9 @@
+
 import PlaylistCard from "./PlaylistCard";
 
 export default function PlaylistRow({ playlistData, setPlaylistSelected }) {
   return (
-    <div className=" flex flex-nowrap overflow-auto ">
+    <div className=" flex overflow-auto p-5 gap-5">
       {playlistData.map((item) => (
         <PlaylistCard
           key={item.id}
