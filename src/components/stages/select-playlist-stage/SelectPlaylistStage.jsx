@@ -121,11 +121,16 @@ export default function SelectPlaylistStage() {
         </div>
       </Modal>
 
-      <Accordion defaultExpandedKeys={["2"]} selectionMode="multiple">
+      <Accordion
+        defaultExpandedKeys={["2"]}
+        selectionMode="multiple"
+        keepContentMounted
+      >
         <AccordionItem
           key="1"
           title="Search Playlists"
           aria-label="Search Playlists"
+          classNames={{content: "justify-center"}}
         >
           <SearchPlaylists setPlaylistSelected={setPlaylistSelected} />
         </AccordionItem>

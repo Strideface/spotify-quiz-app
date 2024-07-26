@@ -19,26 +19,29 @@ export default function SearchBar({ searchTerm, setSearchTerm }) {
   };
 
   return (
-    <Input
+    <>
+      {/* <Input
       ref={searchBar}
       type="search"
       name="search-form"
       id="search-form"
       onChange={(e) => handleOnChange(e.target.value)}
       placeholder={searchTerm ? searchTerm : "Search Spotify..."}
-      fullWidth={false}
       radius="full"
-    />
+      classNames={{inputbase: "flex flex-row justify-center", mainWrapper: "w-80"}}
+    /> */}
 
-    // <div className=" flex justify-center">
-    //   <input
-    //     ref={searchBar}
-    //     type="search"
-    //     name="search-form"
-    //     id="search-form"
-    //     onChange={(e) => handleOnChange(e.target.value)}
-    //     placeholder={searchTerm ? searchTerm : "Search Spotify..."}
-    //   />
-    // </div>
+      <div className=" flex justify-center">
+        <input
+          className=" rounded-3xl search-cancel:bg-foreground bg-default text-center p-2 mb-16"
+          ref={searchBar}
+          type="search"
+          name="search-form"
+          id="search-form"
+          onChange={(e) => handleOnChange(e.target.value)}
+          placeholder={searchTerm ? searchTerm : "Search Spotify..."}
+        />
+      </div>
+    </>
   );
 }

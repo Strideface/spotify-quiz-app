@@ -33,6 +33,11 @@ module.exports = {
   // NextUI
   darkMode: "class",
   plugins: [
+    // Required to style the search bar 'x'. See: https://github.com/tailwindlabs/tailwindcss/discussions/10190
+    require('tailwindcss/plugin')(({ addVariant }) => {
+      addVariant('search-cancel', '&::-webkit-search-cancel-button');
+    }),
+    // NextUI
     nextui({
       prefix: "spotify", // prefix for themes variables
       addCommonColors: false, // override common colors (e.g. "blue", "green", "pink").
