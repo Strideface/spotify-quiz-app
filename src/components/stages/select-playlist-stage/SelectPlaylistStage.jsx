@@ -125,6 +125,7 @@ export default function SelectPlaylistStage() {
         defaultExpandedKeys={["2"]}
         selectionMode="multiple"
         keepContentMounted
+        variant="shadow"
       >
         <AccordionItem
           key="1"
