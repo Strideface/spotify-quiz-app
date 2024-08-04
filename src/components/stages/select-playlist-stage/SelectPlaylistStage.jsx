@@ -5,6 +5,7 @@ import Modal from "../../Modal";
 import { useEffect, useRef, useState } from "react";
 import { Accordion, AccordionItem } from "@nextui-org/accordion";
 
+
 export default function SelectPlaylistStage() {
   const { isAuthenticated, setQuizStage, quizData } = useOutletContext();
   const [playlistSelected, setPlaylistSelected] = useState(false);
@@ -125,7 +126,8 @@ export default function SelectPlaylistStage() {
         defaultExpandedKeys={["2"]}
         selectionMode="multiple"
         keepContentMounted
-        variant="shadow"
+        variant="splitted"
+        itemClasses={{title: " font-semibold text-mobile-2 sm:text-sm-screen-2"}}
       >
         <AccordionItem
           key="1"

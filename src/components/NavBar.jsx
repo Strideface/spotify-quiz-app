@@ -8,7 +8,9 @@ import {
 } from "@nextui-org/navbar";
 import { useLocation } from "react-router-dom";
 
-import icon from "../images/Spotify_Icon_RGB_Green.png";
+import logo from "../images/Spotify_Logo_RGB_Green.png";
+import icon from "../images/Spotify_Icon_RGB_Green.png"
+import { Image } from "@nextui-org/image";
 
 export default function NavBar({ quizStage }) {
 
@@ -18,17 +20,18 @@ export default function NavBar({ quizStage }) {
 
   return (
     <NextuiNavBar
-      isBordered
-      height="20rem"
       maxWidth="full"
       position="static"
       classNames={{
-        base: " sm:h-48 bg-spotify-black text-secondary py-6",
-        wrapper: " flex-col sm:flex-row",
-        brand: " flex-none",
+        base: " bg-spotify-black text-secondary py-6 mb-3 ",
+        wrapper: " gap-3 flex-col sm:flex-row h-24 sm:h-16",
+        brand: " flex-row sm:flex-col",
         item: [
           "flex",
+
           "relative",
+          "h-full",
+          "items-center",
           "data-[active=true]:after:absolute",
           "data-[active=true]:after:bottom-0",
           "data-[active=true]:after:left-0",
@@ -39,29 +42,41 @@ export default function NavBar({ quizStage }) {
         ],
       }}
     >
-      <NavbarContent justify="center">
+      {/* show this brand config from small screens to larger */}
+      <NavbarContent justify="center" className=" hidden sm:block">
         <NavbarBrand>
-          <img src={icon} alt="" className=" w-24 h-24" />
+          <p className=" text-primary font-semibold mb-2">Powered by</p>
+          <Image src={logo} alt="Spotify Logo" width={110}/>
         </NavbarBrand>
       </NavbarContent>
+
       <NavbarContent justify="center">
-        <h1 className=" text-spotify-green text-5xl text-center font-semibold">Spotify Quiz App</h1>
+        <h1 className=" text-spotify-green text-center font-semibold text-xl sm:text-3xl ">Spotify Quiz App</h1>
       </NavbarContent>
-      <NavbarContent className=" flex-col" justify="center">
+    {/* show this brand config on mobile (less than 'sm:')*/}
+      <NavbarContent justify="center" className=" sm:hidden">
+        <NavbarBrand >
+          <p className=" text-primary font-semibold mr-2 text-mobile-1 ">Powered by</p>
+          <Image src={icon} alt="Spotify Icon" width={36}/>
+        </NavbarBrand>
+      </NavbarContent>
+
+      <NavbarContent className="items-start flex-row sm:flex-col " justify="center">
         {/* Don't show the leaderboard link option if at the quiz stage of the app, as clicking away and returning causes errors*/}
         {quizStage && !quizStage.playQuizStage && (
           <NavbarItem isActive={location.pathname === "/leaderboard"}>
             <RouterLink to="/leaderboard">
-              <h2>Leaderboard</h2>
+              <h2 className=" text-mobile-2 sm:text-sm-screen-1">Leaderboard</h2>
             </RouterLink>
           </NavbarItem>
         )}
         <NavbarItem isActive={location.pathname === "/"}>
           <RouterLink to="/">
-            <h2>Main Page</h2>
+            <h2 className=" text-mobile-2 sm:text-sm-screen-1">Main Page</h2>
           </RouterLink>
         </NavbarItem>
       </NavbarContent>
+
     </NextuiNavBar>
   );
 }

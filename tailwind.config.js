@@ -1,4 +1,5 @@
 const { nextui } = require("@nextui-org/theme");
+// const defaultTheme = require('tailwindcss/defaultTheme')
 
 // useful reading:
 // concept of 'slots' to override styles - https://nextui.org/docs/customization/override-styles
@@ -9,7 +10,7 @@ module.exports = {
     // Tailwind
     "./src/**/*.{js,jsx,ts,tsx}",
     // NextUI
-    "./node_modules/@nextui-org/theme/dist/components/(modal|popover|spinner|navbar|button|card|divider|image|accordion|spacer|input).js",
+    "./node_modules/@nextui-org/theme/dist/components/(modal|popover|spinner|navbar|button|card|divider|image|accordion|spacer|input|avatar).js",
   ],
   // Tailwind
   theme: {
@@ -28,6 +29,23 @@ module.exports = {
         "spotify-white": "#FFFFFF",
         "spotify-black": "#191414",
       },
+      // fontSize: ({ theme }) => ({
+      //   "mobile-1": 'tiny',
+      //   "mobile-2": 'small',
+      //   "mobile-3": 'medium',
+      //   "sm-screen-1": 'medium',
+      //   ...theme('fontSize')
+      // })
+
+      // my own font-sizes copy the default sizes but helps me to standardise and ensure relativity across mobile and small screen onwards
+      fontSize: {
+        "mobile-1": ["0.75rem", "1rem"],// text-tiny
+        "mobile-2": ["0.875rem", "1.25rem"],// text-small
+        "mobile-3": ["1rem", "1.5rem"],// text-medium
+        "sm-screen-1": ["1rem", "1.5rem"],// text-medium
+        "sm-screen-2": ["1.125rem", "1.75rem"],// text-large
+        
+      }
     },
   },
   // NextUI
@@ -63,6 +81,7 @@ module.exports = {
               medium: "1rem", // text-medium
               large: "1.125rem", // text-large
             },
+            
           },
           colors: {
             background: "#FFFFFF", // "spotify-white"

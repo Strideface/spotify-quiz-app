@@ -32,13 +32,12 @@ export default function GameTile({ title, description, gameId }) {
       whileHover={{ scale: 1.05 }}
     >
       <Card
-        isPressable
-        onPress={handleOnClick}
-        isHoverable
+        isPressable={isAuthenticated}
+        onPress={isAuthenticated && handleOnClick}
         isDisabled={!isAuthenticated}
         shadow="none"
         classNames={{
-          base: " bg-slate-200 hover:bg-background flex-auto border",
+          base: " bg-slate-200 hover:bg-background flex-auto border max-w-2xl",
           body: " text-center bg-primary hover:bg-spotify-green-2",
           header: " justify-center text-2xl",
         }}

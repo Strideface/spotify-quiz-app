@@ -36,6 +36,7 @@ export default function Root() {
     userDetails: {
       name: null,
       country: null,
+      image: null,
     },
   });
 

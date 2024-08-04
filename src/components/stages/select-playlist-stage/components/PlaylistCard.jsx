@@ -24,23 +24,23 @@ export default function PlaylistCard({
         isPressable
         onPress={() => handleOnClick(playlistTracksHref)}
         classNames={{
-          base: "flex-none border py-4 w-80 bg-foreground text-default",
-          body: "overflow-visible py-2",
+          base: "flex-none border py-3 w-60 sm:w-80 sm:h-96 bg-foreground text-default",
+          body: "overflow-visible py-1 ",
         }}
       >
-        <CardHeader className="pb-0 pt-2 px-4 w-80 flex-col items-start">
-          <h4 className="font-bold text-primary truncate">{name}</h4>
-          <small className="text-default-500">
+        <CardHeader className="pb-0 pt-1 px-3 w-60 sm:w-80 flex-col items-start">
+          <h4 className=" text-mobile-2 sm:text-sm-screen-1 font-bold text-primary truncate">{name}</h4>
+          <p className=" text-mobile-1 sm:text-sm text-default-500">
             {totalTracks > 1 ? totalTracks + " tracks" : totalTracks + " track"}
-          </small>
+          </p>
         </CardHeader>
         <CardBody>
           <Image
             alt="Playlist Cover Image"
             className="object-cover rounded-xl"
             src={image.url}
-            width={300}
-            height={300}
+            // width={220}
+            // height={220}
           />
         </CardBody>
       </Card>

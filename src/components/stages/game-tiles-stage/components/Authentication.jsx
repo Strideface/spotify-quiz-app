@@ -12,7 +12,8 @@ import {
   fetchAccessToken,
   fetchUserDetails,
 } from "../../../../util/spotify-api.js";
-import { Card, CardBody } from "@nextui-org/card";
+import { Card, CardBody, CardHeader } from "@nextui-org/card";
+import { Avatar } from "@nextui-org/avatar";
 
 export default function Authentication() {
   // STATE
@@ -92,25 +93,43 @@ export default function Authentication() {
     // if user details data is present as a result of calling userRefetch in previous useEffect code,
     // store details
     if (userIsSuccess) {
+      console.log(userData);
       quizData.current.userDetails.name = userData.display_name;
       quizData.current.userDetails.country = userData.country;
+      quizData.current.userDetails.image = userData.images[1].url;
     }
   }, [quizData, userData, userIsSuccess]);
 
   return (
-    <div className=" flex justify-center pt-20 px-10">
+    <div className=" flex sm:min-w-72">
       <Card
         fullWidth
         classNames={{
-          base: " bg-foreground text-primary justify-center",
+          base: " bg-foreground text-primary",
           body: " text-center",
+          header: "justify-center",
         }}
       >
-        <CardBody className=" font-medium text-lg gap-4">
-          {accessIsError && <p>An error has occured: {accessError.message}</p>}
+        {isAuthenticated && (
+          <CardHeader>
+            <Avatar
+              src={userData ? userData?.images[1].url : ""}
+              showFallback
+              size="lg"
+              isBordered
+              color="primary"
+            />
+          </CardHeader>
+        )}
+        <CardBody className=" font-medium gap-4 justify-center text-mobile-3 sm:text-sm-screen-2">
+          {accessIsError && (
+            <p className=" text-mobile-1 sm:text-sm-screen-1">
+              An error has occured: {accessError.message}
+            </p>
+          )}
           {/* only show auth error if it has a current value. Clears when auth is a success. */}
           {authError.current && (
-            <p>
+            <p className=" text-mobile-1 sm:text-sm-screen-1">
               It looks like you did not give authorization, or there was an
               error. Please try again.
             </p>
@@ -119,7 +138,7 @@ export default function Authentication() {
           {isAuthenticated ? (
             <p>
               Let's Play{userIsLoading && "..."}
-              {", "+userData?.display_name+"!"}
+              {userData && ", " + userData?.display_name + "!"}
             </p>
           ) : (
             <SignInButton isLoading={accessIsFetching} />
