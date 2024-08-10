@@ -1,20 +1,25 @@
 import { useOutletContext } from "react-router-dom";
 import SearchPlaylists from "./components/SearchPlaylists";
 import UserPlaylists from "./components/UserPlaylists";
-import Modal from "../../Modal";
-import { useEffect, useRef, useState } from "react";
+import {
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  Modal,
+} from "@nextui-org/modal";
+import { useEffect, useState } from "react";
 import { Accordion, AccordionItem } from "@nextui-org/accordion";
-
+import { Button } from "@nextui-org/button";
+import { Radio, RadioGroup } from "@nextui-org/radio";
+import { Input } from "@nextui-org/input";
 
 export default function SelectPlaylistStage() {
   const { isAuthenticated, setQuizStage, quizData } = useOutletContext();
+
   const [playlistSelected, setPlaylistSelected] = useState(false);
-  // refs to connect with elements
-  const settingsModal = useRef();
-  const easy = useRef();
-  const medium = useRef();
-  const hard = useRef();
-  const quantity = useRef();
+  const [selectedDifficulty, setSelectedDifficulty] = useState("medium");
+  const [numberOfTracks, setNumberOfTracks] = useState();
 
   if (!isAuthenticated) {
     setQuizStage((prevState) => ({
@@ -24,26 +29,11 @@ export default function SelectPlaylistStage() {
     }));
   }
 
-  useEffect(() => {
-    if (playlistSelected) {
-      settingsModal.current.open();
-    }
-  }, [playlistSelected]);
-
   const handleOnSubmit = (event) => {
-    event.preventDefault(); // prevents form submission to server
     // assign selected total tracks for quiz
-    quizData.current.quizTotalTracks = quantity.current.value;
+    quizData.current.quizTotalTracks = numberOfTracks;
     // assign selected difficulty level
-    if (easy.current.checked) {
-      quizData.current.difficulty = easy.current.value;
-    } else if (medium.current.checked) {
-      quizData.current.difficulty = medium.current.value;
-    } else if (hard.current.checked) {
-      quizData.current.difficulty = hard.current.value;
-    }
-
-    settingsModal.current.close();
+    quizData.current.difficulty = selectedDifficulty;
 
     setQuizStage((prevState) => ({
       ...prevState,
@@ -52,74 +42,79 @@ export default function SelectPlaylistStage() {
     }));
   };
 
+  // for the 'cancel' button within ModalFooter only. Should match Modal's onClose attribute.
   const handleOnClose = () => {
-    settingsModal.current.close();
+    // reset numberOfTracks to 1 because otherwise when a user selects a playlist again,
+    // isInvalid in Input will still be true if the last numberOfTracks selected caused isInvalid to be true.
+    // 1 is a safe number as there will always be at least 1 track in a playlist and it won't trigger the conditions which make isInvalid true.
+    setNumberOfTracks(1);
     setPlaylistSelected(false);
   };
 
   return (
     <>
       <Modal
-        ref={settingsModal}
-        title="Quiz Settings"
-        message="Select preferences or leave as it is"
+        isOpen={playlistSelected}
+        // eslint-disable-next-line no-sequences
+        onClose={() => (setNumberOfTracks(1), setPlaylistSelected(false))}
       >
-        <div className=" flex p-5 justify-center space-y-2">
-          <form method="dialog" onSubmit={handleOnSubmit}>
+        <ModalContent>
+          <ModalHeader>Quiz Settings</ModalHeader>
+          <ModalBody>
             <div>
-              <label htmlFor="quantity">Number of tracks : </label>
-              <input
-                ref={quantity}
-                type="number"
-                id="quantity"
-                name="quantity"
-                defaultValue={
-                  quizData.current.playlistTotalTracks &&
-                  quizData.current.playlistTotalTracks.toString()
-                }
-                min="1"
-                max={
-                  quizData.current.playlistTotalTracks &&
-                  quizData.current.playlistTotalTracks.toString()
-                }
-              />
+              <p>Select preferences:</p>
             </div>
-            <h2>Choose the difficulty level of the quiz</h2>
-            <input
-              ref={easy}
-              type="radio"
-              id="easy"
-              name="difficulty"
-              value="easy"
-            />
-            <label htmlFor="easy">Easy</label>
-            <br />
-            <input
-              ref={medium}
-              type="radio"
-              id="medium"
-              name="difficulty"
-              defaultValue="medium"
-              defaultChecked="readOnly"
-            />
-            <label htmlFor="medium">Medium</label>
-            <br />
-            <input
-              ref={hard}
-              type="radio"
-              id="hard"
-              name="difficulty"
-              value="hard"
-            />
-            <label htmlFor="hard">Hard</label>
-            <br />
 
-            <button type="reset" onClick={handleOnClose}>
+            <Input
+              className=" flex p-5 place-content-center"
+              type="number"
+              label="Number of tracks:"
+              placeholder={
+                quizData.current.playlistTotalTracks &&
+                quizData.current.playlistTotalTracks.toString()
+              }
+              min="1"
+              max={
+                quizData.current.playlistTotalTracks &&
+                quizData.current.playlistTotalTracks.toString()
+              }
+              isInvalid={
+                numberOfTracks > quizData.current.playlistTotalTracks ||
+                numberOfTracks < 1
+              }
+              errorMessage={`Invalid number selected (must be between 1 and ${quizData.current.playlistTotalTracks})`}
+              onValueChange={(value) => setNumberOfTracks(parseInt(value))}
+              size="md"
+            />
+
+            <div className=" flex p-5 justify-center">
+              <RadioGroup
+                label="Select difficulty:"
+                value={selectedDifficulty}
+                onValueChange={setSelectedDifficulty}
+              >
+                <Radio value="easy">easy</Radio>
+                <Radio value="medium">medium</Radio>
+                <Radio value="hard">hard</Radio>
+              </RadioGroup>
+            </div>
+          </ModalBody>
+          <ModalFooter>
+            <Button color="danger" onPress={handleOnClose}>
               Cancel
-            </button>
-            <button type="submit">Confirm</button>
-          </form>
-        </div>
+            </Button>
+            <Button
+              color="success"
+              onPress={handleOnSubmit}
+              isDisabled={
+                numberOfTracks > quizData.current.playlistTotalTracks ||
+                numberOfTracks === 0
+              }
+            >
+              Confirm
+            </Button>
+          </ModalFooter>
+        </ModalContent>
       </Modal>
 
       <Accordion
@@ -127,13 +122,15 @@ export default function SelectPlaylistStage() {
         selectionMode="multiple"
         keepContentMounted
         variant="splitted"
-        itemClasses={{title: " font-semibold text-mobile-2 sm:text-sm-screen-2"}}
+        itemClasses={{
+          title: " font-semibold text-mobile-2 sm:text-sm-screen-2",
+        }}
       >
         <AccordionItem
           key="1"
           title="Search Playlists"
           aria-label="Search Playlists"
-          classNames={{content: "justify-center"}}
+          classNames={{ content: "justify-center" }}
         >
           <SearchPlaylists setPlaylistSelected={setPlaylistSelected} />
         </AccordionItem>

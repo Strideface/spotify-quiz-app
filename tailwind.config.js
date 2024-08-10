@@ -10,7 +10,7 @@ module.exports = {
     // Tailwind
     "./src/**/*.{js,jsx,ts,tsx}",
     // NextUI
-    "./node_modules/@nextui-org/theme/dist/components/(modal|popover|spinner|navbar|button|card|divider|image|accordion|spacer|input|avatar|tooltip).js",
+    "./node_modules/@nextui-org/theme/dist/components/(modal|popover|spinner|navbar|button|card|divider|image|accordion|spacer|input|avatar|tooltip|modal|radio).js",
   ],
   // Tailwind
   theme: {
@@ -86,10 +86,10 @@ module.exports = {
           colors: {
             background: "#FFFFFF", // "spotify-white"
             foreground: "#191414", // "spotify-black"
-            danger: {
-              DEFAULT: "#FFFFFF", // "spotify-white"
-              foreground: "#e01616", // dark red
-            },
+            // danger: {
+            //   DEFAULT: "#FFFFFF", // "spotify-white"
+            //   foreground: "#e01616", // dark red
+            // },
             primary: "#1DB954", // "spotify-green",
             secondary: "#FFFFFF", // "spotify-white"
           },

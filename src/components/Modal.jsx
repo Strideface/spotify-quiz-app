@@ -1,3 +1,4 @@
+// REDUNTANT COMPONENT NOW AS USING NEXT UI'S MODAL COMPONENT
 import { forwardRef, useImperativeHandle, useRef } from "react";
 import { createPortal } from "react-dom";
 

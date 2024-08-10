@@ -10,8 +10,6 @@ export default function SearchPlaylists({ setPlaylistSelected }) {
   const [searchTerm, setSearchTerm] = useState("");
   const { quizData } = useOutletContext();
 
-  console.log(searchTerm.trim().length !== 0);
-
   const {
     data: searchedPlaylistData,
     error: searchedPlaylistError,
