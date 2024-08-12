@@ -21,6 +21,10 @@ export default function SelectPlaylistStage() {
   const [selectedDifficulty, setSelectedDifficulty] = useState("medium");
   const [numberOfTracks, setNumberOfTracks] = useState();
 
+  useEffect(() => {
+    console.log(numberOfTracks);
+  }, [numberOfTracks]);
+
   if (!isAuthenticated) {
     setQuizStage((prevState) => ({
       ...prevState,
@@ -31,7 +35,13 @@ export default function SelectPlaylistStage() {
 
   const handleOnSubmit = (event) => {
     // assign selected total tracks for quiz
-    quizData.current.quizTotalTracks = numberOfTracks;
+    if (isNaN(numberOfTracks)) {// handles if value is undefined which will be the case if..
+      // initial placeholder value is not overwritten
+      quizData.current.quizTotalTracks = quizData.current.playlistTotalTracks;
+    } else {
+      quizData.current.quizTotalTracks = numberOfTracks;
+    }
+
     // assign selected difficulty level
     quizData.current.difficulty = selectedDifficulty;
 
@@ -44,10 +54,9 @@ export default function SelectPlaylistStage() {
 
   // for the 'cancel' button within ModalFooter only. Should match Modal's onClose attribute.
   const handleOnClose = () => {
-    // reset numberOfTracks to 1 because otherwise when a user selects a playlist again,
+    // reset numberOfTracks to undefined because otherwise when a user selects a playlist again,
     // isInvalid in Input will still be true if the last numberOfTracks selected caused isInvalid to be true.
-    // 1 is a safe number as there will always be at least 1 track in a playlist and it won't trigger the conditions which make isInvalid true.
-    setNumberOfTracks(1);
+    setNumberOfTracks();
     setPlaylistSelected(false);
   };
 
@@ -55,14 +64,16 @@ export default function SelectPlaylistStage() {
     <>
       <Modal
         isOpen={playlistSelected}
-        // eslint-disable-next-line no-sequences
-        onClose={() => (setNumberOfTracks(1), setPlaylistSelected(false))}
+        onClose={() => {setNumberOfTracks();setPlaylistSelected(false)}}      
+        classNames={{ header: " text-mobile-2 sm:text-sm-screen-2" }}
       >
         <ModalContent>
           <ModalHeader>Quiz Settings</ModalHeader>
           <ModalBody>
-            <div>
-              <p>Select preferences:</p>
+            <div className=" flex justify-center">
+              <p className=" text-mobile-2 sm:text-sm-screen-1">
+                Select preferences:
+              </p>
             </div>
 
             <Input
@@ -92,10 +103,29 @@ export default function SelectPlaylistStage() {
                 label="Select difficulty:"
                 value={selectedDifficulty}
                 onValueChange={setSelectedDifficulty}
+                classNames={{
+                  label: " text-mobile-2 sm:text-sm-screen-1",
+                  wrapper: " text-mobile-2 sm:text-sm-screen-1",
+                }}
               >
-                <Radio value="easy">easy</Radio>
-                <Radio value="medium">medium</Radio>
-                <Radio value="hard">hard</Radio>
+                <Radio
+                  classNames={{ label: " text-mobile-2 sm:text-sm-screen-1" }}
+                  value="easy"
+                >
+                  easy
+                </Radio>
+                <Radio
+                  classNames={{ label: " text-mobile-2 sm:text-sm-screen-1" }}
+                  value="medium"
+                >
+                  medium
+                </Radio>
+                <Radio
+                  classNames={{ label: " text-mobile-2 sm:text-sm-screen-1" }}
+                  value="hard"
+                >
+                  hard
+                </Radio>
               </RadioGroup>
             </div>
           </ModalBody>
