@@ -8,6 +8,7 @@ import AnswerSelection from "./AnswerSelection";
 import PlayerControl from "./player/PlayerControl";
 import Modal from "../../../Modal";
 import CountdownTimer from "./CountdownTimer";
+import { Chip } from "@nextui-org/chip";
 
 export default function Quiz({ inPlay, setTracksReady }) {
   const activeTrackIndex = useRef();
@@ -133,15 +134,16 @@ export default function Quiz({ inPlay, setTracksReady }) {
           </div>
         </div>
       </Modal>
-      <div className=" flex flex-col p-10 justify-center space-y-10">
+
+      <div className=" flex flex-col justify-center space-y-10 m-auto md:w-2/3">
         {playlistTracksIsLoading && <LoadingIndicator />}
         {playlistTracksData && (
           <>
-            <div className=" flex p-10 justify-center space-y-5">
+            <div className=" flex p-5 md:p-10 justify-center space-x-5">
               {/* show current track number as long as there's tracks left */}
               {activeTrackIndex.current + 1 <=
                 quizData.current?.quizTracks?.length && (
-                <h2>Track No: {activeTrackIndex.current + 1}</h2>
+                  <Chip size="lg" className=" md:text-sm-screen-2">Track No: {activeTrackIndex.current + 1}</Chip>
               )}
               {/* only render timer if it's not on easy mode and if the quiz is in play with time on the clock */}
               {quizData.current.difficulty !== "easy" &&
@@ -156,7 +158,7 @@ export default function Quiz({ inPlay, setTracksReady }) {
                   />
                 ) : null)}
             </div>
-            <div className=" flex flex-col p-10 justify-center border">
+            <div className="flex-col p-10 justify-center space-y-2 border-medium border-foreground rounded-md">
               <AnswerSelection
                 key={activeTrackIndex.current}
                 activeTrackIndex={activeTrackIndex}
@@ -166,7 +168,7 @@ export default function Quiz({ inPlay, setTracksReady }) {
                 setTimerIsFinished={setTimerIsFinished}
               />
             </div>
-            <div className=" flex flex-col p-10 justify-center border">
+            <div className="flex-col p-10 justify-center border">
               <PlayerControl
                 key={activeTrackIndex.current}
                 activeTrackIndex={activeTrackIndex}

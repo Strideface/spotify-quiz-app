@@ -7,6 +7,7 @@ import {
   fetchSearchedItems,
 } from "../../../../util/spotify-api";
 import { shuffleArray } from "../../../../util/util";
+import { Button } from "@nextui-org/button";
 
 export default function AnswerSelection({
   activeTrackIndex,
@@ -254,6 +255,32 @@ export default function AnswerSelection({
   // IS THERE A WAY TO CACHE PREVIOUS ARTIST SEARCHES WHILST DESTROYING THIS COMPONENT? CACHE ONLY WORKS WHEN COMPONENT ISN'T UNMOUNTED,
   // WHICH IS CURRENTLY HAPPENING BECAUSE YOU'RE PASSING IN A KEY TO THIS COMPONENT.
   // OR, A WAY FOR THE BROWSER TO SUGGEST PREVIOUSLY TYPED IN SEARCHES. ATTRIBUTE OPTION OF THE UNDERLYING ELEMENT?
+
+  // Can only figure out how to override the existing default theme colors.
+  // Ideally would like to extend the color theme to reflect my custom Next UI color theme
+  // https://react-select.com/styles#overriding-the-theme
+  const selectTheme = (theme) => ({
+    ...theme,
+    borderRadius: 0,
+    colors: {
+      ...theme.colors,
+      primary: "#1DB954", // spotify-green
+      primary25: "#1DB954", // spotify-green
+      primary50: "#1ed760" // // spotify-green
+      
+    },
+  });
+
+  const selectStyles = {
+    control: (baseStyles, state) => ({
+      ...baseStyles,
+      borderColor: state.isFocused ? "primary" : "black",
+      borderRadius: "2rem",
+    }),
+  };
+
+  const classNames = " font-medium text-mobile-3 md:text-sm-screen-2";
+
   return (
     <>
       <AsyncSelect
@@ -261,10 +288,14 @@ export default function AnswerSelection({
         isSearchable={!selectedValue.artist}
         cacheOptions
         isClearable
-        placeholder="search..."
-        noOptionsMessage={() => "search for options"}
+        placeholder="search for artists..."
+        noOptionsMessage={() => "search to see results"}
+        loadingMessage={() => "searching Spotify..."}
         loadOptions={searchloadOptions}
         onChange={(value, action) => handleSearchOnChange(value, action)}
+        theme={selectTheme}
+        styles={selectStyles}
+        className={classNames}
       />
       {error.current && <p>{error.current.message}</p>}
 
@@ -274,20 +305,37 @@ export default function AnswerSelection({
           isSearchable={false}
           cacheOptions
           isClearable
-          placeholder="select..."
+          placeholder="select track..."
           defaultOptions
           loadOptions={trackSelectorLoadOptions}
           onChange={(value, action) =>
             handleTrackSelectorOnChange(value, action)
           }
+          theme={selectTheme}
+          styles={selectStyles}
+          className={classNames}
         />
       )}
-
-      {selectedValue.track ? (
-        <button onClick={handleSubmitAnswer}>Submit Answer</button>
-      ) : (
-        <button onClick={handleSkip}>Skip</button>
-      )}
+      <div className=" flex justify-center">
+        {selectedValue.track ? (
+          <Button
+            className=" md:w-80"
+            color="primary"
+            size="lg"
+            onPress={handleSubmitAnswer}
+          >
+            Submit Answer
+          </Button>
+        ) : (
+          <Button
+            className=" bg-foreground text-background md:w-80"
+            size="lg"
+            onPress={handleSkip}
+          >
+            Skip
+          </Button>
+        )}
+      </div>
     </>
   );
 }

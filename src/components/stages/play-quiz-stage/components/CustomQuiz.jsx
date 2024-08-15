@@ -1,7 +1,6 @@
-import { useRef, useEffect, useState } from "react";
+import { useState } from "react";
 import Quiz from "./Quiz";
 import { useOutletContext } from "react-router-dom";
-import LoadingIndicator from "../../../LoadingIndicator";
 import {
   Modal,
   ModalBody,
@@ -10,7 +9,7 @@ import {
   ModalHeader,
 } from "@nextui-org/modal";
 import { Button } from "@nextui-org/button";
-import { Card, CardBody, CardHeader } from "@nextui-org/card";
+import { Card, CardBody } from "@nextui-org/card";
 
 // present an introductory modal when component is rendered initially that explains how to play.
 // Rules change depending on selected difficulty
