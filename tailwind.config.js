@@ -10,7 +10,7 @@ module.exports = {
     // Tailwind
     "./src/**/*.{js,jsx,ts,tsx}",
     // NextUI
-    "./node_modules/@nextui-org/theme/dist/components/(modal|popover|spinner|navbar|button|card|divider|image|accordion|spacer|input|avatar|tooltip|modal|radio|chip|badge).js",
+    "./node_modules/@nextui-org/theme/dist/components/(modal|popover|spinner|navbar|button|card|divider|image|accordion|spacer|input|avatar|tooltip|modal|radio|chip|badge|progress).js",
   ],
   // Tailwind
   theme: {
@@ -89,6 +89,7 @@ module.exports = {
             danger: "#ff3333", // red
             primary: "#1DB954", // "spotify-green",
             secondary: "#FFFFFF", // "spotify-white"
+            success: "#1ed760", // "spotify-green-2",
           },
         },
       },

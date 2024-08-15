@@ -1,4 +1,13 @@
-export default function ProgressBar({ progressMax, progressValue }) {
+import { Progress } from "@nextui-org/progress";
 
-  return <progress max={progressMax} value={progressValue}></progress>;
+export default function ProgressBar({ progressMax, progressValue }) {
+  return (
+    <Progress
+      size="md"
+      color="success"
+      aria-label="in progress..."
+      maxValue={progressMax}
+      value={progressValue}
+    ></Progress>
+  );
 }

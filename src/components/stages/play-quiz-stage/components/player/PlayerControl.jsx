@@ -67,7 +67,7 @@ export default function PlayerControl({ activeTrackIndex, timerIsFinished }) {
 
   return (
     <div className=" flex flex-col p-5 justify-center">
-      <div className=" flex p-5 space-x-4 justify-center border">
+      <div className=" flex p-5 space-x-4 justify-center border-medium border-foreground rounded-md">
         <RepeatButton
           isPlay={isPlay}
           setIsPlay={setIsPlay}

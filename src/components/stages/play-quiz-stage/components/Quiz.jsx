@@ -168,7 +168,7 @@ export default function Quiz({ inPlay, setTracksReady }) {
                 setTimerIsFinished={setTimerIsFinished}
               />
             </div>
-            <div className="flex-col p-10 justify-center border">
+            <div className="flex-col p-10 justify-center border-medium border-foreground rounded-md">
               <PlayerControl
                 key={activeTrackIndex.current}
                 activeTrackIndex={activeTrackIndex}
