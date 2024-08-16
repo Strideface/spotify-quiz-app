@@ -52,7 +52,6 @@ export default function SelectPlaylistStage() {
     }));
   };
 
-  // for the 'cancel' button within ModalFooter only. Should match Modal's onClose attribute.
   const handleOnClose = () => {
     // reset numberOfTracks to undefined because otherwise when a user selects a playlist again,
     // isInvalid in Input will still be true if the last numberOfTracks selected caused isInvalid to be true.
@@ -64,7 +63,7 @@ export default function SelectPlaylistStage() {
     <>
       <Modal
         isOpen={playlistSelected}
-        onClose={() => {setNumberOfTracks();setPlaylistSelected(false)}}      
+        onClose={handleOnClose}      
         classNames={{ header: " text-mobile-2 sm:text-sm-screen-2" }}
       >
         <ModalContent>

@@ -78,7 +78,7 @@ export default function PlayPauseButton({
     }
   }, [progressValue]);
 
-  const playButton = (
+  const playButtonIcon = (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="128"
@@ -91,7 +91,20 @@ export default function PlayPauseButton({
     </svg>
   );
 
-  const pauseButton = (
+  const playButton = (
+    <Button
+      ref={play}
+      onPress={handlePlayOnClick}
+      color="success"
+      endContent={playButtonIcon}
+      size="lg"
+      radius="full"
+    >
+      Play
+    </Button>
+  );
+
+  const pauseButtonIcon = (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="64"
@@ -105,32 +118,27 @@ export default function PlayPauseButton({
     </svg>
   );
 
+  const pauseButton = (
+    <Button
+      ref={pause}
+      onPress={handlePauseOnClick}
+      color="success"
+      endContent={pauseButtonIcon}
+      size="lg"
+      radius="full"
+    >
+      Pause
+    </Button>
+  );
+
   return (
     <>
       {isPlay ? (
-        <Button
-          ref={pause}
-          onPress={handlePauseOnClick}
-          color="success"
-          endContent={pauseButton}
-          size="lg"
-          radius="full"
-        >
-          Pause
-        </Button>
+        pauseButton
       ) : error ? (
         <Alert trigger={playButton} content={error.message} color="danger" />
       ) : (
-        <Button
-          ref={play}
-          onPress={handlePlayOnClick}
-          color="success"
-          endContent={playButton}
-          size="lg"
-          radius="full"
-        >
-          Play
-        </Button>
+        playButton
       )}
     </>
   );

@@ -35,7 +35,7 @@ export default function RepeatButton({
     }
   };
 
-  const repeatButton = (
+  const repeatButtonIcon = (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="64"
@@ -52,18 +52,22 @@ export default function RepeatButton({
     </svg>
   );
 
-  return error ? (
-    <Alert trigger={repeatButton} content={error.message} color="danger" />
-  ) : (
+  const repeatButton = (
     <Button
       ref={repeat}
       onPress={handleRepeatOnClick}
       color="success"
-      endContent={repeatButton}
+      endContent={repeatButtonIcon}
       size="lg"
       radius="full"
     >
       Repeat
     </Button>
+  );
+
+  return error ? (
+    <Alert trigger={repeatButton} content={error.message} color="danger" />
+  ) : (
+    repeatButton
   );
 }

@@ -23,6 +23,7 @@ export default function PlaylistCard({
     <motion.div whileHover={{ scale: 1.05 }}>
       <Card
         isPressable
+        shadow="lg"
         onPress={() => handleOnClick(playlistTracksHref)}
         classNames={{
           base: "flex-none border py-3 w-60 sm:w-80 sm:h-96 bg-foreground text-default",

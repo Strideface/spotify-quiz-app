@@ -3,6 +3,7 @@ import PlayPauseButton from "./PlayPauseButton";
 import RepeatButton from "./RepeatButton";
 import ProgressBar from "./ProgressBar";
 import { useOutletContext } from "react-router-dom";
+import { Card, CardBody, CardFooter } from "@nextui-org/card";
 
 export default function PlayerControl({ activeTrackIndex, timerIsFinished }) {
   const [isPlay, setIsPlay] = useState(false);
@@ -22,16 +23,11 @@ export default function PlayerControl({ activeTrackIndex, timerIsFinished }) {
         );
       }
       if (quizData.current.difficulty === "medium") {
-        setProgressMax(
-          30000
-        );
+        setProgressMax(30000);
       }
       if (quizData.current.difficulty === "hard") {
-        setProgressMax(
-          10000
-        );
+        setProgressMax(10000);
       }
-      
     }
   }, [activeTrackIndex, quizData, quizData.current.quizTracks]);
 
@@ -67,30 +63,40 @@ export default function PlayerControl({ activeTrackIndex, timerIsFinished }) {
 
   return (
     <div className=" flex flex-col p-5 justify-center">
-      <div className=" flex p-5 space-x-4 justify-center border-medium border-foreground rounded-md">
-        <RepeatButton
-          isPlay={isPlay}
-          setIsPlay={setIsPlay}
-          activeTrackIndex={activeTrackIndex}
-          error={error}
-          setError={setError}
-          setProgressValue={setProgressValue}
-        />
-        <PlayPauseButton
-          isPlay={isPlay}
-          setIsPlay={setIsPlay}
-          activeTrackIndex={activeTrackIndex}
-          error={error}
-          setError={setError}
-          progressMax={progressMax}
-          progressValue={progressValue}
-          setProgressValue={setProgressValue}
-          timerIsFinished={timerIsFinished}
-        />
-      </div>
-      <div className=" flex p-5 justify-center">
+      <Card isFooterBlurred classNames={{base: " bg-foreground", body: " flex-row p-5 space-x-4 justify-center" }}>
+        <CardBody>
+          <RepeatButton
+            isPlay={isPlay}
+            setIsPlay={setIsPlay}
+            activeTrackIndex={activeTrackIndex}
+            error={error}
+            setError={setError}
+            setProgressValue={setProgressValue}
+          />
+          <PlayPauseButton
+            isPlay={isPlay}
+            setIsPlay={setIsPlay}
+            activeTrackIndex={activeTrackIndex}
+            error={error}
+            setError={setError}
+            progressMax={progressMax}
+            progressValue={progressValue}
+            setProgressValue={setProgressValue}
+            timerIsFinished={timerIsFinished}
+          />
+        </CardBody>
+
+        <CardFooter>
+          <ProgressBar
+            progressMax={progressMax}
+            progressValue={progressValue}
+          />
+        </CardFooter>
+      </Card>
+      {/* </div> */}
+      {/* <div className=" flex p-5 justify-center">
         <ProgressBar progressMax={progressMax} progressValue={progressValue} />
-      </div>
+      </div> */}
     </div>
   );
 }
