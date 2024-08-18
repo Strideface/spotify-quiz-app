@@ -42,7 +42,8 @@ export default function Quiz({ inPlay, setTracksReady }) {
       fetchPlaylistTracks(
         quizData.current.playlistTracksHref,
         quizData.current.userDetails.country,
-        quizData.current.quizTotalTracks
+        quizData.current.quizTotalTracks,
+        quizData.current.playlistTotalTracks
       ),
     queryKey: [
       "fetchPlaylistTracks",
@@ -50,6 +51,7 @@ export default function Quiz({ inPlay, setTracksReady }) {
     ],
     refetchOnWindowFocus: false,
     staleTime: Infinity, // Only get playlist tracks once. Data is never considered old so no auto refetches.
+    retry: 2,
   });
   // the query is not caching previous results, probably due to what's in the response header
   // 'Cache-Control: public, max-age=0'

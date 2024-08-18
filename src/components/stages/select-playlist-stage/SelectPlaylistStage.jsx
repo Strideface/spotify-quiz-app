@@ -21,10 +21,6 @@ export default function SelectPlaylistStage() {
   const [selectedDifficulty, setSelectedDifficulty] = useState("medium");
   const [numberOfTracks, setNumberOfTracks] = useState();
 
-  useEffect(() => {
-    console.log(numberOfTracks);
-  }, [numberOfTracks]);
-
   if (!isAuthenticated) {
     setQuizStage((prevState) => ({
       ...prevState,

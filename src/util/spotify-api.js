@@ -247,7 +247,7 @@ export async function fetchSearchedItems(searchTerm, market, type, limit) {
   return searchResultsItems;
 }
 
-export async function fetchPlaylistTracks(playlistTracksHref, market, limit) {
+export async function fetchPlaylistTracks(playlistTracksHref, market, limit, playlistTotalTracks) {
   // CREATE AN ALGORITHM TO ENSURE YOU GET TRACKS FROM A RANDOM POINT IN THE PLAYLIST, WHEN LIMIT IS LESS THAN PLAYLIST TRACK TOTAL.
   // OTHERWISE, COULD GET A LOT OF TRACKS FROM ONE ARTIST IF OFFSET IS ALWAYS FROM THE START.
   let accessToken = await getLocalAccessToken();
@@ -255,7 +255,8 @@ export async function fetchPlaylistTracks(playlistTracksHref, market, limit) {
   const queryParams = new URLSearchParams({
     // if limit param is less than 100 then use that value, otherwise get 100 at a time until limit is reached.
     limit: limit < 100 ? limit : 100, // 100 is max limit allowed per fetch
-    offset: 0,
+    // randomize the offset if limit selected is different to playlistTotalTracks. Otherwise, always be getting from first track. 
+    offset: Math.floor(Math.random() * (playlistTotalTracks - limit)), // Returns a random integer from 0 to the difference of playlistTotalTracks - limit:
     market: market,
   });
 
@@ -284,8 +285,12 @@ export async function fetchPlaylistTracks(playlistTracksHref, market, limit) {
 
     playlistTracks.push(responseJson);
 
-    // record how many tracks left to get (Irrelevant if limit param is less than 100).
+    // record how many tracks left to get (Irrelevant if limit param is less than 100 and remainingLimit is now a minus figure.
     remainingLimit = remainingLimit - 100;
+    // Discontinue if no tracks left to get
+    if (remainingLimit === 0) {
+      break
+    }
 
     // get next batch of tracks if 'next' is not 'null', the initial limit is more than 100, and we haven't reached the final fetch yet.
     if (responseJson.next && limit >= 100 && !finalLimit) {
@@ -298,14 +303,13 @@ export async function fetchPlaylistTracks(playlistTracksHref, market, limit) {
       if (remainingLimit < 100) {
         finalLimit = remainingLimit;
         queryParams.set("limit", finalLimit);
-      }
+      } 
     } else {
       getNext = false;
     }
   }
-  // return an 
 
-  const quizTracks = []
+  const quizTracks = [];
 
   for (let playlistTracksObj of playlistTracks) {
     quizTracks.push(
