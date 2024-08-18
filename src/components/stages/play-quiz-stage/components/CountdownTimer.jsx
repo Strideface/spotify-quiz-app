@@ -37,8 +37,8 @@ export default function CountdownTimer({
   const timerIcon = (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="16"
-      height="16"
+      width="48"
+      height="48"
       fill="currentColor"
       class="bi bi-stopwatch-fill"
       viewBox="0 0 16 16"
@@ -48,7 +48,13 @@ export default function CountdownTimer({
   );
 
   return (
-    <Chip size="lg" className=" md:text-sm-screen-2" color={remainingTime < 11 ? "danger" : "primary"} startContent={timerIcon}>
+    <Chip
+      size="lg"
+      className=" md:text-sm-screen-2"
+      color={remainingTime < 11 ? "danger" : "primary"}
+      startContent={timerIcon}
+      classNames={{content: " font-medium"}}
+    >
       : {remainingTime}
     </Chip>
   );

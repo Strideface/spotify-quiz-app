@@ -61,7 +61,7 @@ export default function RepeatButton({
       size="lg"
       radius="full"
     >
-      Repeat
+      <p className=" hidden sm:block">Repeat</p>
     </Button>
   );
 

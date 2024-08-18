@@ -138,10 +138,10 @@ export default function Quiz({ inPlay, setTracksReady }) {
         isDismissable={false}
         isKeyboardDismissDisabled
         hideCloseButton
-        size="3xl"
+        size="2xl"
         classNames={{
-          header: " justify-center",
-          body: " flex-row divide-x-large divide-foreground",
+          header: " justify-center text-mobile-3 sm:text-sm-screen-2",
+          body: " sm:flex-row divide-y-large sm:divide-y-0 sm:divide-x-large divide-foreground",
           // footer: " justify-center",
         }}
       >
@@ -151,7 +151,7 @@ export default function Quiz({ inPlay, setTracksReady }) {
             <div className=" flex justify-center">
               <Card
                 classNames={{
-                  base: "flex-none justify-center border py-3 w-60 sm:w-80 sm:h-96 bg-foreground",
+                  base: "flex-none justify-center border py-3 w-60 sm:w-80 sm:h-80 bg-foreground",
                   body: "overflow-visible py-1 ",
                 }}
               >
@@ -173,7 +173,7 @@ export default function Quiz({ inPlay, setTracksReady }) {
             <div className=" flex-col px-3 w-full space-y-1 ">
               <Card
                 classNames={{
-                  base: " md:text-sm-screen-2 font-medium h-1/2",
+                  base: " text-mobile-3 sm:text-sm-screen-2 font-medium h-1/2 mt-2 sm:mt-0",
                   body: artistIsCorrect.current ? " bg-primary" : " bg-danger",
                   header: artistIsCorrect.current
                     ? " bg-primary"
@@ -192,7 +192,7 @@ export default function Quiz({ inPlay, setTracksReady }) {
               </Card>
               <Card
                 classNames={{
-                  base: " md:text-sm-screen-2 font-medium h-1/2",
+                  base: " text-mobile-3 sm:text-sm-screen-2 font-medium h-1/2",
                   body: trackIsCorrect.current ? " bg-primary" : " bg-danger",
                   header: trackIsCorrect.current
                     ? " bg-primary"
@@ -227,11 +227,11 @@ export default function Quiz({ inPlay, setTracksReady }) {
         {playlistTracksIsLoading && <LoadingIndicator />}
         {playlistTracksData && (
           <>
-            <div className=" flex p-5 md:p-10 justify-center space-x-5">
+            <div className=" flex p-10 justify-center space-x-5">
               {/* show current track number as long as there's tracks left */}
               {activeTrackIndex.current + 1 <=
                 quizData.current?.quizTracks?.length && (
-                <Chip size="lg" className=" md:text-sm-screen-2">
+                <Chip size="lg" classNames={{content: " font-medium text-mobile-3 md:text-sm-screen-2"}}>
                   Track No: {activeTrackIndex.current + 1}
                 </Chip>
               )}
@@ -248,7 +248,7 @@ export default function Quiz({ inPlay, setTracksReady }) {
                   />
                 ) : null)}
             </div>
-            <div className="flex-col p-10 justify-center space-y-2 border-medium border-foreground rounded-md">
+            <div className="flex-col mx-2 p-10 justify-center space-y-2 border-medium border-foreground rounded-md">
               <AnswerSelection
                 key={activeTrackIndex.current}
                 activeTrackIndex={activeTrackIndex}

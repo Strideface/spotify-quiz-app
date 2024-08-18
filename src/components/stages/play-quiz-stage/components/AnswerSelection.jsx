@@ -319,7 +319,7 @@ export default function AnswerSelection({
       <div className=" flex justify-center">
         {selectedValue.track ? (
           <Button
-            className=" md:w-80"
+            className=" sm:text-sm-screen-2 sm:w-80"
             color="primary"
             size="lg"
             onPress={handleSubmitAnswer}
@@ -328,7 +328,7 @@ export default function AnswerSelection({
           </Button>
         ) : (
           <Button
-            className=" bg-foreground text-background md:w-80"
+            className=" bg-foreground text-background sm:text-sm-screen-2 sm:w-80"
             size="lg"
             onPress={handleSkip}
           >

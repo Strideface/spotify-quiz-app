@@ -62,7 +62,7 @@ export default function PlayerControl({ activeTrackIndex, timerIsFinished }) {
   }, [isPlay, progressMax, progressValue]);
 
   return (
-    <div className=" flex flex-col p-5 justify-center">
+    <div className=" flex flex-col justify-center">
       <Card isFooterBlurred classNames={{base: " bg-foreground", body: " flex-row p-5 space-x-4 justify-center" }}>
         <CardBody>
           <RepeatButton

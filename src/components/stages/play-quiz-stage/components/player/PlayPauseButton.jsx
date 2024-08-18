@@ -100,7 +100,7 @@ export default function PlayPauseButton({
       size="lg"
       radius="full"
     >
-      Play
+      <p className=" hidden sm:block">Play</p>
     </Button>
   );
 
@@ -127,7 +127,7 @@ export default function PlayPauseButton({
       size="lg"
       radius="full"
     >
-      Pause
+      <p className=" hidden sm:block">Pause</p>
     </Button>
   );
 
