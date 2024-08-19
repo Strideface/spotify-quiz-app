@@ -3,7 +3,7 @@ import { Divider } from "@nextui-org/divider";
 import { useOutletContext } from "react-router-dom";
 import { motion } from "framer-motion";
 
-export default function GameTile({ title, description, gameId }) {
+export default function GameTile({ title, description, image, gameId }) {
   const { setQuizStage, isAuthenticated, quizData } = useOutletContext();
 
   const handleOnClick = () => {
@@ -38,39 +38,18 @@ export default function GameTile({ title, description, gameId }) {
         shadow="none"
         classNames={{
           base: " bg-slate-200 hover:bg-background flex-auto border max-w-2xl",
-          body: " text-center bg-primary hover:bg-spotify-green-2",
-          header: " justify-center text-2xl",
+          body: " space-y-8 text-center font-medium text-mobile-3 sm:text-screen-2 bg-primary hover:bg-spotify-green-2",
+          header: " justify-center font-semibold text-mobile-big sm:text-sm-screen-big",
         }}
-        className=" font-medium"
       >
         <CardHeader>{title}</CardHeader>
         <Divider />
-        <CardBody>{description}</CardBody>
+        <CardBody>
+          <p>{description}</p>
+          {image}
+          </CardBody>
       </Card>
     </motion.div>
   );
 
-  // const authenticatedButton = (
-  //   <button className=" hover:bg-spotify-green" onClick={handleOnClick}>
-  //     <div className=" flex-auto border">
-  //       <h1>{title}</h1>
-  //       <p>{description}</p>
-  //     </div>
-  //   </button>
-  // );
-
-  // const unauthenticatedButton = (
-  //   <button>
-  //     <div className=" flex-auto border">
-  //       <h1>{title}</h1>
-  //       <p>{description}</p>
-  //     </div>
-  //   </button>
-  // );
-
-  // if (isAuthenticated) {
-  //   return authenticatedButton;
-  // } else {
-  //   return unauthenticatedButton;
-  // }
 }

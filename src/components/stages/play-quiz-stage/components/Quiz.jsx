@@ -142,7 +142,7 @@ export default function Quiz({ inPlay, setTracksReady }) {
         hideCloseButton
         size="2xl"
         classNames={{
-          header: " justify-center text-mobile-3 sm:text-sm-screen-2",
+          header: " justify-center underline underline-offset-8 decoration-primary decoration-4 text-mobile-3 sm:text-sm-screen-2",
           body: " sm:flex-row divide-y-large sm:divide-y-0 sm:divide-x-large divide-foreground",
           // footer: " justify-center",
         }}

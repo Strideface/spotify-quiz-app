@@ -101,7 +101,7 @@ export default function Authentication() {
   }, [quizData, userData, userIsSuccess]);
 
   return (
-    <div className=" flex sm:min-w-72">
+    <div className=" flex min-w-72">
       <Card
         fullWidth
         classNames={{
@@ -118,6 +118,7 @@ export default function Authentication() {
               size="lg"
               isBordered
               color="primary"
+              radius="sm"
             />
           </CardHeader>
         )}

@@ -31,7 +31,8 @@ export default function SelectPlaylistStage() {
 
   const handleOnSubmit = (event) => {
     // assign selected total tracks for quiz
-    if (isNaN(numberOfTracks)) {// handles if value is undefined which will be the case if..
+    if (isNaN(numberOfTracks)) {
+      // handles if value is undefined which will be the case if..
       // initial placeholder value is not overwritten
       quizData.current.quizTotalTracks = quizData.current.playlistTotalTracks;
     } else {
@@ -59,8 +60,11 @@ export default function SelectPlaylistStage() {
     <>
       <Modal
         isOpen={playlistSelected}
-        onClose={handleOnClose}      
-        classNames={{ header: " text-mobile-2 sm:text-sm-screen-2" }}
+        onClose={handleOnClose}
+        classNames={{
+          header:
+            " underline underline-offset-8 decoration-primary decoration-4 text-mobile-2 sm:text-sm-screen-2",
+        }}
       >
         <ModalContent>
           <ModalHeader>Quiz Settings</ModalHeader>

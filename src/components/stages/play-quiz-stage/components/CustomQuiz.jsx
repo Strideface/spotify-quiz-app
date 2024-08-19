@@ -20,7 +20,6 @@ export default function CustomQuiz() {
   const [inPlay, setInPlay] = useState(false);
   const [tracksReady, setTracksReady] = useState(false);
 
-
   const easy = (
     <ul>
       <li>
@@ -85,7 +84,8 @@ export default function CustomQuiz() {
         classNames={{
           body: "flex-col justify-center space-y-2 text-mobile-2 md:text-sm-screen-1",
           footer: " justify-center text-mobile-2 md:text-sm-screen-1",
-          header: "text-mobile-3 md:text-sm-screen-2"
+          header:
+            " underline underline-offset-8 decoration-primary decoration-4 text-mobile-3 md:text-sm-screen-2",
         }}
       >
         <ModalContent>

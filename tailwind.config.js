@@ -10,7 +10,7 @@ module.exports = {
     // Tailwind
     "./src/**/*.{js,jsx,ts,tsx}",
     // NextUI
-    "./node_modules/@nextui-org/theme/dist/components/(modal|popover|spinner|navbar|button|card|divider|image|accordion|spacer|input|avatar|tooltip|modal|radio|chip|badge|progress).js",
+    "./node_modules/@nextui-org/theme/dist/components/(modal|popover|spinner|navbar|button|card|divider|image|accordion|spacer|input|avatar|tooltip|modal|radio|chip|badge|progress|table).js",
   ],
   // Tailwind
   theme: {
@@ -42,8 +42,10 @@ module.exports = {
         "mobile-1": ["0.75rem", "1rem"],// text-tiny
         "mobile-2": ["0.875rem", "1.25rem"],// text-small
         "mobile-3": ["1rem", "1.5rem"],// text-medium
+        "mobile-big": ["1.125rem", "1.75rem"],// text-large
         "sm-screen-1": ["1rem", "1.5rem"],// text-medium
         "sm-screen-2": ["1.125rem", "1.75rem"],// text-large
+        "sm-screen-big": ["1.5rem", "2rem"],// text-2xl
         
       }
     },
