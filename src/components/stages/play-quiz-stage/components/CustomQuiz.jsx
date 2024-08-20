@@ -80,7 +80,7 @@ export default function CustomQuiz() {
         isOpen={!inPlay}
         hideCloseButton
         isDismissable
-        backdrop="blur"
+        size="lg"
         classNames={{
           body: "flex-col justify-center space-y-2 text-mobile-2 md:text-sm-screen-1",
           footer: " justify-center text-mobile-2 md:text-sm-screen-1",

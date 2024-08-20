@@ -2,11 +2,12 @@ import { useState, useEffect, useRef } from "react";
 import { useOutletContext } from "react-router-dom";
 import { fetchPlaylistTracks } from "../../../../util/spotify-api";
 import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
 import { shuffleArray } from "../../../../util/util";
+
 import LoadingIndicator from "../../../LoadingIndicator";
 import AnswerSelection from "./AnswerSelection";
 import PlayerControl from "./player/PlayerControl";
-
 import CountdownTimer from "./CountdownTimer";
 import { Chip } from "@nextui-org/chip";
 import {
@@ -142,9 +143,15 @@ export default function Quiz({ inPlay, setTracksReady }) {
         hideCloseButton
         size="2xl"
         classNames={{
-          header: " justify-center underline underline-offset-8 decoration-primary decoration-4 text-mobile-3 sm:text-sm-screen-2",
+          header:
+            " justify-center underline underline-offset-8 decoration-primary decoration-4 text-mobile-3 sm:text-sm-screen-2",
           body: " sm:flex-row divide-y-large sm:divide-y-0 sm:divide-x-large divide-foreground",
-          // footer: " justify-center",
+        }}
+        motionProps={{
+          variants: {
+            enter: { y: 0, opacity: 1,},
+            exit: { y: 200, opacity: 0, transition: { duration: 0.2 } },
+          },
         }}
       >
         <ModalContent>
@@ -196,9 +203,7 @@ export default function Quiz({ inPlay, setTracksReady }) {
                 classNames={{
                   base: " text-mobile-3 sm:text-sm-screen-2 font-medium h-1/2",
                   body: trackIsCorrect.current ? " bg-primary" : " bg-danger",
-                  header: trackIsCorrect.current
-                    ? " bg-primary"
-                    : " bg-danger",
+                  header: trackIsCorrect.current ? " bg-primary" : " bg-danger",
                 }}
               >
                 <CardHeader>
@@ -225,7 +230,12 @@ export default function Quiz({ inPlay, setTracksReady }) {
         </ModalContent>
       </Modal>
 
-      <div className=" flex flex-col justify-center space-y-10 m-auto md:w-2/3">
+      <motion.div
+        className=" flex flex-col justify-center space-y-10 m-auto md:w-2/3"
+        initial={{ opacity: 0, y: 120 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 3 }}
+      >
         {playlistTracksIsLoading && <LoadingIndicator />}
         {playlistTracksData && (
           <>
@@ -233,7 +243,12 @@ export default function Quiz({ inPlay, setTracksReady }) {
               {/* show current track number as long as there's tracks left */}
               {activeTrackIndex.current + 1 <=
                 quizData.current?.quizTracks?.length && (
-                <Chip size="lg" classNames={{content: " font-medium text-mobile-3 md:text-sm-screen-2"}}>
+                <Chip
+                  size="lg"
+                  classNames={{
+                    content: " font-medium text-mobile-3 md:text-sm-screen-2",
+                  }}
+                >
                   Track No: {activeTrackIndex.current + 1}
                 </Chip>
               )}
@@ -271,7 +286,7 @@ export default function Quiz({ inPlay, setTracksReady }) {
         )}
 
         {playlistTracksIsError && <p>Error: {playlistTracksError.message}</p>}
-      </div>
+      </motion.div>
     </>
   );
 }

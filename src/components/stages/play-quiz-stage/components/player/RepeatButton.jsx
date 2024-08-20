@@ -40,7 +40,7 @@ export default function RepeatButton({
       xmlns="http://www.w3.org/2000/svg"
       width="64"
       height="64"
-      fillRule="currentColor"
+      fill="#1ed760" // spotify-green-2
       className="bi bi-arrow-repeat"
       viewBox="0 0 16 16"
     >
@@ -60,6 +60,7 @@ export default function RepeatButton({
       endContent={repeatButtonIcon}
       size="lg"
       radius="full"
+      variant="bordered"
     >
       <p className=" hidden sm:block">Repeat</p>
     </Button>

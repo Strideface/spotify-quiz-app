@@ -83,7 +83,7 @@ export default function PlayPauseButton({
       xmlns="http://www.w3.org/2000/svg"
       width="128"
       height="128"
-      fillRule="currentColor"
+      fill="#1ed760" // spotify-green-2
       className="bi bi-play-circle-fill"
       viewBox="0 0 16 16"
     >
@@ -99,6 +99,7 @@ export default function PlayPauseButton({
       endContent={playButtonIcon}
       size="lg"
       radius="full"
+      variant="bordered"
     >
       <p className=" hidden sm:block">Play</p>
     </Button>
@@ -109,7 +110,7 @@ export default function PlayPauseButton({
       xmlns="http://www.w3.org/2000/svg"
       width="64"
       height="64"
-      fillRule="currentColor"
+      fill="#1ed760" // spotify-green-2
       className="bi bi-pause-circle"
       viewBox="0 0 16 16"
     >
@@ -126,6 +127,7 @@ export default function PlayPauseButton({
       endContent={pauseButtonIcon}
       size="lg"
       radius="full"
+      variant="bordered"
     >
       <p className=" hidden sm:block">Pause</p>
     </Button>

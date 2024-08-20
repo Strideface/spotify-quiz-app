@@ -1,6 +1,7 @@
 import AsyncSelect from "react-select/async";
 import { useRef, useState, useCallback } from "react";
 import { useOutletContext } from "react-router-dom";
+import { motion } from "framer-motion";
 
 import {
   fetchArtistTopTracks,
@@ -266,8 +267,7 @@ export default function AnswerSelection({
       ...theme.colors,
       primary: "#1DB954", // spotify-green
       primary25: "#1DB954", // spotify-green
-      primary50: "#1ed760" // // spotify-green
-      
+      primary50: "#1ed760", // // spotify-green
     },
   });
 
@@ -316,7 +316,7 @@ export default function AnswerSelection({
           className={classNames}
         />
       )}
-      <div className=" flex justify-center">
+      <motion.div className=" flex justify-center" whileHover={{ scale: 1.05 }}>
         {selectedValue.track ? (
           <Button
             className=" sm:text-sm-screen-2 sm:w-80"
@@ -335,7 +335,7 @@ export default function AnswerSelection({
             Skip
           </Button>
         )}
-      </div>
+      </motion.div>
     </>
   );
 }
