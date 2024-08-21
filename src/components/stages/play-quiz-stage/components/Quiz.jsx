@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useOutletContext } from "react-router-dom";
 import { fetchPlaylistTracks } from "../../../../util/spotify-api";
 import { useQuery } from "@tanstack/react-query";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { shuffleArray } from "../../../../util/util";
 
 import LoadingIndicator from "../../../LoadingIndicator";
@@ -133,6 +133,11 @@ export default function Quiz({ inPlay, setTracksReady }) {
     </svg>
   );
 
+  // IMPORTANT NOTE ABOUT KEYS
+  // have to make the set of keys unique for each sibling component within a parent
+  // for react to recognize that they have been unmounted from the DOM.
+  // crucial for framer motion to work as it won't animate if react can't distinguish whether components have mounted/unmounted.
+
   return (
     <>
       <Modal
@@ -149,7 +154,7 @@ export default function Quiz({ inPlay, setTracksReady }) {
         }}
         motionProps={{
           variants: {
-            enter: { y: 0, opacity: 1,},
+            enter: { y: 0, opacity: 1 },
             exit: { y: 200, opacity: 0, transition: { duration: 0.2 } },
           },
         }}
@@ -230,16 +235,18 @@ export default function Quiz({ inPlay, setTracksReady }) {
         </ModalContent>
       </Modal>
 
-      <motion.div
+      <div
         className=" flex flex-col justify-center space-y-10 m-auto md:w-2/3"
-        initial={{ opacity: 0, y: 120 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 3 }}
       >
         {playlistTracksIsLoading && <LoadingIndicator />}
         {playlistTracksData && (
           <>
-            <div className=" flex p-10 justify-center space-x-5">
+            <motion.div
+              className=" flex p-10 justify-center space-x-5"
+              key={activeTrackIndex.current + 1}
+              initial={{ y: -200, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+            >
               {/* show current track number as long as there's tracks left */}
               {activeTrackIndex.current + 1 <=
                 quizData.current?.quizTracks?.length && (
@@ -264,29 +271,42 @@ export default function Quiz({ inPlay, setTracksReady }) {
                     handleTimerIsFinished={handleTimerIsFinished}
                   />
                 ) : null)}
-            </div>
-            <div className="flex-col mx-2 p-10 justify-center space-y-2 border-medium border-foreground rounded-md">
+            </motion.div>
+
+            <motion.div
+              key={userResponse}
+              className="flex-col mx-2 p-10 space-y-2 justify-center border-medium border-foreground rounded-md"
+              initial={{ x: 300, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+            >
               <AnswerSelection
-                key={activeTrackIndex.current}
                 activeTrackIndex={activeTrackIndex}
                 setUserResponse={setUserResponse}
                 artistIsCorrect={artistIsCorrect}
                 trackIsCorrect={trackIsCorrect}
                 setTimerIsFinished={setTimerIsFinished}
               />
-            </div>
-            <div className="flex-col p-10 justify-center">
+            </motion.div>
+
+            <motion.div
+              key={
+                userResponse.length > 0 &&
+                quizData.current.quizTracks[activeTrackIndex.current]?.track?.id
+              }
+              className="flex-col p-10 justify-center"
+              initial={{ x: -300, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+            >
               <PlayerControl
-                key={activeTrackIndex.current}
                 activeTrackIndex={activeTrackIndex}
                 timerIsFinished={timerIsFinished}
               />
-            </div>
+            </motion.div>
           </>
         )}
 
         {playlistTracksIsError && <p>Error: {playlistTracksError.message}</p>}
-      </motion.div>
+      </div>
     </>
   );
 }
