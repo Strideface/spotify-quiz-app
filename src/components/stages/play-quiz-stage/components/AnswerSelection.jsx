@@ -34,6 +34,8 @@ export default function AnswerSelection({
   // function must return a promise
   // artist search bar
   const searchloadOptions = (inputValue) => {
+  // DEBOUNCING: only change inputValue once user stops typing after specified time in setTimeout
+  // reduces amount of Spotify API calls (i.e. not after every key stroke)
     if (lastChange.current) {
       clearTimeout(lastChange.current);
     }
@@ -68,7 +70,7 @@ export default function AnswerSelection({
                 return options;
               })
           );
-        }, 2000);
+        }, 1000);
       });
     }
   };
@@ -319,7 +321,7 @@ export default function AnswerSelection({
       <motion.div className=" flex justify-center" whileHover={{ scale: 1.05 }}>
         {selectedValue.track ? (
           <Button
-            className=" sm:text-sm-screen-2 sm:w-80"
+            className=" font-medium sm:text-sm-screen-2 sm:w-80"
             color="primary"
             size="lg"
             onPress={handleSubmitAnswer}

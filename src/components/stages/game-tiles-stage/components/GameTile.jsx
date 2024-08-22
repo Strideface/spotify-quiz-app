@@ -27,9 +27,9 @@ export default function GameTile({ title, description, image, gameId }) {
 
   return (
     <motion.div
-      animate={{ y: 20 }}
-      transition={{ duration: 1 }}
-      whileHover={{ scale: 1.05 }}
+      whileHover={{ scale: 1.05, transition: { duration: 1 } }}
+      initial={{ y: 300, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
     >
       <Card
         isPressable={isAuthenticated}
@@ -39,7 +39,8 @@ export default function GameTile({ title, description, image, gameId }) {
         classNames={{
           base: " bg-slate-200 hover:bg-background flex-auto border max-w-2xl",
           body: " space-y-8 text-center font-medium text-mobile-3 sm:text-screen-2 bg-primary hover:bg-spotify-green-2",
-          header: " justify-center font-semibold text-mobile-big sm:text-sm-screen-big",
+          header:
+            " justify-center font-semibold text-mobile-big sm:text-sm-screen-big",
         }}
       >
         <CardHeader>{title}</CardHeader>
@@ -47,9 +48,8 @@ export default function GameTile({ title, description, image, gameId }) {
         <CardBody>
           <p>{description}</p>
           {image}
-          </CardBody>
+        </CardBody>
       </Card>
     </motion.div>
   );
-
 }

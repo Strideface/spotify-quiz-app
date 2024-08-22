@@ -43,8 +43,6 @@ export default function PlaylistCard({
             alt="Playlist Cover Image"
             className="object-cover rounded-xl aspect-square"
             src={image.url}
-            // width={220}
-            // height={220}
           />
         </CardBody>
       </Card>

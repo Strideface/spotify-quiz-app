@@ -1,4 +1,5 @@
 import { useOutletContext } from "react-router-dom";
+import { motion } from "framer-motion";
 import SearchPlaylists from "./components/SearchPlaylists";
 import UserPlaylists from "./components/UserPlaylists";
 import {
@@ -8,7 +9,7 @@ import {
   ModalHeader,
   Modal,
 } from "@nextui-org/modal";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Accordion, AccordionItem } from "@nextui-org/accordion";
 import { Button } from "@nextui-org/button";
 import { Radio, RadioGroup } from "@nextui-org/radio";
@@ -30,6 +31,8 @@ export default function SelectPlaylistStage() {
   }
 
   const handleOnSubmit = (event) => {
+    // close modal first
+    setPlaylistSelected(false);
     // assign selected total tracks for quiz
     if (isNaN(numberOfTracks)) {
       // handles if value is undefined which will be the case if..
@@ -57,7 +60,11 @@ export default function SelectPlaylistStage() {
   };
 
   return (
-    <>
+    <motion.div
+      initial={{ x: 2000, opacity: 0 }}
+      animate={{ x: 0, opacity: 1, transition: { delay: 0.3 } }}
+      exit={{ x: -2000, opacity: 0, transition: {duration: 0.2}}}
+    >
       <Modal
         isOpen={playlistSelected}
         onClose={handleOnClose}
@@ -171,6 +178,6 @@ export default function SelectPlaylistStage() {
           <UserPlaylists setPlaylistSelected={setPlaylistSelected} />
         </AccordionItem>
       </Accordion>
-    </>
+    </motion.div>
   );
 }

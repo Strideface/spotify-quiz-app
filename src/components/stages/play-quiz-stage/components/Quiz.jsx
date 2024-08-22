@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useOutletContext } from "react-router-dom";
 import { fetchPlaylistTracks } from "../../../../util/spotify-api";
 import { useQuery } from "@tanstack/react-query";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { shuffleArray } from "../../../../util/util";
 
 import LoadingIndicator from "../../../LoadingIndicator";
@@ -96,6 +96,7 @@ export default function Quiz({ inPlay, setTracksReady }) {
   const handleModalOnClick = () => {
     // change UI to the final results stage once tracks are exhausted
     if (userResponse.length === quizData.current.quizTracks.length) {
+      setModalIsOpen(false);
       setQuizStage((prevState) => ({
         ...prevState,
         playQuizStage: false,
@@ -155,7 +156,7 @@ export default function Quiz({ inPlay, setTracksReady }) {
         motionProps={{
           variants: {
             enter: { y: 0, opacity: 1 },
-            exit: { y: 200, opacity: 0, transition: { duration: 0.2 } },
+            exit: { y: 200, opacity: 0 },
           },
         }}
       >
@@ -276,8 +277,8 @@ export default function Quiz({ inPlay, setTracksReady }) {
             <motion.div
               key={userResponse}
               className="flex-col mx-2 p-10 space-y-2 justify-center border-medium border-foreground rounded-md"
-              initial={{ x: 300, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
+              initial={{ y: 300, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
             >
               <AnswerSelection
                 activeTrackIndex={activeTrackIndex}

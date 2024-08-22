@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion } from "framer-motion";
 import Quiz from "./Quiz";
 import { useOutletContext } from "react-router-dom";
 import {
@@ -75,7 +76,11 @@ export default function CustomQuiz() {
   };
 
   return (
-    <>
+    <motion.div
+      initial={{ x: 2000, opacity: 0 }}
+      animate={{ x: 0, opacity: 1, transition: { delay: 0.3 } }}
+      exit={{ x: -2000, opacity: 0, transition: { duration: 0.2 } }}
+    >
       <Modal
         isOpen={!inPlay}
         hideCloseButton
@@ -86,6 +91,12 @@ export default function CustomQuiz() {
           footer: " justify-center text-mobile-2 md:text-sm-screen-1",
           header:
             " underline underline-offset-8 decoration-primary decoration-4 text-mobile-3 md:text-sm-screen-2",
+        }}
+        motionProps={{
+          variants: {
+            enter: { y: 0, opacity: 1, transition: { delay: 0.3 } },
+            exit: { y: 200, opacity: 0}
+          },
         }}
       >
         <ModalContent>
@@ -137,6 +148,6 @@ export default function CustomQuiz() {
       </Modal>
 
       <Quiz inPlay={inPlay} setTracksReady={setTracksReady} />
-    </>
+    </motion.div>
   );
 }
