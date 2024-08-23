@@ -11,24 +11,14 @@ export default function MainPage() {
 
   return (
     <AnimatePresence>
-      {quizStage.gameTilesStage && <GameTilesStage key="game-tiles-stage"/>}
-      {quizStage.selectPlaylistStage && <SelectPlaylistStage key="select-playlist-stage"/>}
-      {quizStage.playQuizStage && <PlayQuizStage key="play-quiz-stage"/>}
-      {quizStage.finalResultsStage && <FinalResultsStage key="final-results-stage"/>}
+      {quizStage.gameTilesStage && <GameTilesStage key="game-tiles-stage" />}
+      {quizStage.selectPlaylistStage && (
+        <SelectPlaylistStage key="select-playlist-stage" />
+      )}
+      {quizStage.playQuizStage && <PlayQuizStage key="play-quiz-stage" />}
+      {quizStage.finalResultsStage && (
+        <FinalResultsStage key="final-results-stage" />
+      )}
     </AnimatePresence>
   );
-
-  // render content depending on the quiz 'flow' state
-  // if (quizStage.gameTilesStage) {
-  //   return <GameTilesStage />;
-  // }
-  // if (quizStage.selectPlaylistStage) {
-  //   return <SelectPlaylistStage />;
-  // }
-  // if (quizStage.playQuizStage) {
-  //   return <PlayQuizStage />;
-  // }
-  // if (quizStage.finalResultsStage) {
-  //   return <FinalResultsStage />;
-  // }
 }

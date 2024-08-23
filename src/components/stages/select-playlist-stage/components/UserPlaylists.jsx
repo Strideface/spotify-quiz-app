@@ -12,9 +12,9 @@ export default function UserPlaylists({ setPlaylistSelected }) {
   } = useQuery({
     queryKey: ["fetchUserPlaylists"],
     queryFn: fetchUserPlaylists,
-    staleTime: 60000, // every 60 secs, refetch data. Aribitrary but to reduce API calls.
+    staleTime: 60000, // every 60 secs, refetch data. Arbitrary but to reduce API calls.
     // could have a situation where a user creates a new playlist and  wants to use it for the quiz.
-    retry: 1,
+    retry: 3,
   });
 
   if (userPlaylistIsLoading) {
@@ -26,7 +26,7 @@ export default function UserPlaylists({ setPlaylistSelected }) {
   }
 
   if (userPlaylistIsError) {
-    return <p>Error: {userPlaylistError.message}</p>;
+    return <p className=" text-danger text-mobile-1 sm:text-sm-screen-1">{userPlaylistError.message}</p>;
   }
 
   if (userPlaylistData) {

@@ -88,6 +88,13 @@ export async function fetchAccessToken() {
     );
     error.code = response.status;
     error.info = await response.json();
+    console.log(
+      error +
+        " - status: " +
+        error.code +
+        "- message: " +
+        error.info.error.message
+    );
     throw error;
   }
 
@@ -117,6 +124,13 @@ export async function fetchRefreshToken() {
     );
     error.code = response.status;
     error.info = await response.json();
+    console.log(
+      error +
+        " - status: " +
+        error.code +
+        "- message: " +
+        error.info.error.message
+    );
     throw error;
   }
 
@@ -142,6 +156,13 @@ export async function fetchUserDetails() {
     );
     error.code = response.status;
     error.info = await response.json();
+    console.log(
+      error +
+        " - status: " +
+        error.code +
+        "- message: " +
+        error.info.error.message
+    );
     throw error;
   }
 
@@ -173,10 +194,17 @@ export async function fetchUserPlaylists() {
 
     if (!response.ok) {
       const error = new Error(
-        "An error occurred while fetching spotify user Playlists"
+        "An error occurred while fetching your playlists."
       );
       error.code = response.status;
       error.info = await response.json();
+      console.log(
+        error +
+          " - status: " +
+          error.code +
+          "- message: " +
+          error.info.error.message
+      );
       throw error;
     }
 
@@ -228,6 +256,13 @@ export async function fetchSearchedItems(searchTerm, market, type, limit) {
     const error = new Error("An error occurred while fetching searched items");
     error.code = response.status;
     error.info = await response.json();
+    console.log(
+      error +
+        " - status: " +
+        error.code +
+        "- message: " +
+        error.info.error.message
+    );
     throw error;
   }
 
@@ -247,15 +282,18 @@ export async function fetchSearchedItems(searchTerm, market, type, limit) {
   return searchResultsItems;
 }
 
-export async function fetchPlaylistTracks(playlistTracksHref, market, limit, playlistTotalTracks) {
-  // CREATE AN ALGORITHM TO ENSURE YOU GET TRACKS FROM A RANDOM POINT IN THE PLAYLIST, WHEN LIMIT IS LESS THAN PLAYLIST TRACK TOTAL.
-  // OTHERWISE, COULD GET A LOT OF TRACKS FROM ONE ARTIST IF OFFSET IS ALWAYS FROM THE START.
+export async function fetchPlaylistTracks(
+  playlistTracksHref,
+  market,
+  limit,
+  playlistTotalTracks
+) {
   let accessToken = await getLocalAccessToken();
 
   const queryParams = new URLSearchParams({
     // if limit param is less than 100 then use that value, otherwise get 100 at a time until limit is reached.
     limit: limit < 100 ? limit : 100, // 100 is max limit allowed per fetch
-    // randomize the offset if limit selected is different to playlistTotalTracks. Otherwise, always be getting from first track. 
+    // randomize the offset if limit selected is different to playlistTotalTracks. Otherwise, always be getting from first track.
     offset: Math.floor(Math.random() * (playlistTotalTracks - limit)), // Returns a random integer from 0 to the difference of playlistTotalTracks - limit:
     market: market,
   });
@@ -278,6 +316,13 @@ export async function fetchPlaylistTracks(playlistTracksHref, market, limit, pla
       );
       error.code = response.status;
       error.info = await response.json();
+      console.log(
+        error +
+          " - status: " +
+          error.code +
+          "- message: " +
+          error.info.error.message
+      );
       throw error;
     }
 
@@ -289,7 +334,7 @@ export async function fetchPlaylistTracks(playlistTracksHref, market, limit, pla
     remainingLimit = remainingLimit - 100;
     // Discontinue if no tracks left to get
     if (remainingLimit === 0) {
-      break
+      break;
     }
 
     // get next batch of tracks if 'next' is not 'null', the initial limit is more than 100, and we haven't reached the final fetch yet.
@@ -303,7 +348,7 @@ export async function fetchPlaylistTracks(playlistTracksHref, market, limit, pla
       if (remainingLimit < 100) {
         finalLimit = remainingLimit;
         queryParams.set("limit", finalLimit);
-      } 
+      }
     } else {
       getNext = false;
     }
@@ -381,6 +426,13 @@ async function fetchPlaybackState() {
     const error = new Error("An error occurred while fetching playback state");
     error.code = response.status;
     error.info = await response.json();
+    console.log(
+      error +
+        " - status: " +
+        error.code +
+        "- message: " +
+        error.info.error.message
+    );
     throw error;
   }
 
@@ -447,6 +499,13 @@ export async function resumePlayback(trackUri, resumeFromStart) {
     const error = new Error("An error occurred when attempting playback");
     error.code = response.status;
     error.info = await response.json();
+    console.log(
+      error +
+        " - status: " +
+        error.code +
+        "- message: " +
+        error.info.error.message
+    );
     throw error;
   }
 

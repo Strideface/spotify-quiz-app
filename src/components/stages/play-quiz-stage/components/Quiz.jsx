@@ -5,7 +5,6 @@ import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { shuffleArray } from "../../../../util/util";
 
-import LoadingIndicator from "../../../LoadingIndicator";
 import AnswerSelection from "./AnswerSelection";
 import PlayerControl from "./player/PlayerControl";
 import CountdownTimer from "./CountdownTimer";
@@ -21,7 +20,7 @@ import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { Image } from "@nextui-org/image";
 import { Button } from "@nextui-org/button";
 
-export default function Quiz({ inPlay, setTracksReady }) {
+export default function Quiz({ inPlay, setTracksReady, setError }) {
   const activeTrackIndex = useRef();
   const [userResponse, setUserResponse] = useState([]);
   const [timerIsFinished, setTimerIsFinished] = useState(true);
@@ -37,7 +36,6 @@ export default function Quiz({ inPlay, setTracksReady }) {
     data: playlistTracksData,
     error: playlistTracksError,
     isError: playlistTracksIsError,
-    isLoading: playlistTracksIsLoading,
   } = useQuery({
     queryFn: () =>
       fetchPlaylistTracks(
@@ -60,6 +58,7 @@ export default function Quiz({ inPlay, setTracksReady }) {
   // get quiz tracks result from fetchPlaylistTracks once available
   useEffect(() => {
     if (playlistTracksData) {
+      setError(null)// reset error in case there was one before  
       // shuffle order of tracks before assignment
       shuffleArray(playlistTracksData);
       quizData.current.quizTracks = playlistTracksData;
@@ -67,7 +66,14 @@ export default function Quiz({ inPlay, setTracksReady }) {
       // inform parent component that quiz can be started.
       setTracksReady(true);
     }
-  }, [playlistTracksData, quizData, setTracksReady]);
+  }, [playlistTracksData, quizData, setError, setTracksReady]);
+
+  // if error, inform parent component that has the modal so message can be displayed there.
+    useEffect(() => {
+      if (playlistTracksIsError) {
+        setError(playlistTracksError);
+      }
+    }, [playlistTracksIsError, playlistTracksError, setError]);
 
   // inPlay will only change once, when user closes modal in the parent component. Set timer when inPlay changes.
   useEffect(() => {
@@ -82,6 +88,8 @@ export default function Quiz({ inPlay, setTracksReady }) {
       setModalIsOpen(true);
     }
   }, [userResponse]);
+
+
 
   // handles scenario where timer runs out
   const handleTimerIsFinished = () => {
@@ -236,10 +244,7 @@ export default function Quiz({ inPlay, setTracksReady }) {
         </ModalContent>
       </Modal>
 
-      <div
-        className=" flex flex-col justify-center space-y-10 m-auto md:w-2/3"
-      >
-        {playlistTracksIsLoading && <LoadingIndicator />}
+      <div className=" flex flex-col justify-center space-y-10 m-auto md:w-2/3">
         {playlistTracksData && (
           <>
             <motion.div
@@ -305,8 +310,6 @@ export default function Quiz({ inPlay, setTracksReady }) {
             </motion.div>
           </>
         )}
-
-        {playlistTracksIsError && <p>Error: {playlistTracksError.message}</p>}
       </div>
     </>
   );

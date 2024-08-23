@@ -20,6 +20,7 @@ export default function CustomQuiz() {
   const { quizData } = useOutletContext();
   const [inPlay, setInPlay] = useState(false);
   const [tracksReady, setTracksReady] = useState(false);
+  const [error, setError] = useState(null);
 
   const easy = (
     <ul>
@@ -77,8 +78,8 @@ export default function CustomQuiz() {
 
   return (
     <motion.div
-      initial={{ x: 2000, opacity: 0 }}
-      animate={{ x: 0, opacity: 1, transition: { delay: 0.3 } }}
+      // initial={{ x: 2000, opacity: 0 }}
+      // animate={{ x: 0, opacity: 1, transition: { delay: 0.3 } }}
       exit={{ x: -2000, opacity: 0, transition: { duration: 0.2 } }}
     >
       <Modal
@@ -95,7 +96,7 @@ export default function CustomQuiz() {
         motionProps={{
           variants: {
             enter: { y: 0, opacity: 1, transition: { delay: 0.3 } },
-            exit: { y: 200, opacity: 0}
+            exit: { y: 200, opacity: 0 },
           },
         }}
       >
@@ -138,16 +139,27 @@ export default function CustomQuiz() {
               <Button
                 color="success"
                 onPress={handleOnClick}
-                isLoading={!tracksReady}
+                isLoading={!error && !tracksReady}
+                isDisabled={error}
+                className={error && "bg-default-500"}
               >
                 Play
               </Button>
+              {error && (
+                <p className=" text-danger text-mobile-1 sm:text-sm-screen-1">
+                  {error.message}
+                </p>
+              )}
             </div>
           </ModalFooter>
         </ModalContent>
       </Modal>
 
-      <Quiz inPlay={inPlay} setTracksReady={setTracksReady} />
+      <Quiz
+        inPlay={inPlay}
+        setTracksReady={setTracksReady}
+        setError={setError}
+      />
     </motion.div>
   );
 }

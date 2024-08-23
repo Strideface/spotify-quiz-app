@@ -67,6 +67,7 @@ export default function Authentication() {
     }
     if (currentParams.error) {
       authError.current = currentParams.error;
+      console.log(`authError = ${authError.current}`)// For error logging
       setSearchParams("");
     }
     // clean up function resets any previous authentication error to null
@@ -125,7 +126,7 @@ export default function Authentication() {
         <CardBody className=" font-medium gap-4 justify-center text-mobile-3 sm:text-sm-screen-2">
           {accessIsError && (
             <p className=" text-mobile-1 sm:text-sm-screen-1">
-              An error has occured: {accessError.message}
+              {accessError.message}
             </p>
           )}
           {/* only show auth error if it has a current value. Clears when auth is a success. */}
