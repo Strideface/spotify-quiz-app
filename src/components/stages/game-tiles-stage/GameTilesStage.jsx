@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 export default function GameTilesStage() {
   return (
       <motion.div exit={{ x: -2000, opacity: 0, transition: {duration: 0.2}}}>
-        <section className=" flex place-content-center pt-10 sm:pt-20 ">
+        <section className=" flex place-content-center mx-4 pt-10 sm:pt-20 ">
           <Authentication />
         </section>
 

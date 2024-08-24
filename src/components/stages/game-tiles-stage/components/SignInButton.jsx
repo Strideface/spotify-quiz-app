@@ -12,7 +12,7 @@ export default function SignInButton({ isLoading }) {
       radius="full"
       isLoading={isLoading}
       id="signInSpotify"
-      className=" hover:bg-spotify-green-2 text-foreground"
+      className=" hover:bg-spotify-green-2 text-foreground font-medium sm:text-sm-screen-2"
     >
       Sign in to Spotify
     </Button>

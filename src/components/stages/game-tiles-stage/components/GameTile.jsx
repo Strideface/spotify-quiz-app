@@ -34,7 +34,6 @@ export default function GameTile({ title, description, image, gameId }) {
       <Card
         isPressable={isAuthenticated}
         onPress={isAuthenticated && handleOnClick}
-        isDisabled={!isAuthenticated}
         shadow="none"
         classNames={{
           base: " bg-foreground flex-auto border max-w-2xl",
