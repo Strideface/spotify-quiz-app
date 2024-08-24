@@ -37,10 +37,10 @@ export default function GameTile({ title, description, image, gameId }) {
         isDisabled={!isAuthenticated}
         shadow="none"
         classNames={{
-          base: " bg-slate-200 hover:bg-background flex-auto border max-w-2xl",
-          body: " space-y-8 text-center font-medium text-mobile-3 sm:text-screen-2 bg-primary hover:bg-spotify-green-2",
+          base: " bg-foreground flex-auto border max-w-2xl",
+          body: " space-y-8 text-background text-center font-medium text-mobile-3 sm:text-screen-2 bg-primary hover:bg-spotify-green-2",
           header:
-            " justify-center font-semibold text-mobile-big sm:text-sm-screen-big",
+            " justify-center font-semibold text-mobile-big sm:text-sm-screen-big text-primary hover:text-spotify-green-2",
         }}
       >
         <CardHeader>{title}</CardHeader>

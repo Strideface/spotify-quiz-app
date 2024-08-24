@@ -2,7 +2,6 @@
 import { useEffect, useRef } from "react";
 import { resumePlayback, pausePlayback } from "../../../../../util/spotify-api";
 import { useOutletContext } from "react-router-dom";
-import Alert from "../../../../Alert";
 import { Button } from "@nextui-org/button";
 
 export default function PlayPauseButton({
@@ -37,12 +36,13 @@ export default function PlayPauseButton({
       setIsPlay((prevState) => {
         return !prevState;
       });
+      // reset error is there was an error before
       if (error) {
         setError("");
       }
     } catch (error) {
       setError(error);
-      console.log(error)
+      console.log(error);
     }
   };
 
@@ -134,15 +134,5 @@ export default function PlayPauseButton({
     </Button>
   );
 
-  return (
-    <>
-      {isPlay ? (
-        pauseButton
-      ) : error ? (
-        <Alert trigger={playButton} content={error.message} color="danger" />
-      ) : (
-        playButton
-      )}
-    </>
-  );
+  return <>{isPlay ? pauseButton : playButton}</>;
 }

@@ -463,7 +463,7 @@ export async function resumePlayback(trackUri, resumeFromStart) {
 
   if (!playbackStateResults) {
     const error = new Error(
-      "You do not have an active device. Please play content from Spotify on your preferred device and try again"
+      "You do not have an active device. Please play content from Spotify and try again"
     );
     throw error;
   }
@@ -526,6 +526,13 @@ export async function pausePlayback() {
     const error = new Error("An error occurred when attempting to pause");
     error.code = response.status;
     error.info = await response.json();
+    console.log(
+      error +
+        " - status: " +
+        error.code +
+        "- message: " +
+        error.info.error.message
+    );
     throw error;
   }
 

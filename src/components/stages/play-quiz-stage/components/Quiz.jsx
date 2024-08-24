@@ -299,7 +299,7 @@ export default function Quiz({ inPlay, setTracksReady, setError }) {
                 userResponse.length > 0 &&
                 quizData.current.quizTracks[activeTrackIndex.current]?.track?.id
               }
-              className="flex-col p-10 justify-center"
+              className="flex-col mx-2 justify-center"
               initial={{ x: -300, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
             >

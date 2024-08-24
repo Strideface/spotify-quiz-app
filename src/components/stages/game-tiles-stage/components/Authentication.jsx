@@ -106,7 +106,7 @@ export default function Authentication() {
       <Card
         fullWidth
         classNames={{
-          base: " bg-foreground text-primary",
+          base: " bg-foreground text-primary hover:text-spotify-green-2",
           body: " text-center",
           header: "justify-center",
         }}

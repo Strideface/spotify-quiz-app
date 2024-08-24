@@ -1,7 +1,6 @@
 import { useRef } from "react";
 import { resumePlayback } from "../../../../../util/spotify-api";
 import { useOutletContext } from "react-router-dom";
-import Alert from "../../../../Alert";
 import { Button } from "@nextui-org/button";
 
 export default function RepeatButton({
@@ -27,6 +26,7 @@ export default function RepeatButton({
       if (!isPlay) {
         setIsPlay(true);
       }
+      // reset error is there was an error before
       if (error) {
         setError("");
       }
@@ -66,9 +66,5 @@ export default function RepeatButton({
     </Button>
   );
 
-  return error ? (
-    <Alert trigger={repeatButton} content={error.message} color="danger" />
-  ) : (
-    repeatButton
-  );
+  return repeatButton;
 }
