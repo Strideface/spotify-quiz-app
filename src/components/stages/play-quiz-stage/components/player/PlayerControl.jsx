@@ -4,7 +4,7 @@ import RepeatButton from "./RepeatButton";
 import ProgressBar from "./ProgressBar";
 import { useOutletContext } from "react-router-dom";
 import { Card, CardBody, CardFooter } from "@nextui-org/card";
-import ExclamationIcon from "./images/ExclamationIcon";
+import Alert from "../../../../Alert";
 
 export default function PlayerControl({ activeTrackIndex, timerIsFinished }) {
   const [isPlay, setIsPlay] = useState(false);
@@ -64,12 +64,7 @@ export default function PlayerControl({ activeTrackIndex, timerIsFinished }) {
 
   return (
     <div className=" flex flex-col justify-center">
-      {error && (
-        <div className=" flex justify-center w-fit m-auto mb-4 p-1 space-x-1 border border-danger text-danger">
-          <ExclamationIcon />
-          <p className=" text-mobile-1 sm:text-sm-screen-1">{error.message}</p>
-        </div>
-      )}
+      {error && <Alert message={error.message} />}
       <Card
         isFooterBlurred
         classNames={{

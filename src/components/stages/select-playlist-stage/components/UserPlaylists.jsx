@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchUserPlaylists } from "../../../../util/spotify-api";
 import PlaylistRow from "./PlaylistRow";
 import { Spinner } from "@nextui-org/spinner";
+import Alert from "../../../Alert";
 
 export default function UserPlaylists({ setPlaylistSelected }) {
   const {
@@ -20,21 +21,22 @@ export default function UserPlaylists({ setPlaylistSelected }) {
   if (userPlaylistIsLoading) {
     return (
       <div className=" flex p-10 justify-center">
-        <Spinner color="primary" label="Getting your playlists..." labelColor="primary"/>
+        <Spinner
+          color="primary"
+          label="Getting your playlists..."
+          labelColor="primary"
+        />
       </div>
     );
   }
 
   if (userPlaylistIsError) {
-    return <p className=" text-danger text-mobile-1 sm:text-sm-screen-1">{userPlaylistError.message}</p>;
+    return <Alert message={userPlaylistError.message} />;
   }
 
   if (userPlaylistData) {
     return (
       <>
-        {/* <div className=" flex p-10 justify-center">
-          <h1>Your Playlists</h1>
-        </div> */}
         <PlaylistRow
           playlistData={userPlaylistData}
           setPlaylistSelected={setPlaylistSelected}

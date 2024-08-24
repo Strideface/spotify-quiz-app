@@ -253,7 +253,7 @@ export async function fetchSearchedItems(searchTerm, market, type, limit) {
   );
 
   if (!response.ok) {
-    const error = new Error("An error occurred while fetching searched items");
+    const error = new Error("An error occurred while fetching search items");
     error.code = response.status;
     error.info = await response.json();
     console.log(
@@ -398,10 +398,17 @@ export async function fetchArtistTopTracks(id, market) {
 
   if (!response.ok) {
     const error = new Error(
-      "An error occurred while fetching artist top tracks"
+      "An error occurred while fetching artist tracks"
     );
     error.code = response.status;
     error.info = await response.json();
+    console.log(
+      error +
+        " - status: " +
+        error.code +
+        "- message: " +
+        error.info.error.message
+    );
     throw error;
   }
 

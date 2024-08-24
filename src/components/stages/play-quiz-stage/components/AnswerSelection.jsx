@@ -9,6 +9,7 @@ import {
 } from "../../../../util/spotify-api";
 import { shuffleArray } from "../../../../util/util";
 import { Button } from "@nextui-org/button";
+import Alert from "../../../Alert";
 
 export default function AnswerSelection({
   activeTrackIndex,
@@ -22,11 +23,11 @@ export default function AnswerSelection({
     artist: null,
     track: null,
   });
+  const [error, setError] = useState(null);
 
   const lastChange = useRef();
   const artistSearchBar = useRef();
   const trackSelector = useRef();
-  const error = useRef();
 
   // https://www.dhiwise.com/post/how-to-implement-a-react-search-bar-with-dropdown
   // https://react-select.com/home
@@ -34,8 +35,8 @@ export default function AnswerSelection({
   // function must return a promise
   // artist search bar
   const searchloadOptions = (inputValue) => {
-  // DEBOUNCING: only change inputValue once user stops typing after specified time in setTimeout
-  // reduces amount of Spotify API calls (i.e. not after every key stroke)
+    // DEBOUNCING: only change inputValue once user stops typing after specified time in setTimeout
+    // reduces amount of Spotify API calls (i.e. not after every key stroke)
     if (lastChange.current) {
       clearTimeout(lastChange.current);
     }
@@ -54,7 +55,7 @@ export default function AnswerSelection({
               10
             )
               .then((searchItemsData) => {
-                error.current = null;
+                setError(null);
                 searchItemsData.map((item) =>
                   options.push({
                     label: item.name,
@@ -66,7 +67,7 @@ export default function AnswerSelection({
                 return options;
               })
               .catch((err) => {
-                error.current = err;
+                setError(err);
                 return options;
               })
           );
@@ -101,7 +102,7 @@ export default function AnswerSelection({
           quizData.current.userDetails.country
         )
           .then((artistTrackItemsData) => {
-            error.current = null;
+            setError(null);
             artistTrackItemsData.map((item) =>
               options.push({
                 label: item.name,
@@ -166,7 +167,7 @@ export default function AnswerSelection({
             return options;
           })
           .catch((err) => {
-            error.current = err;
+            setError(err);
             return options;
           })
       );
@@ -299,7 +300,6 @@ export default function AnswerSelection({
         styles={selectStyles}
         className={classNames}
       />
-      {error.current && <p>{error.current.message}</p>}
 
       {selectedValue.artist && (
         <AsyncSelect
@@ -318,6 +318,9 @@ export default function AnswerSelection({
           className={classNames}
         />
       )}
+
+      {error && <Alert message={error.message} />}
+
       <motion.div className=" flex justify-center" whileHover={{ scale: 1.05 }}>
         {selectedValue.track ? (
           <Button

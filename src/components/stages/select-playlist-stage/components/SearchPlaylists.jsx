@@ -5,6 +5,7 @@ import SearchBar from "./SearchBar";
 import { fetchSearchedItems } from "../../../../util/spotify-api";
 import { useOutletContext } from "react-router-dom";
 import { Spinner } from "@nextui-org/spinner";
+import Alert from "../../../Alert";
 
 export default function SearchPlaylists({ setPlaylistSelected }) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -27,7 +28,7 @@ export default function SearchPlaylists({ setPlaylistSelected }) {
     queryKey: ["fetchSearchedPlaylistItems", { search: searchTerm }], // cache each unique search term
     refetchOnWindowFocus: false,
     enabled: searchTerm.trim().length !== 0, // enable when a searchTerm has a value so that caching queries work
-    retry: 1,
+    retry: 3,
   });
   // because playlistRow.jsx gets unmounted then remounted, searchTerm state is destroyed and not persisted.
   // This means a previous search result won't remain on screen when clicking to leaderboard and back again.
@@ -60,11 +61,7 @@ export default function SearchPlaylists({ setPlaylistSelected }) {
         />
       )}
       {searchedPlaylistIsError && (
-        <div className=" flex justify-center">
-          <p className=" text-danger text-mobile-1 sm:text-sm-screen-1">
-            {searchedPlaylistError.message}
-          </p>
-        </div>
+        <Alert message={searchedPlaylistError.message} />
       )}
     </>
   );
