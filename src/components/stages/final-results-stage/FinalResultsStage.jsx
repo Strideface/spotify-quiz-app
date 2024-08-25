@@ -2,8 +2,6 @@ import { Button } from "@nextui-org/button";
 import Results from "./components/Results";
 import { useOutletContext } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Avatar } from "@nextui-org/avatar";
-import { Badge } from "@nextui-org/badge";
 
 export default function FinalResultsStage() {
   const { quizData, setQuizStage } = useOutletContext();
@@ -19,11 +17,6 @@ export default function FinalResultsStage() {
     }));
   };
 
-  const percentageScore = Math.floor(
-    (quizData.current.quizResults.totalPoints /
-      (quizData.current.quizTotalTracks * 2)) *
-      100
-  );
   return (
     <motion.div
       className=" flex-col justify-center p-5 mt-20"
@@ -34,23 +27,7 @@ export default function FinalResultsStage() {
         Final Results
       </h1>
       <Results />
-      <div className=" flex justify-center m-auto">
-        <Badge
-          content={percentageScore + "%"}
-          color={percentageScore >= 50 ? "success" : "warning"}
-          size="lg"
-          shape="circle"
-        >
-          <Avatar
-            src={quizData.current.userDetails.image}
-            showFallback
-            size="lg"
-            isBordered
-            color="primary"
-            radius="sm"
-          />
-        </Badge>
-      </div>
+
       <motion.div
         className=" flex justify-center max-w-xl m-auto mt-14"
         whileHover={{ scale: 1.2 }}

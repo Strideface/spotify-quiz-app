@@ -1,4 +1,11 @@
-import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@nextui-org/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableColumn,
+  TableHeader,
+  TableRow,
+} from "@nextui-org/table";
 import { Badge } from "@nextui-org/badge";
 import { Avatar } from "@nextui-org/avatar";
 import { useOutletContext } from "react-router-dom";
@@ -13,7 +20,13 @@ export default function Results() {
   );
 
   return (
-    <Table color="primary" classNames={{base: " max-w-xl m-auto", td: " sm:text-sm-screen-2 font-medium"}}>
+    <Table
+      color="primary"
+      classNames={{
+        base: " max-w-xl m-auto",
+        td: " sm:text-sm-screen-2 font-medium",
+      }}
+    >
       <TableHeader>
         <TableColumn></TableColumn>
         <TableColumn></TableColumn>
@@ -43,24 +56,28 @@ export default function Results() {
         </TableRow>
         <TableRow key="5" className=" bg-primary">
           <TableCell>Total Points Scored</TableCell>
-          <TableCell className=" space-x-4">
-            {quizData.current.quizResults.totalPoints} /{" "}
-            {quizData.current.quizTotalTracks * 2}
-            <Badge
-          content={percentageScore + "%"}
-          color={percentageScore >= 50 ? "success" : "warning"}
-          size="lg"
-          shape="circle"
-        >
-          <Avatar
-            src={quizData.current.userDetails.image}
-            showFallback
-            size="lg"
-            isBordered
-            color="primary"
-            radius="sm"
-          />
-        </Badge>
+          <TableCell>
+            <div className="relative flex flex-col gap-y-2 sm:flex-row sm:gap-y-0 sm:items-center sm:justify-between">
+              {quizData.current.quizResults.totalPoints} /{" "}
+              {quizData.current.quizTotalTracks * 2}
+              <div className=" flex sm:justify-center">
+              <Badge
+                content={percentageScore + "%"}
+                color={percentageScore >= 50 ? "success" : "warning"}
+                size="lg"
+                shape="circle"
+              >
+                <Avatar
+                  src={quizData.current.userDetails.image}
+                  showFallback
+                  size="lg"
+                  isBordered
+                  color="primary"
+                  radius="sm"
+                />
+              </Badge>
+              </div>
+            </div>
           </TableCell>
         </TableRow>
       </TableBody>
