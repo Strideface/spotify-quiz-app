@@ -9,7 +9,7 @@ export default function FinalResultsStage() {
   const { quizData, setQuizStage } = useOutletContext();
 
   // NEED TO RESET THE QUIZ RESULTS HERE OTHERWISE IT WILL REMAIN IF USER PRESSES PLAY AGAIN BUTTON AND CARRY OVER
-  console.log(quizData.current)
+  console.log(quizData.current);
 
   const handleOnPress = () => {
     setQuizStage((prevState) => ({
@@ -19,11 +19,11 @@ export default function FinalResultsStage() {
     }));
   };
 
-  const percentageScore =
+  const percentageScore = Math.floor(
     (quizData.current.quizResults.totalPoints /
       (quizData.current.quizTotalTracks * 2)) *
-    100;
-
+      100
+  );
   return (
     <motion.div
       className=" flex-col justify-center p-5 mt-20"

@@ -129,7 +129,9 @@ export async function fetchRefreshToken() {
         " - status: " +
         error.code +
         "- message: " +
-        error.info.error.message
+        error.info.error.message +
+        "- error.info.error: " +
+        error.info.error
     );
     throw error;
   }

@@ -13,7 +13,7 @@ export default function RepeatButton({
 }) {
   // https://icons.getbootstrap.com/icons/arrow-repeat/
   const repeat = useRef();
-  const { quizData } = useOutletContext();
+  const { quizData, setQuizStage } = useOutletContext();
 
   const handleRepeatOnClick = async () => {
     try {
@@ -32,6 +32,14 @@ export default function RepeatButton({
       }
     } catch (error) {
       setError(error);
+      console.log(error)
+      if (error?.info?.error === "invalid_grant") {
+        setQuizStage((prevState) => ({
+          ...prevState,
+          playQuizStage: false,
+          gameTilesStage: true,
+        }));
+      }
     }
   };
 

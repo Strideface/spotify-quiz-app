@@ -9,7 +9,7 @@ import Alert from "../../../Alert";
 
 export default function SearchPlaylists({ setPlaylistSelected }) {
   const [searchTerm, setSearchTerm] = useState("");
-  const { quizData } = useOutletContext();
+  const { quizData, setQuizStage } = useOutletContext();
 
   const {
     data: searchedPlaylistData,
@@ -28,7 +28,7 @@ export default function SearchPlaylists({ setPlaylistSelected }) {
     queryKey: ["fetchSearchedPlaylistItems", { search: searchTerm }], // cache each unique search term
     refetchOnWindowFocus: false,
     enabled: searchTerm.trim().length !== 0, // enable when a searchTerm has a value so that caching queries work
-    retry: 3,
+    retry: 1,
   });
   // because playlistRow.jsx gets unmounted then remounted, searchTerm state is destroyed and not persisted.
   // This means a previous search result won't remain on screen when clicking to leaderboard and back again.
@@ -42,6 +42,20 @@ export default function SearchPlaylists({ setPlaylistSelected }) {
       searchedItemsRefetch();
     }
   }, [searchTerm, searchedItemsRefetch]);
+
+  // if refesh token fails, redirect to sign-in 
+  useEffect(() => {
+    if (searchedPlaylistIsError) {
+      if (searchedPlaylistError.info.error === "invalid_grant") {
+        setQuizStage((prevState) => ({
+          ...prevState,
+          gameTilesStage: true,
+          selectPlaylistStage: false,
+        }));
+      }
+      
+    }
+  },[searchedPlaylistError, searchedPlaylistIsError, setQuizStage])
 
   return (
     <>

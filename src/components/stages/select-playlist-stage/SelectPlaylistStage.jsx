@@ -9,26 +9,32 @@ import {
   ModalHeader,
   Modal,
 } from "@nextui-org/modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Accordion, AccordionItem } from "@nextui-org/accordion";
 import { Button } from "@nextui-org/button";
 import { Radio, RadioGroup } from "@nextui-org/radio";
 import { Input } from "@nextui-org/input";
+import { checkAuth } from "../../../util/authentication";
 
 export default function SelectPlaylistStage() {
-  const { isAuthenticated, setQuizStage, quizData } = useOutletContext();
+  const { isAuthenticated, setIsAuthenticated, setQuizStage, quizData } =
+    useOutletContext();
 
   const [playlistSelected, setPlaylistSelected] = useState(false);
   const [selectedDifficulty, setSelectedDifficulty] = useState("medium");
   const [numberOfTracks, setNumberOfTracks] = useState();
 
-  if (!isAuthenticated) {
-    setQuizStage((prevState) => ({
-      ...prevState,
-      gameTilesStage: true,
-      selectPlaylistStage: false,
-    }));
-  }
+  // Authentication check
+  useEffect(() => {
+    setIsAuthenticated(checkAuth());
+    if (!isAuthenticated) {
+      setQuizStage((prevState) => ({
+        ...prevState,
+        gameTilesStage: true,
+        selectPlaylistStage: false,
+      }));
+    }
+  }, [isAuthenticated, setIsAuthenticated, setQuizStage]);
 
   const handleOnSubmit = (event) => {
     // close modal first

@@ -17,7 +17,7 @@ export default function PlayPauseButton({
 }) {
   // https://icons.getbootstrap.com/icons/play-circle-fill/
   // https://icons.getbootstrap.com/icons/pause-circle/
-  const { quizData } = useOutletContext();
+  const { quizData, setQuizStage } = useOutletContext();
   const play = useRef();
   const pause = useRef();
 
@@ -43,6 +43,13 @@ export default function PlayPauseButton({
     } catch (error) {
       setError(error);
       console.log(error);
+      if (error?.info?.error === "invalid_grant") {
+        setQuizStage((prevState) => ({
+          ...prevState,
+          playQuizStage: false,
+          gameTilesStage: true,
+        }));
+      }
     }
   };
 
@@ -57,6 +64,14 @@ export default function PlayPauseButton({
       }
     } catch (error) {
       setError(error);
+      console.log(error);
+      if (error?.info?.error === "invalid_grant") {
+        setQuizStage((prevState) => ({
+          ...prevState,
+          playQuizStage: false,
+          gameTilesStage: true,
+        }));
+      }
     }
   };
 

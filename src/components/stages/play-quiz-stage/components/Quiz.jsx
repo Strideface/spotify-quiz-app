@@ -19,6 +19,8 @@ import {
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { Image } from "@nextui-org/image";
 import { Button } from "@nextui-org/button";
+import CorrectIcon from "../../../../images/CorrectIcon";
+import IncorrectIcon from "../../../../images/IncorrectIcon";
 
 export default function Quiz({ inPlay, setTracksReady, setError }) {
   const activeTrackIndex = useRef();
@@ -58,7 +60,7 @@ export default function Quiz({ inPlay, setTracksReady, setError }) {
   // get quiz tracks result from fetchPlaylistTracks once available
   useEffect(() => {
     if (playlistTracksData) {
-      setError(null)// reset error in case there was one before  
+      setError(null); // reset error in case there was one before
       // shuffle order of tracks before assignment
       shuffleArray(playlistTracksData);
       quizData.current.quizTracks = playlistTracksData;
@@ -69,11 +71,11 @@ export default function Quiz({ inPlay, setTracksReady, setError }) {
   }, [playlistTracksData, quizData, setError, setTracksReady]);
 
   // if error, inform parent component that has the modal so message can be displayed there.
-    useEffect(() => {
-      if (playlistTracksIsError) {
-        setError(playlistTracksError);
-      }
-    }, [playlistTracksIsError, playlistTracksError, setError]);
+  useEffect(() => {
+    if (playlistTracksIsError) {
+      setError(playlistTracksError);
+    }
+  }, [playlistTracksIsError, playlistTracksError, setError]);
 
   // inPlay will only change once, when user closes modal in the parent component. Set timer when inPlay changes.
   useEffect(() => {
@@ -88,8 +90,6 @@ export default function Quiz({ inPlay, setTracksReady, setError }) {
       setModalIsOpen(true);
     }
   }, [userResponse]);
-
-
 
   // handles scenario where timer runs out
   const handleTimerIsFinished = () => {
@@ -115,32 +115,6 @@ export default function Quiz({ inPlay, setTracksReady, setError }) {
       setTimerIsFinished(false);
     }
   };
-
-  const correctIcon = (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="64"
-      height="64"
-      fill="currentColor"
-      class="bi bi-check-circle-fill"
-      viewBox="0 0 16 16"
-    >
-      <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
-    </svg>
-  );
-
-  const incorrectIcon = (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="64"
-      height="64"
-      fill="currentColor"
-      class="bi bi-file-x-fill"
-      viewBox="0 0 16 16"
-    >
-      <path d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2M6.854 6.146 8 7.293l1.146-1.147a.5.5 0 1 1 .708.708L8.707 8l1.147 1.146a.5.5 0 0 1-.708.708L8 8.707 6.854 9.854a.5.5 0 0 1-.708-.708L7.293 8 6.146 6.854a.5.5 0 1 1 .708-.708" />
-    </svg>
-  );
 
   // IMPORTANT NOTE ABOUT KEYS
   // have to make the set of keys unique for each sibling component within a parent
@@ -210,7 +184,11 @@ export default function Quiz({ inPlay, setTracksReady, setError }) {
                       .artist[0].name}
                 </CardHeader>
                 <CardBody>
-                  {artistIsCorrect.current ? correctIcon : incorrectIcon}
+                  {artistIsCorrect.current ? (
+                    <CorrectIcon />
+                  ) : (
+                    <IncorrectIcon />
+                  )}
                 </CardBody>
               </Card>
               <Card
@@ -227,7 +205,11 @@ export default function Quiz({ inPlay, setTracksReady, setError }) {
                       .track.name}
                 </CardHeader>
                 <CardBody>
-                  {artistIsCorrect.current ? correctIcon : incorrectIcon}
+                  {trackIsCorrect.current ? (
+                    <CorrectIcon />
+                  ) : (
+                    <IncorrectIcon />
+                  )}
                 </CardBody>
               </Card>
             </div>

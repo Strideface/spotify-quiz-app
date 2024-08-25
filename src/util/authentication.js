@@ -2,6 +2,15 @@ import { fetchRefreshToken } from "./spotify-api";
 
 // functions to set and get Spotify's auth details in local storage so they can be retrieved.
 
+// A NOTE ON AUTHENTICATION HANDLING GENERALLY THROUGHOUT THE WHOLE APP:
+// .
+// The first way is every time a fetch function is run (spotify API calls within spotify-api.js), to get data after user has been authenticated, 
+// getLocalAccessToken is called and if not present, fetchRefreshToken is called. When an error is thrown because it's not possible (e.g. deleted local storage),
+// this can then be handled in any jsx component initiating the fetch (generally via tanstack query). I.e. error = failed refetch token so redirect user to sign-in.
+// .
+// The second way is to call the checkAuth function at the begninning of each 'quiz stages' components. E.g. User moves on to SelectPlaylistStage, useEffect calls
+// checkAuth and redirects to sign-in if not authenticated.
+
 const EXPIRATION_TIME = 3600 * 1000; // 3600 seconds * 1000 = 1 hour in milliseconds
 
 export const setExpirationTimestamp = () => {
