@@ -10,7 +10,7 @@ export default function GameTile({ title, description, image, gameId }) {
     quizData.current.gameId = gameId;
 
     // else if because may want to add more games at a later point.
-    if (quizData.current.gameId === "CUSTOM") {
+    if (quizData.current.gameId === "INTROS") {
       setQuizStage((prevState) => ({
         ...prevState,
         gameTilesStage: false,

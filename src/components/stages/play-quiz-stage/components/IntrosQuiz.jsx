@@ -16,7 +16,7 @@ import { Card, CardBody } from "@nextui-org/card";
 // Rules change depending on selected difficulty
 // closes once 'Play' button is presed
 
-export default function CustomQuiz() {
+export default function IntrosQuiz() {
   const { quizData } = useOutletContext();
   const [inPlay, setInPlay] = useState(false);
   const [tracksReady, setTracksReady] = useState(false);
@@ -78,6 +78,7 @@ export default function CustomQuiz() {
 
   return (
     <motion.div
+      // caused problems when in mobile screen view. Not sure why
       // initial={{ x: 2000, opacity: 0 }}
       // animate={{ x: 0, opacity: 1, transition: { delay: 0.3 } }}
       exit={{ x: -2000, opacity: 0, transition: { duration: 0.2 } }}

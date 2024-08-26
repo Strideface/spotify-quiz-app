@@ -17,11 +17,4 @@ export default function SignInButton({ isLoading }) {
       Sign in to Spotify
     </Button>
   );
-  // return (
-  //   <div>
-  //     <a href={spotifyAuthenticationLink} id="signInSpotify">
-  //       Sign in to Spotify
-  //     </a>
-  //   </div>
-  // );
 }

@@ -19,7 +19,7 @@ export default function FinalResultsStage() {
 
   return (
     <motion.div
-      className=" flex-col justify-center p-5 mt-20"
+      className=" flex-col justify-center p-5 mt-5 sm:mt-20"
       initial={{ x: 2000, opacity: 0 }}
       animate={{ x: 0, opacity: 1, transition: { delay: 0.3 } }}
     >

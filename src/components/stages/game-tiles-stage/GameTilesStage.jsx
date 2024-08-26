@@ -16,14 +16,14 @@ export default function GameTilesStage() {
 
         <div className=" grid sm:grid-flow-col px-8 mb-20 gap-6 justify-evenly border-solid border-primary">
           <GameTile
-            title="Custom Quiz"
-            description="A quiz based on a selected playlist of your choosing. Search for a playlist or use one of your own!"
+            title="Intros Quiz"
+            description="Guess the artists and tracks on a selected playlist of your choosing. Search for a playlist or use one of your own!"
             image={<MusicIcon />}
-            gameId="CUSTOM"
+            gameId="INTROS"
           />
           <GameTile
             title="Compete"
-            description="Pre-selected playlists of various genres. Standardised to ensure players can be ranked on the leaderboard"
+            description="The Intros quiz on Pre-selected playlists of various genres. Standardised to ensure players can be ranked on the leaderboard"
             image={<TrophyIcon />}
             gameId="COMPETE"
           />

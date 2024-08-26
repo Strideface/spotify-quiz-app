@@ -80,7 +80,7 @@ export default function SelectPlaylistStage() {
         }}
       >
         <ModalContent>
-          <ModalHeader>Quiz Settings</ModalHeader>
+          <ModalHeader>Settings</ModalHeader>
           <ModalBody>
             <div className=" flex justify-center">
               <p className=" text-mobile-2 sm:text-sm-screen-1">

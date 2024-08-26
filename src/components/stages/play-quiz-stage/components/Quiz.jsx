@@ -227,7 +227,7 @@ export default function Quiz({ inPlay, setTracksReady, setError }) {
         </ModalContent>
       </Modal>
 
-      <div className=" flex flex-col justify-center space-y-10 m-auto md:w-2/3">
+      <div className=" flex flex-col justify-center space-y-10 m-auto mb-2 md:w-2/3">
         {playlistTracksData && (
           <>
             <motion.div
