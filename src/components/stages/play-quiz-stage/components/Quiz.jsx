@@ -205,18 +205,19 @@ export default function Quiz({ inPlay, setTracksReady, setError }) {
                       .track.name}
                 </CardHeader>
                 <CardBody>
-                  {trackIsCorrect.current ? (
-                    <CorrectIcon />
-                  ) : (
-                    <IncorrectIcon />
-                  )}
+                  {trackIsCorrect.current ? <CorrectIcon /> : <IncorrectIcon />}
                 </CardBody>
               </Card>
             </div>
           </ModalBody>
 
           <ModalFooter>
-            <Button color="success" fullWidth onPress={handleModalOnClick}>
+            <Button
+              color="success"
+              fullWidth
+              onPress={handleModalOnClick}
+              className=" font-medium"
+            >
               {userResponse.length > 0 &&
               userResponse.length < quizData.current.quizTracks.length
                 ? "Next Track"

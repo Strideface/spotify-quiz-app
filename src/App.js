@@ -7,8 +7,6 @@ import LeaderboardPage from "./pages/LeaderboardPage";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import ErrorPage from "./pages/ErrorPage";
 
-
-
 const router = createBrowserRouter([
   {
     path: "/",

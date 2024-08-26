@@ -1,8 +1,7 @@
 import { Outlet } from "react-router-dom";
 import { useState, useRef } from "react";
-
-import { checkAuth } from "../util/authentication";
 import NavBar from "./NavBar";
+import { checkAuth } from "../util/authentication";
 
 export default function Root() {
   // create state to manage where a user is in the app 'flow'. Default is
@@ -42,7 +41,7 @@ export default function Root() {
 
   return (
     <>
-    <NavBar quizStage={quizStage}/>
+      <NavBar quizStage={quizStage}/>
       <Outlet
         context={{
           quizStage,

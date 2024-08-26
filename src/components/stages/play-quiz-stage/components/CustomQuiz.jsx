@@ -101,7 +101,7 @@ export default function CustomQuiz() {
         }}
       >
         <ModalContent>
-          <ModalHeader>Quiz Rules</ModalHeader>
+          <ModalHeader>Rules</ModalHeader>
           <ModalBody>
             <div>
               <ul className=" list-disc space-y-2">
@@ -111,7 +111,7 @@ export default function CustomQuiz() {
                 </li>
                 <li>
                   Pick the track by selecting an option from the next dropdown
-                  selection field.
+                  field.
                 </li>
                 <li>
                   Submit your answer or Skip if you don't know (An Artist and
