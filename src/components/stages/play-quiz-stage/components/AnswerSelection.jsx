@@ -28,6 +28,7 @@ export default function AnswerSelection({
   const lastChange = useRef();
   const artistSearchBar = useRef();
   const trackSelector = useRef();
+  console.log(error)
 
   // https://www.dhiwise.com/post/how-to-implement-a-react-search-bar-with-dropdown
   // https://react-select.com/home
