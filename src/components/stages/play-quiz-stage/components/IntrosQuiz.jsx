@@ -81,7 +81,7 @@ export default function IntrosQuiz() {
       // caused problems when in mobile screen view. Not sure why
       // initial={{ x: 2000, opacity: 0 }}
       // animate={{ x: 0, opacity: 1, transition: { delay: 0.3 } }}
-      exit={{ x: -2000, opacity: 0, transition: { duration: 0.2 } }}
+      // exit={{ x: -2000, opacity: 0, transition: { duration: 0.2 } }}
     >
       <Modal
         isOpen={!inPlay}
