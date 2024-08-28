@@ -19,7 +19,7 @@ export default function FinalResultsStage() {
 
   return (
     <motion.div
-      className=" flex-col justify-center p-5 mt-5 sm:mt-20"
+      className=" flex-col justify-center p-5 mt-2 sm:mt-20"
       initial={{ x: 2000, opacity: 0 }}
       animate={{ x: 0, opacity: 1, transition: { delay: 0.3 } }}
     >
@@ -29,7 +29,7 @@ export default function FinalResultsStage() {
       <Results />
 
       <motion.div
-        className=" flex justify-center max-w-xl m-auto mt-14"
+        className=" flex justify-center max-w-xl m-auto mt-2 sm:mt-14"
         whileHover={{ scale: 1.2 }}
       >
         <Button

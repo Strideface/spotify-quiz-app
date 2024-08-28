@@ -243,8 +243,13 @@ export async function fetchSearchedItems(searchTerm, market, type, limit) {
     q: searchTerm,
     type: type,
     limit: limit,
-    market: market,
   });
+  // only pass in a market value if one was receieved through params
+  // (if user details were not retrieved for any reason, market value would be empty as this is where I'm getting it from currently)
+  // however, also note that: "If a valid user access token is specified in the request header, the country associated with the user account will take priority over this parameter."
+  if (market) {
+    queryParams.append("market", market);
+  }
 
   const response = await fetch(
     "https://api.spotify.com/v1/search?" + queryParams,
@@ -274,7 +279,12 @@ export async function fetchSearchedItems(searchTerm, market, type, limit) {
   let searchResultsItems = [];
 
   if (searchResults.playlists) {
-    searchResultsItems.push(...searchResults.playlists.items);
+    // don't return any playlists that have 0 tracks
+    for (let item of searchResults.playlists.items) {
+      if (item.tracks.total > 0) {
+        searchResultsItems.push(item);
+      }
+    }   
   } else if (searchResults.artists) {
     searchResultsItems.push(...searchResults.artists.items);
   } else if (searchResults.tracks) {
@@ -297,8 +307,13 @@ export async function fetchPlaylistTracks(
     limit: limit < 100 ? limit : 100, // 100 is max limit allowed per fetch
     // randomize the offset if limit selected is different to playlistTotalTracks. Otherwise, always be getting from first track.
     offset: Math.floor(Math.random() * (playlistTotalTracks - limit)), // Returns a random integer from 0 to the difference of playlistTotalTracks - limit:
-    market: market,
   });
+  // only pass in a market value if one was receieved through params
+  // (if user details were not retrieved for any reason, market value would be empty as this is where I'm getting it from currently)
+  // however, also note that: "If a valid user access token is specified in the request header, the country associated with the user account will take priority over this parameter."
+  if (market) {
+    queryParams.append("market", market);
+  }
 
   // while loop handles cases where a playlist (or the limit set) has more than 100 tracks
   const playlistTracks = [];
@@ -386,9 +401,14 @@ export async function fetchPlaylistTracks(
 export async function fetchArtistTopTracks(id, market) {
   let accessToken = await getLocalAccessToken();
 
-  const queryParams = new URLSearchParams({
-    market: market,
-  });
+  const queryParams = new URLSearchParams();
+  
+  // only pass in a market value if one was receieved through params
+  // (if user details were not retrieved for any reason, market value would be empty as this is where I'm getting it from currently)
+  // however, also note that: "If a valid user access token is specified in the request header, the country associated with the user account will take priority over this parameter."
+  if (market) {
+    queryParams.append("market", market);
+  }
 
   const response = await fetch(
     "https://api.spotify.com/v1/artists/" + id + "/top-tracks?" + queryParams,
@@ -399,9 +419,7 @@ export async function fetchArtistTopTracks(id, market) {
   );
 
   if (!response.ok) {
-    const error = new Error(
-      "An error occurred while fetching artist tracks"
-    );
+    const error = new Error("An error occurred while fetching artist tracks");
     error.code = response.status;
     error.info = await response.json();
     console.log(

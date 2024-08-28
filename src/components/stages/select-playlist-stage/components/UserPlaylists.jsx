@@ -24,7 +24,7 @@ export default function UserPlaylists({ setPlaylistSelected }) {
   // if refesh token fails, redirect to sign-in
   useEffect(() => {
     if (userPlaylistIsError) {
-      if (userPlaylistError.info.error === "invalid_grant") {
+      if (userPlaylistError.info?.error === "invalid_grant") {
         setQuizStage((prevState) => ({
           ...prevState,
           gameTilesStage: true,

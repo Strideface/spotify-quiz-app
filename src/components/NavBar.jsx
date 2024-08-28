@@ -76,7 +76,7 @@ export default function NavBar({ quizStage }) {
           )}
           <NavbarItem isActive={location.pathname === "/"}>
             <RouterLink to="/">
-              <h2 className=" text-mobile-2 sm:text-sm-screen-1">Main Page</h2>
+              <h2 className=" text-mobile-2 sm:text-sm-screen-1">Main</h2>
             </RouterLink>
           </NavbarItem>
         </NavbarContent>
