@@ -43,7 +43,7 @@ export default function SearchPlaylists({ setPlaylistSelected }) {
     }
   }, [searchTerm, searchedItemsRefetch]);
 
-  // if refesh token fails, redirect to sign-in 
+  // if refesh token fails, redirect to sign-in
   useEffect(() => {
     if (searchedPlaylistIsError) {
       if (searchedPlaylistError.info?.error === "invalid_grant") {
@@ -53,15 +53,11 @@ export default function SearchPlaylists({ setPlaylistSelected }) {
           selectPlaylistStage: false,
         }));
       }
-      
     }
-  },[searchedPlaylistError, searchedPlaylistIsError, setQuizStage])
+  }, [searchedPlaylistError, searchedPlaylistIsError, setQuizStage]);
 
   return (
     <>
-      {/* <div className=" flex p-10 justify-center">
-        <h1>Search Playlists</h1>
-      </div> */}
       <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       {searchedPlaylistIsLoading && (
         <div className=" flex p-10 justify-center">

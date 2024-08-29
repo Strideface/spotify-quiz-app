@@ -5,7 +5,7 @@ import { checkAuth } from "../util/authentication";
 import Footer from "./Footer";
 
 export default function Root() {
-  // create state to manage where a user is in the app 'flow'. Default is
+  // state to manage where a user is in the app 'flow'. Default is
   // the game tiles stage where user picks the game type.
   const [quizStage, setQuizStage] = useState({
     gameTilesStage: true,
@@ -43,6 +43,7 @@ export default function Root() {
   return (
     <>
       <NavBar quizStage={quizStage} />
+      {/* Outlet acts like the children prop and renders any child elements of this route */}
       <Outlet
         context={{
           quizStage,
@@ -52,8 +53,7 @@ export default function Root() {
           quizData,
         }}
       />
-      <Footer quizStage={quizStage}/>
-      {/* Outlet acts like the children prop and renders any child elements of this route */}
+      <Footer quizStage={quizStage} />
     </>
   );
 }

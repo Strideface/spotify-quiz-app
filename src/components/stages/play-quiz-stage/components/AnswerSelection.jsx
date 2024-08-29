@@ -330,7 +330,7 @@ export default function AnswerSelection({
 
       {error && <Alert message={error.message} />}
 
-      <motion.div className=" flex justify-center" whileHover={{ scale: 1.05 }}>
+      <motion.div className=" flex justify-center" whileHover={{ scale: 1.02 }}>
         {selectedValue.track ? (
           <Button
             className=" font-medium sm:text-sm-screen-2 sm:w-80"

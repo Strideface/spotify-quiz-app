@@ -3,6 +3,8 @@ import { useEffect, useRef } from "react";
 import { resumePlayback, pausePlayback } from "../../../../../util/spotify-api";
 import { useOutletContext } from "react-router-dom";
 import { Button } from "@nextui-org/button";
+import PlayButtonIcon from "../../../../../images/PlayButtonIcon";
+import PauseButtonIcon from "../../../../../images/PauseButtonIcon";
 
 export default function PlayPauseButton({
   isPlay,
@@ -15,8 +17,6 @@ export default function PlayPauseButton({
   setProgressValue,
   timerIsFinished,
 }) {
-  // https://icons.getbootstrap.com/icons/play-circle-fill/
-  // https://icons.getbootstrap.com/icons/pause-circle/
   const { quizData, setQuizStage } = useOutletContext();
   const play = useRef();
   const pause = useRef();
@@ -94,25 +94,12 @@ export default function PlayPauseButton({
     }
   }, [progressValue]);
 
-  const playButtonIcon = (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="128"
-      height="128"
-      fill="#1ed760" // spotify-green-2
-      className="bi bi-play-circle-fill"
-      viewBox="0 0 16 16"
-    >
-      <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814z" />
-    </svg>
-  );
-
   const playButton = (
     <Button
       ref={play}
       onPress={handlePlayOnClick}
       color="success"
-      endContent={playButtonIcon}
+      endContent={<PlayButtonIcon />}
       size="lg"
       radius="full"
       variant="bordered"
@@ -121,26 +108,12 @@ export default function PlayPauseButton({
     </Button>
   );
 
-  const pauseButtonIcon = (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="64"
-      height="64"
-      fill="#1ed760" // spotify-green-2
-      className="bi bi-pause-circle"
-      viewBox="0 0 16 16"
-    >
-      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-      <path d="M5 6.25a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0zm3.5 0a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0z" />
-    </svg>
-  );
-
   const pauseButton = (
     <Button
       ref={pause}
       onPress={handlePauseOnClick}
       color="success"
-      endContent={pauseButtonIcon}
+      endContent={<PauseButtonIcon />}
       size="lg"
       radius="full"
       variant="bordered"

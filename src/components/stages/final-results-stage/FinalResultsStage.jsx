@@ -36,7 +36,7 @@ export default function FinalResultsStage() {
 
       <motion.div
         className=" flex justify-center max-w-xl m-auto mt-2 sm:mt-14"
-        whileHover={{ scale: 1.2 }}
+        whileHover={{ scale: 1.05 }}
       >
         <Button
           onPress={handleOnPress}

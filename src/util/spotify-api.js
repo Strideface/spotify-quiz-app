@@ -18,10 +18,6 @@ const scope =
 
 const redirectUri = "http://localhost:3000/";
 const clientId = "00e6229ed59a4bd8a0e3e91a99deb1f7";
-// DELETE? const base64EncodeString = btoa(clientId + ":" + clientSecret);
-
-// DELETE? link provided for the Spotify sign in button so user can authenticate and get a code
-// DELETE? export const spotifyAuthenticationLink = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&scope=${scope}`;
 
 // open the spotify auth link (Auth Code PKCE flow) programmatically because need to ensure code verifier
 // is set at this point and therefore will be the same when getting it from storage for the
@@ -36,38 +32,6 @@ export async function openSpotifyAuthenticationLink() {
   window.open(spotifyAuthenticationLink, "_self");
 }
 
-// DELETE? Authorization Code with PKCE Flow
-// Request User Authorization
-// export async function fetchUserAuthentication() {
-//   const queryParams = new URLSearchParams({
-//     response_type: "code",
-//     client_id: clientId,
-//     scope: scope,
-//     code_challenge_method: "S256",
-//     code_challenge: codeChallenge,
-//     redirect_uri: redirectUri,
-//   });
-//   console.log(queryParams);
-
-//   const response = await fetch(
-//     "https://accounts.spotify.com/authorize?" + queryParams,
-//     {
-//       method: "GET",
-//     }
-//   );
-
-//   if (!response.ok) {
-//     const error = new Error("An error occurred during user authentication");
-//     error.code = response.status;
-//     error.info = await response.json();
-//     throw error;
-//   }
-
-//   const responseJson = await response.json();
-
-//   return responseJson;
-//   // doesn't need to return anything
-// }
 
 // gets access token following user authentication and code retrieval (see Authentication.jsx).
 export async function fetchAccessToken() {

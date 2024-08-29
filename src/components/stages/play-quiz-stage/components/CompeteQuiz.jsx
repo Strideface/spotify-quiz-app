@@ -1,7 +1,7 @@
 import { Card, CardBody } from "@nextui-org/card";
 
 export default function CompeteQuiz() {
-  // Render Quiz component here after setting up a prior component, which renders after selecting the game tile,
+  // TO DO: Render Quiz component here after setting up a prior component, which renders after selecting the game tile,
   // allowing the user to select a playlist (these will be pre-made playlists relating to different genres) and thus
   // Quiz will get the appropriate playlistHref
 

@@ -54,7 +54,7 @@ export default function Quiz({ inPlay, setTracksReady, setError }) {
     staleTime: Infinity, // Only get playlist tracks once. Data is never considered old so no auto refetches.
     retry: 2,
   });
-  // the query is not caching previous results, probably due to what's in the response header
+  //! the query is not caching previous results, probably due to what's in the response header
   // 'Cache-Control: public, max-age=0'
 
   // get quiz tracks result from fetchPlaylistTracks once available

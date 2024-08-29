@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
 import Quiz from "./Quiz";
 import { useOutletContext } from "react-router-dom";
 import {
@@ -77,12 +76,7 @@ export default function IntrosQuiz() {
   };
 
   return (
-    <motion.div
-      // caused problems when in mobile screen view. Not sure why
-      // initial={{ x: 2000, opacity: 0 }}
-      // animate={{ x: 0, opacity: 1, transition: { delay: 0.3 } }}
-      // exit={{ x: -2000, opacity: 0, transition: { duration: 0.2 } }}
-    >
+    <div>
       <Modal
         isOpen={!inPlay}
         hideCloseButton
@@ -161,6 +155,6 @@ export default function IntrosQuiz() {
         setTracksReady={setTracksReady}
         setError={setError}
       />
-    </motion.div>
+    </div>
   );
 }
