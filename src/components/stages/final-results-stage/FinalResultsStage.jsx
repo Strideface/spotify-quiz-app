@@ -6,10 +6,16 @@ import { motion } from "framer-motion";
 export default function FinalResultsStage() {
   const { quizData, setQuizStage } = useOutletContext();
 
-  // NEED TO RESET THE QUIZ RESULTS HERE OTHERWISE IT WILL REMAIN IF USER PRESSES PLAY AGAIN BUTTON AND CARRY OVER
-  console.log(quizData.current);
-
   const handleOnPress = () => {
+    // app does not refresh if button is pressed so ensure results data is reset here, otherwise it will carry over.
+    quizData.current.quizResults = {
+      totalPoints: 0,
+      totalCorrectArtists: 0,
+      totalCorrectTracks: 0,
+      totalSkipped: 0,
+      totalTimerFinished: 0,
+    };
+    
     setQuizStage((prevState) => ({
       ...prevState,
       finalResultsStage: false,

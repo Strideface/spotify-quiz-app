@@ -6,7 +6,7 @@ import GithubIcon from "../images/GitHubIcon";
 // Can't tell what the height of a mobile device could be.
 export default function Footer({ quizStage }) {
   return quizStage && quizStage.playQuizStage ? null : (
-    <footer className=" w-full fixed inset-x-0 bottom-0 px-2 bg-foreground">
+    <footer className=" z-20 w-full fixed inset-x-0 bottom-0 px-2 bg-foreground">
       <div className=" flex justify-between">
         <div className=" flex items-center">
           <p className=" text-default-500 text-mobile-1 sm:text-sm-screen-1">
