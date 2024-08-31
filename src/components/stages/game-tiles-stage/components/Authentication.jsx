@@ -4,10 +4,7 @@ import { useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import SignInButton from "./SignInButton.jsx";
-import {
-  setLocalAuthCode,
-  checkAuth,
-} from "../../../../util/authentication.js";
+import { setLocalAuthCode } from "../../../../util/authentication.js";
 import {
   fetchAccessToken,
   fetchUserDetails,
@@ -87,7 +84,7 @@ export default function Authentication() {
     // If fetchAccessToken is a success, set isAuthenticated to true.
     // This effect only runs one time after sign in
     if (accessIsSuccess) {
-      setIsAuthenticated(checkAuth());
+      setIsAuthenticated(true);
     }
   }, [accessIsSuccess, setIsAuthenticated]);
 

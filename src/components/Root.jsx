@@ -1,7 +1,6 @@
 import { Outlet } from "react-router-dom";
 import { useState, useRef } from "react";
 import NavBar from "./NavBar";
-import { checkAuth } from "../util/authentication";
 import Footer from "./Footer";
 
 export default function Root() {
@@ -14,7 +13,7 @@ export default function Root() {
     finalResultsStage: false,
   });
   // to control what the user sees on the app, e.g. sign in button
-  const [isAuthenticated, setIsAuthenticated] = useState(checkAuth());
+  const [isAuthenticated, setIsAuthenticated] = useState(localStorage.getItem("spotify_access_token") ? true : false);
 
   // IMPORTANT: note the 'expectations' of using useRef in this way, from React doc:
   // 'Do not write or read ref.current during rendering...You can read or write refs from event handlers or effects'
