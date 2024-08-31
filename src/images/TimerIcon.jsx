@@ -7,7 +7,7 @@ export default function TimerIcon({ remainingTime, maxTimeLimit }) {
       width="48"
       height="48"
       fill="currentColor"
-      class="bi bi-stopwatch-fill"
+      className="bi bi-stopwatch-fill"
       viewBox="0 0 16 16"
       animate={
         (remainingTime === maxTimeLimit && {

@@ -40,6 +40,7 @@ export default function Root() {
     },
   });
 
+
   return (
     <>
       <NavBar quizStage={quizStage} />

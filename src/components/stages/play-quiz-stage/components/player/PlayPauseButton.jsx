@@ -17,7 +17,7 @@ export default function PlayPauseButton({
   setProgressValue,
   timerIsFinished,
 }) {
-  const { quizData, setQuizStage } = useOutletContext();
+  const { quizData } = useOutletContext();
   const play = useRef();
   const pause = useRef();
 
@@ -43,13 +43,6 @@ export default function PlayPauseButton({
     } catch (error) {
       setError(error);
       console.log(error);
-      if (error?.info?.error === "invalid_grant") {
-        setQuizStage((prevState) => ({
-          ...prevState,
-          playQuizStage: false,
-          gameTilesStage: true,
-        }));
-      }
     }
   };
 
@@ -65,13 +58,6 @@ export default function PlayPauseButton({
     } catch (error) {
       setError(error);
       console.log(error);
-      if (error?.info?.error === "invalid_grant") {
-        setQuizStage((prevState) => ({
-          ...prevState,
-          playQuizStage: false,
-          gameTilesStage: true,
-        }));
-      }
     }
   };
 

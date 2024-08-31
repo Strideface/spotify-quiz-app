@@ -13,7 +13,7 @@ export default function RepeatButton({
   setProgressValue,
 }) {
   const repeat = useRef();
-  const { quizData, setQuizStage } = useOutletContext();
+  const { quizData } = useOutletContext();
 
   const handleRepeatOnClick = async () => {
     try {
@@ -26,20 +26,13 @@ export default function RepeatButton({
       if (!isPlay) {
         setIsPlay(true);
       }
-      // reset error is there was an error before
+      // reset error if there was an error before
       if (error) {
         setError("");
       }
     } catch (error) {
       setError(error);
       console.log(error);
-      if (error?.info?.error === "invalid_grant") {
-        setQuizStage((prevState) => ({
-          ...prevState,
-          playQuizStage: false,
-          gameTilesStage: true,
-        }));
-      }
     }
   };
 

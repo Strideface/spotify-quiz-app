@@ -1,13 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchUserPlaylists } from "../../../../util/spotify-api";
-import { useEffect } from "react";
 import PlaylistRow from "./PlaylistRow";
 import { Spinner } from "@nextui-org/spinner";
 import Alert from "../../../Alert";
-import { useOutletContext } from "react-router-dom";
+import { useRedirectToSignIn } from "../../../../hooks/useRedirectToSignIn";
 
 export default function UserPlaylists({ setPlaylistSelected }) {
-  const { setQuizStage } = useOutletContext();
   const {
     data: userPlaylistData,
     error: userPlaylistError,
@@ -21,18 +19,8 @@ export default function UserPlaylists({ setPlaylistSelected }) {
     retry: 1,
   });
 
-  // if refesh token fails, redirect to sign-in
-  useEffect(() => {
-    if (userPlaylistIsError) {
-      if (userPlaylistError.info?.error === "invalid_grant") {
-        setQuizStage((prevState) => ({
-          ...prevState,
-          gameTilesStage: true,
-          selectPlaylistStage: false,
-        }));
-      }
-    }
-  }, [userPlaylistError, userPlaylistIsError, setQuizStage]);
+  // if no access or refresh token, redirect to sign-in
+  useRedirectToSignIn(userPlaylistError);
 
   if (userPlaylistIsLoading) {
     return (

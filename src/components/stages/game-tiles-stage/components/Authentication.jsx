@@ -92,7 +92,7 @@ export default function Authentication() {
   }, [accessIsSuccess, setIsAuthenticated]);
 
   useEffect(() => {
-    // if user details data is present as a result of calling userRefetch in previous useEffect code,
+    // if user details data is present as a result of authentication in previous useEffect code,
     // store details
     if (userIsSuccess) {
       console.log(userData);

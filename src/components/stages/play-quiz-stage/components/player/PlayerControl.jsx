@@ -5,6 +5,7 @@ import ProgressBar from "./ProgressBar";
 import { useOutletContext } from "react-router-dom";
 import { Card, CardBody, CardFooter } from "@nextui-org/card";
 import Alert from "../../../../Alert";
+import { useRedirectToSignIn } from "../../../../../hooks/useRedirectToSignIn";
 
 export default function PlayerControl({ activeTrackIndex, timerIsFinished }) {
   const [isPlay, setIsPlay] = useState(false);
@@ -13,6 +14,9 @@ export default function PlayerControl({ activeTrackIndex, timerIsFinished }) {
   const [progressValue, setProgressValue] = useState(0);
   const intervalId = useRef();
   const { quizData } = useOutletContext();
+
+  // if no access or refresh token, redirect to sign-in
+  useRedirectToSignIn(error);
 
   // This useEffect queries the tracks data once it is ready, as it is dependant on an async fetch call in Quiz.jsx (playlistTracksData)
   // it then sets the progressMax value (how long the track should play for) which can be configured here.

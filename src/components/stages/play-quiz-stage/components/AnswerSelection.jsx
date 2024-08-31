@@ -10,6 +10,7 @@ import {
 import { shuffleArray } from "../../../../util/util";
 import { Button } from "@nextui-org/button";
 import Alert from "../../../Alert";
+import { useRedirectToSignIn } from "../../../../hooks/useRedirectToSignIn";
 
 export default function AnswerSelection({
   activeTrackIndex,
@@ -18,7 +19,7 @@ export default function AnswerSelection({
   trackIsCorrect,
   setTimerIsFinished,
 }) {
-  const { quizData, setQuizStage } = useOutletContext();
+  const { quizData } = useOutletContext();
   const [selectedValue, setSelectedValue] = useState({
     artist: null,
     track: null,
@@ -28,7 +29,9 @@ export default function AnswerSelection({
   const lastChange = useRef();
   const artistSearchBar = useRef();
   const trackSelector = useRef();
-  console.log(error)
+
+  // if no access or refresh token, redirect to sign-in
+  useRedirectToSignIn(error);
 
   // https://www.dhiwise.com/post/how-to-implement-a-react-search-bar-with-dropdown
   // https://react-select.com/home
@@ -70,13 +73,13 @@ export default function AnswerSelection({
               .catch((err) => {
                 setError(err);
                 console.log(err)
-                if (err?.info?.error === "invalid_grant") {
-                  setQuizStage((prevState) => ({
-                    ...prevState,
-                    playQuizStage: false,
-                    gameTilesStage: true,
-                  }));
-                }
+                // if (err?.info?.error === "invalid_grant") {
+                //   setQuizStage((prevState) => ({
+                //     ...prevState,
+                //     playQuizStage: false,
+                //     gameTilesStage: true,
+                //   }));
+                // }
                 return options;
               })
           );
@@ -177,6 +180,7 @@ export default function AnswerSelection({
           })
           .catch((err) => {
             setError(err);
+            console.log(err)
             return options;
           })
       );

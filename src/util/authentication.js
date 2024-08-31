@@ -4,12 +4,16 @@ import { fetchRefreshToken } from "./spotify-api";
 
 // A NOTE ON AUTHENTICATION HANDLING GENERALLY THROUGHOUT THE WHOLE APP:
 // .
-// The first way is every time a fetch function is run (spotify API calls within spotify-api.js), to get data after user has been authenticated, 
+// The first way is REACTIVE - every time a fetch function is run (spotify API calls within spotify-api.js), to get data after user has been authenticated,
 // getLocalAccessToken is called and if not present, fetchRefreshToken is called. When an error is thrown because it's not possible (e.g. deleted local storage),
-// this can then be handled in any jsx component initiating the fetch (generally via tanstack query). I.e. error = failed refetch token so redirect user to sign-in.
+// this can then be handled in any jsx component initiating the fetch (generally via tanstack query) with help of the useRedirectToSignn hook.
+// I.e. error = failed refetch token so redirect user to sign-in.
+// Diagram of flow here: https://docs.google.com/drawings/d/1PL-F0q1pTlzOJkYGIm9E7-O4GuC9nRMItPXdMQlsz08/edit?usp=sharing
+
 // .
-// The second way is to call the checkAuth function at the begninning of each 'quiz stages' components. E.g. User moves on to SelectPlaylistStage, useEffect calls
+// The second way is PROACTIVE (ish) - call the checkAuth function at the begninning of each 'quiz stages' components. E.g. User moves on to SelectPlaylistStage, useEffect calls
 // checkAuth and redirects to sign-in if not authenticated.
+// checkAuth = is there an access token in local storage.
 
 const EXPIRATION_TIME = 3600 * 1000; // 3600 seconds * 1000 = 1 hour in milliseconds
 
@@ -23,7 +27,6 @@ export const getExpirationTimestamp = () =>
 
 export const setLocalAuthCode = (authCode) => {
   localStorage.setItem("spotify_auth_code", authCode);
-  // to do: handle a 'QuotaExceededError'
 };
 
 export const getLocalAuthCode = () => localStorage.getItem("spotify_auth_code");
@@ -31,17 +34,22 @@ export const getLocalAuthCode = () => localStorage.getItem("spotify_auth_code");
 export const setLocalAccessToken = (accessToken) => {
   setExpirationTimestamp();
   localStorage.setItem("spotify_access_token", accessToken);
-  // to do: handle a 'QuotaExceededError'
 };
 
 // function to ensure a valid access token for Spotify API requests
 export const getLocalAccessToken = async () => {
   // check if current token is expired
-  if (new Date().getTime() > getExpirationTimestamp()) {
+  if (new Date().getTime() > parseInt(getExpirationTimestamp())) {
     let accessToken = await fetchRefreshToken(); // Token has expired, get new one
     return accessToken;
   } else {
-    return localStorage.getItem("spotify_access_token");
+    if (!localStorage.getItem("spotify_access_token")) {
+      const error = new Error("No access token in local storage");
+      error.info = "NO_TOKEN";
+      throw error;
+    } else {
+      return localStorage.getItem("spotify_access_token");
+    }
   }
 };
 
@@ -50,7 +58,13 @@ export const setLocalRefreshToken = (refreshToken) => {
 };
 
 export const getLocalRefreshToken = () => {
-  return localStorage.getItem("spotify_refresh_token");
+  if (!localStorage.getItem("spotify_refresh_token")) {
+    const error = new Error("No refresh token in local storage");
+    error.info = "NO_TOKEN";
+    throw error;
+  } else {
+    return localStorage.getItem("spotify_refresh_token");
+  }
 };
 
 // determine if user is authenticated or not.

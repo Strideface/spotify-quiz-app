@@ -6,10 +6,11 @@ import { fetchSearchedItems } from "../../../../util/spotify-api";
 import { useOutletContext } from "react-router-dom";
 import { Spinner } from "@nextui-org/spinner";
 import Alert from "../../../Alert";
+import { useRedirectToSignIn } from "../../../../hooks/useRedirectToSignIn";
 
 export default function SearchPlaylists({ setPlaylistSelected }) {
   const [searchTerm, setSearchTerm] = useState("");
-  const { quizData, setQuizStage } = useOutletContext();
+  const { quizData } = useOutletContext();
 
   const {
     data: searchedPlaylistData,
@@ -34,6 +35,9 @@ export default function SearchPlaylists({ setPlaylistSelected }) {
   // This means a previous search result won't remain on screen when clicking to leaderboard and back again.
   // However, the result is cached by the query so if same search is performed, it gets served from cache quickly
 
+  // if no access or refresh token, redirect to sign-in
+  useRedirectToSignIn(searchedPlaylistError);
+
   useEffect(() => {
     // don't send a request if the searchTerm value contains an empty string ("  ")
     // e.g. user only presses space or tab. This would result in a 400 error response from Spotify API.
@@ -43,18 +47,6 @@ export default function SearchPlaylists({ setPlaylistSelected }) {
     }
   }, [searchTerm, searchedItemsRefetch]);
 
-  // if refesh token fails, redirect to sign-in
-  useEffect(() => {
-    if (searchedPlaylistIsError) {
-      if (searchedPlaylistError.info?.error === "invalid_grant") {
-        setQuizStage((prevState) => ({
-          ...prevState,
-          gameTilesStage: true,
-          selectPlaylistStage: false,
-        }));
-      }
-    }
-  }, [searchedPlaylistError, searchedPlaylistIsError, setQuizStage]);
 
   return (
     <>
