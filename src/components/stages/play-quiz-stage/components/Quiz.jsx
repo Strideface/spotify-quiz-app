@@ -131,6 +131,7 @@ export default function Quiz({ inPlay, setTracksReady, setError }) {
         hideCloseButton
         size="2xl"
         classNames={{
+          base: "overflow-auto",
           header:
             " justify-center underline underline-offset-8 decoration-primary decoration-4 text-mobile-3 sm:text-sm-screen-2",
           body: " sm:flex-row divide-y-large sm:divide-y-0 sm:divide-x-large divide-foreground",
@@ -167,7 +168,7 @@ export default function Quiz({ inPlay, setTracksReady, setError }) {
               </Card>
             </div>
 
-            <div className=" flex-col px-3 w-full space-y-1 ">
+            <div className=" flex-col px-3 w-full space-y-1">
               <Card
                 classNames={{
                   base: " text-mobile-3 sm:text-sm-screen-2 font-medium h-1/2 mt-2 sm:mt-0",

@@ -203,6 +203,7 @@ export default function AnswerSelection({
   };
 
   const handleSubmitAnswer = () => {
+    console.log(selectedValue)
     // this logic marks the answer
     // May be more than one artist for track so loop through and check if answer matches any
     for (let artist of quizData.current.quizTracks[activeTrackIndex.current]

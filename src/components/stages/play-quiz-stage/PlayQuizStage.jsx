@@ -16,12 +16,12 @@ export default function PlayQuizStage() {
     <AnimatePresence>
       <motion.div
         // ! initial animation causes problem on mobile view
-        // initial={{ x: 2000, opacity: 0 }}
-        // animate={{ x: 0, opacity: 1, transition: { delay: 0.3 } }}
+        initial={{opacity: 0 }}
+        animate={{opacity: 1, transition: { delay: 0.3 } }}
         exit={{ x: -2000, opacity: 0, transition: { duration: 0.2 } }}
       >
-        {quizData.current.gameId === "INTROS" && <IntosQuiz />}
-        {quizData.current.gameId === "COMPETE" && <CompeteQuiz />}
+        {quizData.current.gameId === "INTROS" && <IntosQuiz key="intros-quiz"/>}
+        {quizData.current.gameId === "COMPETE" && <CompeteQuiz key="compete-quiz"/>}
       </motion.div>
     </AnimatePresence>
   );

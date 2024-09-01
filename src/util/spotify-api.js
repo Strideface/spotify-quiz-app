@@ -405,7 +405,7 @@ export async function fetchArtistTopTracks(id, market) {
   return artistTrackItems;
 }
 
-async function fetchPlaybackState() {
+export async function fetchPlaybackState() {
   let accessToken = await getLocalAccessToken();
 
   const response = await fetch("https://api.spotify.com/v1/me/player", {
@@ -414,7 +414,7 @@ async function fetchPlaybackState() {
   });
 
   if (!response.ok) {
-    const error = new Error("An error occurred while fetching playback state");
+    const error = new Error("An error occurred");
     error.code = response.status;
     error.info = await response.json();
     console.log(
@@ -435,6 +435,8 @@ async function fetchPlaybackState() {
   }
   // playback state detected and retruns a 200 with response data
   const responseJson = await response.json();
+
+  console.log(responseJson) ;
 
   const activeDevice = responseJson.device;
   const currentTrackUri = responseJson.item ? responseJson.item.uri : null;

@@ -10,6 +10,11 @@ import {
 } from "@nextui-org/modal";
 import { Button } from "@nextui-org/button";
 import { Card, CardBody } from "@nextui-org/card";
+import { useQuery } from "@tanstack/react-query";
+import { fetchPlaybackState } from "../../../../util/spotify-api";
+import Alert from "../../../Alert";
+import CorrectIcon from "../../../../images/CorrectIcon";
+import { Progress } from "@nextui-org/progress";
 
 // present an introductory modal when component is rendered initially that explains how to play.
 // Rules change depending on selected difficulty
@@ -20,6 +25,18 @@ export default function IntrosQuiz() {
   const [inPlay, setInPlay] = useState(false);
   const [tracksReady, setTracksReady] = useState(false);
   const [error, setError] = useState(null);
+
+  // also check for an active device and show the user a message
+  const {
+    isFetching: playbackStateisFetching,
+    isError: playbackStateIsError,
+    data: playbackStateData,
+  } = useQuery({
+    queryKey: ["fetchPlaybackState"],
+    queryFn: () => fetchPlaybackState(),
+    retry: 1,
+    // enabled: tracksReady,
+  });
 
   const easy = (
     <ul>
@@ -96,6 +113,29 @@ export default function IntrosQuiz() {
         }}
       >
         <ModalContent>
+          {!playbackStateIsError && (
+            <div className=" flex justify-center m-1 space-x-1 text-mobile-2 md:text-sm-screen-1">
+              {playbackStateisFetching ? (
+                <Progress
+                  label="Scanning for active device..."
+                  size="sm"
+                  color="default"
+                  isIndeterminate
+                  aria-label="scanning for device"
+                />
+              ) : playbackStateData ? (
+                <>
+                  <CorrectIcon color="success" width="16" height="16" />{" "}
+                  <p>You have an active device</p>
+                </>
+              ) : (
+                <Alert
+                  message="This app needs your Spotify app to be active. Play a track now
+                and activate it before starting the quiz."
+                />
+              )}
+            </div>
+          )}
           <ModalHeader>Rules</ModalHeader>
           <ModalBody>
             <div>
