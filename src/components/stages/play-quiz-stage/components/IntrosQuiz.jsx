@@ -35,7 +35,8 @@ export default function IntrosQuiz() {
     queryKey: ["fetchPlaybackState"],
     queryFn: () => fetchPlaybackState(),
     retry: 1,
-    // enabled: tracksReady,
+    // only fetch playback state during modal display so it doesn't continue to refetch once it's closed and data call is no longer needed
+    enabled: !inPlay,
   });
 
   const easy = (

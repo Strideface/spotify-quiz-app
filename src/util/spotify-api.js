@@ -32,7 +32,6 @@ export async function openSpotifyAuthenticationLink() {
   window.open(spotifyAuthenticationLink, "_self");
 }
 
-
 // gets access token following user authentication and code retrieval (see Authentication.jsx).
 export async function fetchAccessToken() {
   let authCode = getLocalAuthCode();
@@ -248,7 +247,7 @@ export async function fetchSearchedItems(searchTerm, market, type, limit) {
       if (item.tracks.total > 0) {
         searchResultsItems.push(item);
       }
-    }   
+    }
   } else if (searchResults.artists) {
     searchResultsItems.push(...searchResults.artists.items);
   } else if (searchResults.tracks) {
@@ -366,7 +365,7 @@ export async function fetchArtistTopTracks(id, market) {
   let accessToken = await getLocalAccessToken();
 
   const queryParams = new URLSearchParams();
-  
+
   // only pass in a market value if one was receieved through params
   // (if user details were not retrieved for any reason, market value would be empty as this is where I'm getting it from currently)
   // however, also note that: "If a valid user access token is specified in the request header, the country associated with the user account will take priority over this parameter."
@@ -435,8 +434,6 @@ export async function fetchPlaybackState() {
   }
   // playback state detected and retruns a 200 with response data
   const responseJson = await response.json();
-
-  console.log(responseJson) ;
 
   const activeDevice = responseJson.device;
   const currentTrackUri = responseJson.item ? responseJson.item.uri : null;

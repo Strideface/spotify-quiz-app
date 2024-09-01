@@ -155,8 +155,9 @@ export default function SelectPlaylistStage() {
         selectionMode="multiple"
         keepContentMounted
         variant="splitted"
+        className=" mb-20 mt-5"
         itemClasses={{
-          title: " font-semibold text-mobile-2 sm:text-sm-screen-2",
+          title: "font-semibold text-mobile-2 sm:text-sm-screen-2",
         }}
       >
         <AccordionItem
