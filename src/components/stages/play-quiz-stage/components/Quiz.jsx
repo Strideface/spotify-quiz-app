@@ -130,7 +130,7 @@ export default function Quiz({ inPlay, setTracksReady, setError }) {
         isDismissable={false}
         isKeyboardDismissDisabled
         hideCloseButton
-        size="2xl"
+        size="3xl"
         classNames={{
           base: "overflow-auto",
           header:
@@ -195,7 +195,7 @@ export default function Quiz({ inPlay, setTracksReady, setError }) {
               </Card>
               <Card
                 classNames={{
-                  base: " text-mobile-3 sm:text-sm-screen-2 font-medium h-1/2",
+                  base: "text-mobile-3 sm:text-sm-screen-2 font-medium h-1/2",
                   body: trackIsCorrect.current ? " bg-primary" : " bg-danger",
                   header: trackIsCorrect.current ? " bg-primary" : " bg-danger",
                 }}

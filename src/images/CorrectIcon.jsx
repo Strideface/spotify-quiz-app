@@ -1,6 +1,6 @@
 export default function CorrectIcon({ color, width, height }) {
   // customize if params are there, else leave default values.
-  const classes = "flex items-center " + (color && `text-${color}`);
+  const classes = "flex items-center" + (color ? ` text-${color}` : "");
   const svgWidth = width ? width : "64";
   const svgHeight = height ? height : "64";
 

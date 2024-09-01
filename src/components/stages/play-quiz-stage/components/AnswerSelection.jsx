@@ -208,6 +208,7 @@ export default function AnswerSelection({
     // May be more than one artist for track so loop through and check if answer matches any
     for (let artist of quizData.current.quizTracks[activeTrackIndex.current]
       .artist) {
+        console.log(artist)
       console.log(`artist id match = ${selectedValue.artist.id === artist.id}`);
       if (selectedValue.artist.id === artist.id) {
         console.log("marked as a match");
@@ -232,6 +233,7 @@ export default function AnswerSelection({
             artist
           );
         }
+        break;
       } else {
         console.log("marked as not a match");
         artistIsCorrect.current = false;
