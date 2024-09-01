@@ -26,7 +26,7 @@ export default function IntrosQuiz() {
   const [tracksReady, setTracksReady] = useState(false);
   const [error, setError] = useState(null);
 
-  // also check for an active device and show the user a message
+  // also check for an active device and show the user a message in the modal
   const {
     isFetching: playbackStateisFetching,
     isError: playbackStateIsError,

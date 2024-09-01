@@ -15,10 +15,10 @@ import { Button } from "@nextui-org/button";
 import { Radio, RadioGroup } from "@nextui-org/radio";
 import { Input } from "@nextui-org/input";
 import { useAuthCheck } from "../../../hooks/useCheckAuth";
+import BackToStartButton from "../../BackToStartButton";
 
 export default function SelectPlaylistStage() {
-  const { setQuizStage, quizData } =
-    useOutletContext();
+  const { setQuizStage, quizData } = useOutletContext();
 
   const [playlistSelected, setPlaylistSelected] = useState(false);
   const [selectedDifficulty, setSelectedDifficulty] = useState("medium");
