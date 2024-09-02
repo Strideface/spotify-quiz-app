@@ -130,9 +130,10 @@ export default function Quiz({ inPlay, setTracksReady, setError }) {
         isDismissable={false}
         isKeyboardDismissDisabled
         hideCloseButton
-        size="3xl"
+        size="full"
+        radius="lg"
         classNames={{
-          base: "overflow-auto",
+          base: "flex-1 overflow-auto sm:max-w-3xl sm:max-h-[490px] sm:!rounded-lg",
           header:
             " justify-center underline underline-offset-8 decoration-primary decoration-4 text-mobile-3 sm:text-sm-screen-2",
           body: " sm:flex-row divide-y-large sm:divide-y-0 sm:divide-x-large divide-foreground",
@@ -147,7 +148,7 @@ export default function Quiz({ inPlay, setTracksReady, setError }) {
         <ModalContent>
           <ModalHeader>Result</ModalHeader>
           <ModalBody>
-            <div className=" flex justify-center">
+            <div className="flex flex-none justify-center items-center">
               <Card
                 classNames={{
                   base: "flex-none justify-center border py-3 w-60 sm:w-80 sm:h-80 bg-foreground",
@@ -169,10 +170,10 @@ export default function Quiz({ inPlay, setTracksReady, setError }) {
               </Card>
             </div>
 
-            <div className=" flex-col px-3 w-full space-y-1">
+            <div className="flex flex-1 flex-col px-3 w-full space-y-1">
               <Card
                 classNames={{
-                  base: " text-mobile-3 sm:text-sm-screen-2 font-medium h-1/2 mt-2 sm:mt-0",
+                  base: " flex-1 text-mobile-3 sm:text-sm-screen-2 font-medium mt-2 sm:mt-0",
                   body: artistIsCorrect.current ? " bg-primary" : " bg-danger",
                   header: artistIsCorrect.current
                     ? " bg-primary"
@@ -185,7 +186,7 @@ export default function Quiz({ inPlay, setTracksReady, setError }) {
                     quizData.current.quizTracks[activeTrackIndex.current - 1]
                       .artist[0].name}
                 </CardHeader>
-                <CardBody>
+                <CardBody className="flex flex-1">
                   {artistIsCorrect.current ? (
                     <CorrectIcon />
                   ) : (
@@ -195,7 +196,7 @@ export default function Quiz({ inPlay, setTracksReady, setError }) {
               </Card>
               <Card
                 classNames={{
-                  base: "text-mobile-3 sm:text-sm-screen-2 font-medium h-1/2",
+                  base: " flex-1 text-mobile-3 sm:text-sm-screen-2 font-medium",
                   body: trackIsCorrect.current ? " bg-primary" : " bg-danger",
                   header: trackIsCorrect.current ? " bg-primary" : " bg-danger",
                 }}
@@ -206,7 +207,7 @@ export default function Quiz({ inPlay, setTracksReady, setError }) {
                     quizData.current.quizTracks[activeTrackIndex.current - 1]
                       .track.name}
                 </CardHeader>
-                <CardBody>
+                <CardBody className="flex flex-1">
                   {trackIsCorrect.current ? <CorrectIcon /> : <IncorrectIcon />}
                 </CardBody>
               </Card>
