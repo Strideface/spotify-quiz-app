@@ -9,6 +9,7 @@ export default function TimerIcon({ remainingTime, maxTimeLimit }) {
       fill="currentColor"
       className="bi bi-stopwatch-fill"
       viewBox="0 0 16 16"
+      aria-label="stop watch image"
       animate={
         (remainingTime === maxTimeLimit && {
           scale: [1.5, 1],

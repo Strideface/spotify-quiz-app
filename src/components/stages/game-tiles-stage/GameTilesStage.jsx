@@ -1,8 +1,8 @@
 import { Divider } from "@nextui-org/divider";
 import Authentication from "./components/Authentication";
 import GameTile from "./components/GameTile";
-import MusicIcon from "./components/images/MusicIcon";
-import TrophyIcon from "./components/images/TrophyIcon";
+import MusicIcon from "../../../images/MusicIcon";
+import TrophyIcon from "../../../images/TrophyIcon";
 import { motion } from "framer-motion";
 
 export default function GameTilesStage() {

@@ -113,6 +113,7 @@ export default function Authentication() {
           <CardHeader>
             <Avatar
               src={userData ? userData?.images[1].url : ""}
+              alt="user profile image"
               showFallback
               size="lg"
               isBordered

@@ -99,8 +99,9 @@ export default function IntrosQuiz() {
         isOpen={!inPlay}
         hideCloseButton
         isDismissable
-        size="lg"
+        size="full"
         classNames={{
+          base: " flex-1 overflow-auto sm:max-w-lg sm:h-auto sm:!rounded-lg",
           body: "flex-col justify-center space-y-2 text-mobile-2 md:text-sm-screen-1",
           footer: " justify-center text-mobile-2 md:text-sm-screen-1",
           header:
@@ -158,7 +159,7 @@ export default function IntrosQuiz() {
             <div>
               <Card
                 classNames={{
-                  base: " bg-default-500 text-secondary font-medium",
+                  base: "bg-default-500 text-secondary font-medium",
                 }}
               >
                 <CardBody>

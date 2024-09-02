@@ -66,9 +66,11 @@ export default function Results() {
                 color={percentageScore >= 50 ? "success" : "warning"}
                 size="lg"
                 shape="circle"
+                aria-label="score percentage"
               >
                 <Avatar
                   src={quizData.current.userDetails.image}
+                  alt="user profile image"
                   showFallback
                   size="lg"
                   isBordered
