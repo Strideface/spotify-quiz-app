@@ -92,7 +92,6 @@ export default function Authentication() {
     // if user details data is present as a result of authentication in previous useEffect code,
     // store details
     if (userIsSuccess) {
-      console.log(userData);
       quizData.current.userDetails.name = userData.display_name;
       quizData.current.userDetails.country = userData.country;
       quizData.current.userDetails.image = userData.images[1].url;

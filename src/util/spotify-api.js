@@ -16,8 +16,14 @@ const scope =
   "user-read-private playlist-read-private user-modify-playback-state user-read-playback-state";
 // keep adding to scope where neccessary (depends on endpoints)
 
-const redirectUri = "http://localhost:3000/";
-const clientId = "00e6229ed59a4bd8a0e3e91a99deb1f7";
+console.log(process.env);
+
+// redirect url needs to change if running locally versus production
+const redirectUri =
+  process.env.NODE_ENV === "development"
+    ? process.env.REACT_APP_SPOTIFY_REDIRECT_URI_DEV
+    : process.env.REACT_APP_SPOTIFY_REDIRECT_URI;
+const clientId = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
 
 // open the spotify auth link (Auth Code PKCE flow) programmatically because need to ensure code verifier
 // is set at this point and therefore will be the same when getting it from storage for the

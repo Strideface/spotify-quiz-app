@@ -21,7 +21,6 @@ import { Image } from "@nextui-org/image";
 import { Button } from "@nextui-org/button";
 import CorrectIcon from "../../../../images/CorrectIcon";
 import IncorrectIcon from "../../../../images/IncorrectIcon";
-import BackToStartButton from "../../../BackToStartButton";
 
 export default function Quiz({ inPlay, setTracksReady, setError }) {
   const activeTrackIndex = useRef();

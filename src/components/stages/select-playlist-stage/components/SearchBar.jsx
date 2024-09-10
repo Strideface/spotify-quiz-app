@@ -1,4 +1,3 @@
-import { Input } from "@nextui-org/input";
 import { useRef } from "react";
 
 export default function SearchBar({ searchTerm, setSearchTerm }) {

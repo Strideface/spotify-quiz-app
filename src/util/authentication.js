@@ -92,7 +92,6 @@ const base64encode = (input) => {
 
 export const setCodeVerifier = () => {
   let codeVerifier = generateRandomString(64);
-  console.log(`code verifier when set: ${codeVerifier}`);
   localStorage.setItem("code_verifier", codeVerifier);
 };
 
