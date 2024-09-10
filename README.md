@@ -1,3 +1,24 @@
+# Spotify Quiz App
+
+## A web app built with React that offers a quiz based on Spotify tracks and artists.
+
+The app is currently being hosted on Firebase: https://spotify-quiz-app-dev.web.app/
+
+Due to Spotify's TOS, the app cannot be approved for the 'extended quota mode' which would allow anyone with a Spotify premiuim account to use it (https://developer.spotify.com/policy#iii-some-prohibited-applications - "Do not create a game, including trivia quizzes"). This means that the app will remain in "Development mode" where by only Spotify premium users whos registered emails have been added to a whitelist will be able to use it (max of 25 users can be added to the whitelist). Non-whitelisted users can reach the app but will fail authentication when trying to sign-in. Users are added to the whitelist through the Spotify for developers dashboard under 'User Management' (of course, only I will be able to add to this list as the owner of this Spotify app).
+
+## Run locally
+
+To run locally, you need to add a .env file at the root of the directory, with the following enviroment variables:
+
+`REACT_APP_SPOTIFY_CLIENT_ID=*my_spotify_client_id`\
+`REACT_APP_SPOTIFY_REDIRECT_URI_DEV=http://localhost:3000/`
+
+Original .env file for this project has been ignored by Git and does not show in this repo.
+
+
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
