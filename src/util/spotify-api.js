@@ -16,8 +16,6 @@ const scope =
   "user-read-private playlist-read-private user-modify-playback-state user-read-playback-state";
 // keep adding to scope where neccessary (depends on endpoints)
 
-console.log(process.env);
-
 // redirect url needs to change if running locally versus production
 const redirectUri =
   process.env.NODE_ENV === "development"

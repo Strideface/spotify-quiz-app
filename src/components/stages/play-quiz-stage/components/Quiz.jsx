@@ -64,7 +64,6 @@ export default function Quiz({ inPlay, setTracksReady, setError }) {
       // shuffle order of tracks before assignment
       shuffleArray(playlistTracksData);
       quizData.current.quizTracks = playlistTracksData;
-      console.log(quizData.current);
       // inform parent component that quiz can be started.
       setTracksReady(true);
     }
