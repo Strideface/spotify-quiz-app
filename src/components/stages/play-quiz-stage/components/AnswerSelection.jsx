@@ -203,16 +203,12 @@ export default function AnswerSelection({
   };
 
   const handleSubmitAnswer = () => {
-    console.log(selectedValue);
     // this logic marks the answer
     // May be more than one artist for track so loop through and check if answer matches any
     // Break loop if there's a match.
     for (let artist of quizData.current.quizTracks[activeTrackIndex.current]
       .artist) {
-        console.log(artist)
-      console.log(`artist id match = ${selectedValue.artist.id === artist.id}`);
       if (selectedValue.artist.id === artist.id) {
-        console.log("marked as a match");
         artistIsCorrect.current = true;
         quizData.current.quizResults.totalPoints += 1;
         quizData.current.quizResults.totalCorrectArtists += 1;
@@ -236,27 +232,18 @@ export default function AnswerSelection({
         }
         break;
       } else {
-        console.log("marked as not a match");
         artistIsCorrect.current = false;
       }
     }
     // mark track
-    console.log(
-      `track id match = ${
-        selectedValue.track.id ===
-        quizData.current.quizTracks[activeTrackIndex.current].track.id
-      }`
-    );
     if (
       selectedValue.track.id ===
       quizData.current.quizTracks[activeTrackIndex.current].track.id
     ) {
-      console.log("marked as a match");
       trackIsCorrect.current = true;
       quizData.current.quizResults.totalPoints += 1;
       quizData.current.quizResults.totalCorrectTracks += 1;
     } else {
-      console.log("marked as not a match");
       trackIsCorrect.current = false;
     }
     setTimerIsFinished(true);
