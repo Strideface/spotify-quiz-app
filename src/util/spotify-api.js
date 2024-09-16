@@ -242,7 +242,7 @@ export async function fetchSearchedItems(searchTerm, market, type, limit) {
 
   const searchResults = await response.json();
 
-  // return an array of playlist items
+  // return an array of items
   let searchResultsItems = [];
 
   if (searchResults.playlists) {

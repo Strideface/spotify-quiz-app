@@ -94,7 +94,12 @@ export default function Authentication() {
     if (userIsSuccess) {
       quizData.current.userDetails.name = userData.display_name;
       quizData.current.userDetails.country = userData.country;
-      quizData.current.userDetails.image = userData.images[1].url;
+      try {
+        quizData.current.userDetails.image = userData.images[0].url;
+      } catch (error) {
+        console.log(`No profile image found - ${error.message}`)
+      }
+      
     }
   }, [quizData, userData, userIsSuccess]);
 
@@ -111,12 +116,11 @@ export default function Authentication() {
         {isAuthenticated && (
           <CardHeader>
             <Avatar
-              src={userData ? userData?.images[1].url : ""}
+              src={userData?.images[0]?.url}
               alt="user profile image"
               showFallback
               size="lg"
               isBordered
-              color="primary"
               radius="sm"
             />
           </CardHeader>

@@ -61,23 +61,23 @@ export default function Results() {
               {quizData.current.quizResults.totalPoints} /{" "}
               {quizData.current.quizTotalTracks * 2}
               <div className=" flex sm:justify-center">
-              <Badge
-                content={percentageScore + "%"}
-                color={percentageScore >= 50 ? "success" : "warning"}
-                size="lg"
-                shape="circle"
-                aria-label="score percentage"
-              >
-                <Avatar
-                  src={quizData.current.userDetails.image}
-                  alt="user profile image"
-                  showFallback
+                <Badge
+                  content={percentageScore + "%"}
+                  color={percentageScore >= 50 ? "success" : "warning"}
                   size="lg"
-                  isBordered
-                  color="primary"
-                  radius="sm"
-                />
-              </Badge>
+                  shape="circle"
+                  aria-label="score percentage"
+                >
+                  <Avatar
+                    src={quizData.current.userDetails.image}
+                    alt="user profile image"
+                    showFallback
+                    size="lg"
+                    isBordered
+                    color="primary"
+                    radius="sm"
+                  />
+                </Badge>
               </div>
             </div>
           </TableCell>

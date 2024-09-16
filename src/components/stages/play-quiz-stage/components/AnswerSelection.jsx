@@ -73,13 +73,6 @@ export default function AnswerSelection({
               .catch((err) => {
                 setError(err);
                 console.log(err);
-                // if (err?.info?.error === "invalid_grant") {
-                //   setQuizStage((prevState) => ({
-                //     ...prevState,
-                //     playQuizStage: false,
-                //     gameTilesStage: true,
-                //   }));
-                // }
                 return options;
               })
           );
