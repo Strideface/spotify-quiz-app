@@ -62,10 +62,6 @@ export default function Authentication() {
   });
 
   // SIDE EFFECTS
-  console.log(`accessIsSuccess = ${accessIsSuccess}`);
-  console.log(userData);
-  console.log(accessData)
-
   useEffect(() => {
     if (currentParams.code) {
       setLocalAuthCode(currentParams.code); // required for fetching access token

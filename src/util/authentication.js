@@ -106,7 +106,7 @@ export const createCodeChallange = async () => {
 };
 
 
-export const logout = () => {
+export const signOut = () => {
 	window.localStorage.clear();
 	window.location.reload();
 };
