@@ -2,7 +2,9 @@ import { Button } from "@nextui-org/button";
 import { openSpotifyAuthenticationLink } from "../../../../util/spotify-api";
 
 export default function SignInButton({ isLoading }) {
-  const handleOnClick = () => openSpotifyAuthenticationLink();
+  const handleOnClick = () => {
+    openSpotifyAuthenticationLink();
+  };
 
   return (
     <Button

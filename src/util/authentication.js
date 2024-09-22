@@ -104,3 +104,9 @@ export const createCodeChallange = async () => {
 
   return codeChallenge;
 };
+
+
+export const logout = () => {
+	window.localStorage.clear();
+	window.location.reload();
+};

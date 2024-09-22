@@ -1,7 +1,7 @@
 import { useOutletContext } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useRef } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import SignInButton from "./SignInButton.jsx";
 import { setLocalAuthCode } from "../../../../util/authentication.js";
@@ -14,12 +14,14 @@ import { Avatar } from "@nextui-org/avatar";
 import Alert from "../../../Alert.jsx";
 
 export default function Authentication() {
-  // STATE
+
+  const queryClient = useQueryClient();
+
   const { isAuthenticated, setIsAuthenticated, quizData } = useOutletContext();
 
   const [searchParams, setSearchParams] = useSearchParams();
   let currentParams = Object.fromEntries([...searchParams]);
-  let authError = useRef(null); //   to log if error after user auth link. Temp placeholder.
+  let authError = useRef(null);
 
   // set the current url to state and use effect to monitor any changes.
   // handle if query is either 'code' or 'error' from the Spotify auth process.
@@ -27,8 +29,9 @@ export default function Authentication() {
 
   // FUNCTIONS
   // set up functions to call Spotify API
-  // disabled auto refetching and 'enabled' so it doesn't fire upon rendering of component
+  // disabled auto refetching and the 'enabled' prop so it doesn't fire upon rendering of component
   const {
+    data: accessData,
     isFetching: accessIsFetching,
     isSuccess: accessIsSuccess,
     isError: accessIsError,
@@ -46,7 +49,10 @@ export default function Authentication() {
     isLoading: userIsLoading,
     isSuccess: userIsSuccess,
   } = useQuery({
-    queryKey: ["fetchUserDetails"],
+    queryKey: ["fetchUserDetails", [accessData]],
+    // accessData returns the access_token. This is only being used here as a unique key so that if another user signs in,
+    // a new query will be fetched and not any previously cached query (else the previous user's details will surface)
+    // this requirement relates to queryClient.clear() called in one of the useEffects;
     queryFn: () => fetchUserDetails(),
     staleTime: Infinity, // Only get user details once. Data is never considered old so no auto refetches.
     cacheTime: Infinity, // Cache user details infinitely as this is not expected to change during average usage of the app.
@@ -56,6 +62,9 @@ export default function Authentication() {
   });
 
   // SIDE EFFECTS
+  console.log(`accessIsSuccess = ${accessIsSuccess}`);
+  console.log(userData);
+  console.log(accessData)
 
   useEffect(() => {
     if (currentParams.code) {
@@ -90,18 +99,27 @@ export default function Authentication() {
 
   useEffect(() => {
     // if user details data is present as a result of authentication in previous useEffect code,
-    // store details
+    // create an authError if user is not premium and deny access, else store details and continue.
     if (userIsSuccess) {
-      quizData.current.userDetails.name = userData.display_name;
-      quizData.current.userDetails.country = userData.country;
-      try {
-        quizData.current.userDetails.image = userData.images[0].url;
-      } catch (error) {
-        console.log(`No profile image found - ${error.message}`)
+      if (userData.product === "premium") {
+        quizData.current.userDetails.name = userData.display_name;
+        quizData.current.userDetails.country = userData.country;
+        try {
+          quizData.current.userDetails.image = userData.images[0].url;
+        } catch (error) {
+          console.log(`No profile image found - ${error.message}`);
+        }
+      } else {
+        // need to clear cache used by tanstack query so that if a different user signs in immediately after,
+        // it will be forced to get new data, not old from cache stored after the initial fetch.
+        queryClient.clear();      
+        authError.current = "Sorry, this app is only for Spotify Premium users";
+        setIsAuthenticated(false);
+        
       }
-      
     }
-  }, [quizData, userData, userIsSuccess]);
+  }, [queryClient, quizData, setIsAuthenticated, userData, userIsSuccess]);
+
 
   return (
     <div className=" flex min-w-72">
@@ -131,11 +149,7 @@ export default function Authentication() {
           )}
           {/* only show auth error if it has a current value. Clears when auth is a success. */}
           {authError.current && (
-            <Alert
-              message="It looks like you did not give authorization, or there was an
-              error. Please try again."
-              color="primary"
-            />
+            <Alert message={authError.current} color="primary" />
           )}
           {/* show display name (if available - might be null) if authenticated else show sign in button */}
           {isAuthenticated ? (
