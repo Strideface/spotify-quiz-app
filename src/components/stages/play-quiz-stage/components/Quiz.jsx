@@ -120,6 +120,10 @@ export default function Quiz({ inPlay, setTracksReady, setError }) {
   // for react to recognize that they have been unmounted from the DOM.
   // crucial for framer motion to work as it won't animate if react can't distinguish whether components have mounted/unmounted.
 
+  // NEXT UI MODAL CHANGES
+  // since updating all the npm packages, Next UI's modal ("^2.0.36") size was not being respected when in sm: screen breakpoint.
+  // It's to do with a height and min height of 100dvh (100% of the device's height) being set by default, when selecting the prop: 'size="full".
+  // I now have to override the h and min-h when moving to sm: breakpoint (change here was from sm:max-h-[490px] to sm:h-[490px] sm:min-h-[490px])
   return (
     <>
       <Modal
@@ -131,7 +135,7 @@ export default function Quiz({ inPlay, setTracksReady, setError }) {
         size="full"
         radius="lg"
         classNames={{
-          base: "flex-1 overflow-auto sm:max-w-3xl sm:max-h-[490px] sm:!rounded-lg",
+          base: "flex-1 overflow-auto sm:max-w-3xl sm:h-[490px] sm:min-h-[490px] sm:!rounded-lg",
           header:
             " justify-center underline underline-offset-8 decoration-primary decoration-4 text-mobile-3 sm:text-sm-screen-2",
           body: " sm:flex-row divide-y-large sm:divide-y-0 sm:divide-x-large divide-foreground",

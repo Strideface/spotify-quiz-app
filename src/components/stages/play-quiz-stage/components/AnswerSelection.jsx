@@ -72,6 +72,7 @@ export default function AnswerSelection({
               })
               .catch((err) => {
                 setError(err);
+                // eslint-disable-next-line no-console
                 console.log(err);
                 return options;
               })
@@ -173,6 +174,7 @@ export default function AnswerSelection({
           })
           .catch((err) => {
             setError(err);
+            // eslint-disable-next-line no-console
             console.log(err);
             return options;
           })

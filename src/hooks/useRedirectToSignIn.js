@@ -10,6 +10,7 @@ export function useRedirectToSignIn(error) {
   useEffect(() => {
     if (error) {
       if (error?.info === "NO_TOKEN") {
+        // eslint-disable-next-line no-console
         console.log(error?.message + " - " + error?.info);
         setQuizStage({
           gameTilesStage: true,

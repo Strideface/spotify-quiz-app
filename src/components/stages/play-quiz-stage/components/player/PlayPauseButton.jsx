@@ -42,6 +42,7 @@ export default function PlayPauseButton({
       }
     } catch (error) {
       setError(error);
+      // eslint-disable-next-line no-console
       console.log(error);
     }
   };
@@ -57,6 +58,7 @@ export default function PlayPauseButton({
       }
     } catch (error) {
       setError(error);
+      // eslint-disable-next-line no-console
       console.log(error);
     }
   };

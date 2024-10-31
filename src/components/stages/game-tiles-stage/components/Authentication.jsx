@@ -70,6 +70,7 @@ export default function Authentication() {
     }
     if (currentParams.error) {
       authError.current = currentParams.error;
+      // eslint-disable-next-line no-console
       console.log(`authError = ${authError.current}`); // For error logging
       setSearchParams("");
     }
@@ -103,6 +104,7 @@ export default function Authentication() {
         try {
           quizData.current.userDetails.image = userData.images[0].url;
         } catch (error) {
+          // eslint-disable-next-line no-console
           console.log(`No profile image found - ${error.message}`);
         }
       } else {

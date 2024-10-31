@@ -55,6 +55,7 @@ export async function fetchAccessToken() {
     );
     error.code = response.status;
     error.info = await response.json();
+    // eslint-disable-next-line no-console
     console.log(
       error +
         " - status: " +
@@ -91,6 +92,7 @@ export async function fetchRefreshToken() {
     );
     error.code = response.status;
     error.info = await response.json();
+    // eslint-disable-next-line no-console
     console.log(
       error +
         " - status: " +
@@ -125,6 +127,7 @@ export async function fetchUserDetails() {
     );
     error.code = response.status;
     error.info = await response.json();
+    // eslint-disable-next-line no-console
     console.log(
       error +
         " - status: " +
@@ -167,6 +170,7 @@ export async function fetchUserPlaylists() {
       );
       error.code = response.status;
       error.info = await response.json();
+      // eslint-disable-next-line no-console
       console.log(
         error +
           " - status: " +
@@ -230,6 +234,7 @@ export async function fetchSearchedItems(searchTerm, market, type, limit) {
     const error = new Error("An error occurred while fetching search items");
     error.code = response.status;
     error.info = await response.json();
+    // eslint-disable-next-line no-console
     console.log(
       error +
         " - status: " +
@@ -300,6 +305,7 @@ export async function fetchPlaylistTracks(
       );
       error.code = response.status;
       error.info = await response.json();
+      // eslint-disable-next-line no-console
       console.log(
         error +
           " - status: " +
@@ -389,6 +395,7 @@ export async function fetchArtistTopTracks(id, market) {
     const error = new Error("An error occurred while fetching artist tracks");
     error.code = response.status;
     error.info = await response.json();
+    // eslint-disable-next-line no-console
     console.log(
       error +
         " - status: " +
@@ -420,6 +427,7 @@ export async function fetchPlaybackState() {
     const error = new Error("An error occurred");
     error.code = response.status;
     error.info = await response.json();
+    // eslint-disable-next-line no-console
     console.log(
       error +
         " - status: " +
@@ -493,6 +501,7 @@ export async function resumePlayback(trackUri, resumeFromStart) {
     const error = new Error("An error occurred when attempting playback");
     error.code = response.status;
     error.info = await response.json();
+    // eslint-disable-next-line no-console
     console.log(
       error +
         " - status: " +
@@ -520,6 +529,7 @@ export async function pausePlayback() {
     const error = new Error("An error occurred when attempting to pause");
     error.code = response.status;
     error.info = await response.json();
+    // eslint-disable-next-line no-console
     console.log(
       error +
         " - status: " +

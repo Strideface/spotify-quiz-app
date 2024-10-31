@@ -92,8 +92,12 @@ export default function IntrosQuiz() {
   const handleOnClick = () => {
     setInPlay(true);
   };
+  // NEXT UI MODAL CHANGES
+  // since updating all the npm packages, Next UI's modal ("^2.0.36") size was not being respected when in sm: screen breakpoint.
+  // It's to do with a height and min height of 100dvh (100% of the device's height) being set by default, when selecting the prop: 'size="full".
+  // I now have to override the h and min-h when moving to sm: breakpoint (change here was from sm:h-auto to sm:h-fit sm:min-h-fit)
 
-  return (
+   return (
     <div>
       <Modal
         isOpen={!inPlay}
@@ -101,7 +105,7 @@ export default function IntrosQuiz() {
         isDismissable
         size="full"
         classNames={{
-          base: " flex-1 overflow-auto sm:max-w-lg sm:h-auto sm:!rounded-lg",
+          base: " flex-1 overflow-auto sm:max-w-lg sm:h-fit sm:min-h-fit sm:!rounded-lg",
           body: "flex-col justify-center space-y-2 text-mobile-2 md:text-sm-screen-1",
           footer: " justify-center text-mobile-2 md:text-sm-screen-1",
           header:

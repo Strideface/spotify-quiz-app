@@ -4,6 +4,7 @@ import NavBar from "../components/NavBar";
 
 export default function ErrorPage() {
   const error = useRouteError();
+  // eslint-disable-next-line no-console
   console.log(error);
   return (
     <>

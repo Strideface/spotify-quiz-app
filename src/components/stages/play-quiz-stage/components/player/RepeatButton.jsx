@@ -32,6 +32,7 @@ export default function RepeatButton({
       }
     } catch (error) {
       setError(error);
+      // eslint-disable-next-line no-console
       console.log(error);
     }
   };
