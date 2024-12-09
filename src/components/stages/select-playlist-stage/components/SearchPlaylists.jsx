@@ -24,7 +24,7 @@ export default function SearchPlaylists({ setPlaylistSelected }) {
         searchTerm,
         quizData.current.userDetails.country,
         "playlist",
-        10
+        20
       ),
     queryKey: ["fetchSearchedPlaylistItems", { search: searchTerm }], // cache each unique search term
     refetchOnWindowFocus: false,

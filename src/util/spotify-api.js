@@ -194,12 +194,17 @@ export async function fetchUserPlaylists() {
       getNext = false;
     }
   }
+
   // return an array of playlist items, only if the playlist contains tracks
   let userPlaylistItems = [];
   for (let playlistsObj of userPlaylists) {
     for (let item of playlistsObj.items) {
-      if (item.tracks.total > 0) {
-        userPlaylistItems.push(item);
+      // As of 27th Nov 24, Spotify API no longer returns "Algorithmic and Spotify-owned editorial playlists"
+      // these playlists return 'null', therefore must check for value (i.e. if not 'null'). https://developer.spotify.com/blog/2024-11-27-changes-to-the-web-api
+      if (item) {
+        if (item.tracks.total > 0) {
+          userPlaylistItems.push(item);
+        }
       }
     }
   }
@@ -251,10 +256,14 @@ export async function fetchSearchedItems(searchTerm, market, type, limit) {
   let searchResultsItems = [];
 
   if (searchResults.playlists) {
-    // don't return any playlists that have 0 tracks
     for (let item of searchResults.playlists.items) {
-      if (item.tracks.total > 0) {
-        searchResultsItems.push(item);
+      // As of 27th Nov 24, Spotify API no longer returns "Algorithmic and Spotify-owned editorial playlists"
+      // these playlists return 'null', therefore must check for value (i.e. if not 'null'). https://developer.spotify.com/blog/2024-11-27-changes-to-the-web-api
+      if (item) {
+        // don't return any playlists that have 0 tracks
+        if (item.tracks.total > 0) {
+          searchResultsItems.push(item);
+        }
       }
     }
   } else if (searchResults.artists) {
