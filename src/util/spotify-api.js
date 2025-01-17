@@ -208,7 +208,6 @@ export async function fetchUserPlaylists() {
       }
     }
   }
-
   return userPlaylistItems;
 }
 
@@ -275,8 +274,53 @@ export async function fetchSearchedItems(searchTerm, market, type, limit) {
   return searchResultsItems;
 }
 
+export async function fetchCompetePlaylists() {
+  let accessToken = await getLocalAccessToken();
+  // ** hard coding the specific playlists to be used as they have been pre-selected and should always remain the same
+  // to standardize the competition and results. Will need to change if any of them get deleted **
+
+  const playlistIds = [
+    "61jNo7WKLOIQkahju8i0hw",
+    "6mtYuOxzl58vSGnEDtZ9uB",
+    "56un2laj6rmMUKhDlkUkAY",
+  ];
+  // rock, modern pop, hip-hop
+
+  // Loop through array of playlist Ids and store each playlist object returned.
+  const playlists = [];
+  for (let i = 0; i < playlistIds.length; i++) {
+    const response = await fetch(
+      "https://api.spotify.com/v1/playlists/" + playlistIds[i],
+      {
+        method: "GET",
+        headers: { Authorization: `Bearer ${accessToken}` },
+      }
+    );
+
+    if (!response.ok) {
+      const error = new Error("An error occurred while fetching playlists.");
+      error.code = response.status;
+      error.info = await response.json();
+      // eslint-disable-next-line no-console
+      console.log(
+        error +
+          " - status: " +
+          error.code +
+          "- message: " +
+          error.info.error.message
+      );
+      throw error;
+    }
+
+    let responseJson = await response.json();
+    playlists.push(responseJson);
+  }
+
+  return playlists;
+}
+
 export async function fetchPlaylistTracks(
-  playlistTracksHref,
+  id,
   market,
   limit,
   playlistTotalTracks
@@ -303,10 +347,13 @@ export async function fetchPlaylistTracks(
   let remainingLimit = limit;
 
   while (getNext) {
-    const response = await fetch(playlistTracksHref + "?" + queryParams, {
-      method: "GET",
-      headers: { Authorization: `Bearer ${accessToken}` },
-    });
+    const response = await fetch(
+      `https://api.spotify.com/v1/playlists/${id}/tracks?` + queryParams,
+      {
+        method: "GET",
+        headers: { Authorization: `Bearer ${accessToken}` },
+      }
+    );
 
     if (!response.ok) {
       const error = new Error(
@@ -550,4 +597,49 @@ export async function pausePlayback() {
   }
 
   return "pause playback success";
+}
+
+export async function fetchUsers(userIds) {
+  let accessToken = await getLocalAccessToken();
+
+  // loop through each id in the userIds array and get details for each user
+  const userDetails = [];
+
+  for (let i = 0; i < userIds.length; i++) {
+    const response = await fetch(
+      "https://api.spotify.com/v1/users/" + userIds[i],
+      {
+        method: "GET",
+        headers: { Authorization: `Bearer ${accessToken}` },
+      }
+    );
+
+    if (!response.ok) {
+      const error = new Error(
+        "An error occurred while fetching spotify user details"
+      );
+      error.code = response.status;
+      error.info = await response.json();
+      // eslint-disable-next-line no-console
+      console.log(
+        error +
+          " - status: " +
+          error.code +
+          "- message: " +
+          error.info.error.message
+      );
+      throw error;
+    }
+
+    let responseJson = await response.json();
+    let name = responseJson.display_name;
+    let image = responseJson.images[0].url;
+
+    userDetails.push({
+      name,
+      image,
+    });
+  }
+
+  return userDetails;
 }

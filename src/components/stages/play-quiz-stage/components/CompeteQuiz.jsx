@@ -1,19 +1,26 @@
-import { Card, CardBody } from "@nextui-org/card";
+import { useState } from "react";
+import Quiz from "./Quiz";
+import PreQuizModal from "./PreQuizModal";
 
 export default function CompeteQuiz() {
-  // TO DO: Render Quiz component here after setting up a prior component, which renders after selecting the game tile,
-  // allowing the user to select a playlist (these will be pre-made playlists relating to different genres) and thus
-  // Quiz will get the appropriate playlistHref
+  const [inPlay, setInPlay] = useState(false);
+  const [tracksReady, setTracksReady] = useState(false);
+  const [error, setError] = useState(null);
 
   return (
-    <div className="flex-col p-10 justify-center  ">
-      <Card classNames={{ base: " m-auto sm:w-3/4", body: " space-y-10" }}>
-        <CardBody>
-          <h1 className=" flex justify-center text-mobile-big sm:text-sm-screen-big">
-            Compete, coming soon...
-          </h1>
-        </CardBody>
-      </Card>
+    <div>
+      <PreQuizModal
+        inPlay={inPlay}
+        setInPlay={setInPlay}
+        tracksReady={tracksReady}
+        error={error}
+      />
+
+      <Quiz
+        inPlay={inPlay}
+        setTracksReady={setTracksReady}
+        setError={setError}
+      />
     </div>
   );
 }

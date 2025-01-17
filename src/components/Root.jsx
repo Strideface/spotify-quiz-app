@@ -13,7 +13,9 @@ export default function Root() {
     finalResultsStage: false,
   });
   // to control what the user sees on the app, e.g. sign in button
-  const [isAuthenticated, setIsAuthenticated] = useState(localStorage.getItem("spotify_access_token") ? true : false);
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    localStorage.getItem("spotify_access_token") ? true : false
+  );
 
   // IMPORTANT: note the 'expectations' of using useRef in this way, from React doc:
   // 'Do not write or read ref.current during rendering...You can read or write refs from event handlers or effects'
@@ -21,8 +23,12 @@ export default function Root() {
   const quizData = useRef({
     difficulty: null,
     gameId: null,
-    playlistTracksHref: null,
-    playlistTotalTracks: null,
+    genre: null, // only applicable if 'COMPETE' quiz
+    playlist: {
+      id: null,
+      name: null,
+      playlistTotalTracks: null,
+    },
     quizTotalTracks: null,
     quizTracks: null,
     quizResults: {
@@ -33,12 +39,12 @@ export default function Root() {
       totalTimerFinished: 0,
     },
     userDetails: {
+      userId: null,
       name: null,
       country: null,
       image: null,
     },
   });
-
 
   return (
     <>

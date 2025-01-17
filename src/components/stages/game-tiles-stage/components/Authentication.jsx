@@ -101,6 +101,7 @@ export default function Authentication() {
       if (userData.product === "premium") {
         quizData.current.userDetails.name = userData.display_name;
         quizData.current.userDetails.country = userData.country;
+        quizData.current.userDetails.userId = userData.id;
         try {
           quizData.current.userDetails.image = userData.images[0].url;
         } catch (error) {

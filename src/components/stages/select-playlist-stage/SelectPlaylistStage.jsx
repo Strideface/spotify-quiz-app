@@ -2,6 +2,7 @@ import { useOutletContext } from "react-router-dom";
 import { motion } from "framer-motion";
 import SearchPlaylists from "./components/SearchPlaylists";
 import UserPlaylists from "./components/UserPlaylists";
+import CompetePlaylists from "./components/CompetePlaylists";
 import {
   ModalBody,
   ModalContent,
@@ -9,7 +10,7 @@ import {
   ModalHeader,
   Modal,
 } from "@nextui-org/modal";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Accordion, AccordionItem } from "@nextui-org/accordion";
 import { Button } from "@nextui-org/button";
 import { Radio, RadioGroup } from "@nextui-org/radio";
@@ -22,18 +23,28 @@ export default function SelectPlaylistStage() {
   const [playlistSelected, setPlaylistSelected] = useState(false);
   const [selectedDifficulty, setSelectedDifficulty] = useState("medium");
   const [numberOfTracks, setNumberOfTracks] = useState();
+  //set the default number of tracks for a compete quiz
+  const competeNumberOfTracks = useRef(1); //TEST
 
   // Authentication check
   useAuthCheck();
 
+  // assign selected total tracks for quiz
   const handleOnSubmit = (event) => {
     // close modal first
     setPlaylistSelected(false);
-    // assign selected total tracks for quiz
+
+    // If value is undefined it wil be because the initial placeholder value has not been overwritten
     if (isNaN(numberOfTracks)) {
-      // handles if value is undefined which will be the case if..
-      // initial placeholder value is not overwritten
-      quizData.current.quizTotalTracks = quizData.current.playlistTotalTracks;
+      // a) the reason is because it's a compete quiz and the value is predetermined
+      if (quizData.current.gameId === "COMPETE") {
+        quizData.current.quizTotalTracks = competeNumberOfTracks.current;
+        // b) the user left the placeholder value unchanged so the onChange function did not run
+      } else {
+        quizData.current.quizTotalTracks =
+          quizData.current.playlist.playlistTotalTracks;
+      }
+      // otherwise set to the selected value
     } else {
       quizData.current.quizTotalTracks = numberOfTracks;
     }
@@ -83,21 +94,28 @@ export default function SelectPlaylistStage() {
               type="number"
               label="Number of tracks:"
               placeholder={
-                quizData.current.playlistTotalTracks &&
-                quizData.current.playlistTotalTracks.toString()
+                quizData.current.playlist.playlistTotalTracks &&
+                quizData.current.playlist.playlistTotalTracks.toString()
               }
               min="1"
               max={
-                quizData.current.playlistTotalTracks &&
-                quizData.current.playlistTotalTracks.toString()
+                quizData.current.playlist.playlistTotalTracks &&
+                quizData.current.playlist.playlistTotalTracks.toString()
               }
               isInvalid={
-                numberOfTracks > quizData.current.playlistTotalTracks ||
+                numberOfTracks >
+                  quizData.current.playlist.playlistTotalTracks ||
                 numberOfTracks < 1
               }
-              errorMessage={`Invalid number selected (must be between 1 and ${quizData.current.playlistTotalTracks})`}
+              errorMessage={`Invalid number selected (must be between 1 and ${quizData.current.playlist.playlistTotalTracks})`}
               onValueChange={(value) => setNumberOfTracks(parseInt(value))}
               size="md"
+              // following options are set by default if it's a compete quiz
+              defaultValue={
+                quizData.current.gameId === "COMPETE" &&
+                competeNumberOfTracks.current
+              }
+              isDisabled={quizData.current.gameId === "COMPETE" ? true : false}
             />
 
             <div className=" flex p-5 justify-center">
@@ -109,22 +127,32 @@ export default function SelectPlaylistStage() {
                   label: " text-mobile-2 sm:text-sm-screen-1",
                   wrapper: " text-mobile-2 sm:text-sm-screen-1",
                 }}
+                //if compete quiz then default is medium difficulty, which the state is initialised as. Hence, disabled options.
               >
                 <Radio
                   classNames={{ label: " text-mobile-2 sm:text-sm-screen-1" }}
                   value="easy"
+                  isDisabled={
+                    quizData.current.gameId === "COMPETE" ? true : false
+                  }
                 >
                   easy
                 </Radio>
                 <Radio
                   classNames={{ label: " text-mobile-2 sm:text-sm-screen-1" }}
                   value="medium"
+                  isDisabled={
+                    quizData.current.gameId === "COMPETE" ? true : false
+                  }
                 >
                   medium
                 </Radio>
                 <Radio
                   classNames={{ label: " text-mobile-2 sm:text-sm-screen-1" }}
                   value="hard"
+                  isDisabled={
+                    quizData.current.gameId === "COMPETE" ? true : false
+                  }
                 >
                   hard
                 </Radio>
@@ -139,7 +167,8 @@ export default function SelectPlaylistStage() {
               color="success"
               onPress={handleOnSubmit}
               isDisabled={
-                numberOfTracks > quizData.current.playlistTotalTracks ||
+                numberOfTracks >
+                  quizData.current.playlist.playlistTotalTracks ||
                 numberOfTracks === 0
               }
             >
@@ -149,32 +178,55 @@ export default function SelectPlaylistStage() {
         </ModalContent>
       </Modal>
 
-      <Accordion
-        defaultExpandedKeys={["2"]}
-        selectionMode="multiple"
-        keepContentMounted
-        variant="splitted"
-        className=" mb-20 mt-5"
-        itemClasses={{
-          title: "font-semibold text-mobile-2 sm:text-sm-screen-2",
-        }}
-      >
-        <AccordionItem
-          key="1"
-          title="Search Playlists"
-          aria-label="Search Playlists"
-          classNames={{ content: "justify-center" }}
+      {quizData.current.gameId === "COMPETE" && (
+        <Accordion
+          defaultExpandedKeys={["1"]}
+          keepContentMounted
+          variant="splitted"
+          className=" mb-20 mt-5"
+          itemClasses={{
+            title: "font-semibold text-mobile-2 sm:text-sm-screen-2",
+          }}
         >
-          <SearchPlaylists setPlaylistSelected={setPlaylistSelected} />
-        </AccordionItem>
-        <AccordionItem
-          key="2"
-          title="Your Playlists"
-          aria-label="Your Playlists"
+          <AccordionItem
+            key="1"
+            title="Compete Playlists"
+            aria-label="Compete Playlists"
+            classNames={{ content: "justify-center" }}
+          >
+            <CompetePlaylists setPlaylistSelected={setPlaylistSelected} />
+          </AccordionItem>
+        </Accordion>
+      )}
+
+      {quizData.current.gameId === "INTROS" && (
+        <Accordion
+          defaultExpandedKeys={["2"]}
+          selectionMode="multiple"
+          keepContentMounted
+          variant="splitted"
+          className=" mb-20 mt-5"
+          itemClasses={{
+            title: "font-semibold text-mobile-2 sm:text-sm-screen-2",
+          }}
         >
-          <UserPlaylists setPlaylistSelected={setPlaylistSelected} />
-        </AccordionItem>
-      </Accordion>
+          <AccordionItem
+            key="1"
+            title="Search Playlists"
+            aria-label="Search Playlists"
+            classNames={{ content: "justify-center" }}
+          >
+            <SearchPlaylists setPlaylistSelected={setPlaylistSelected} />
+          </AccordionItem>
+          <AccordionItem
+            key="2"
+            title="Your Playlists"
+            aria-label="Your Playlists"
+          >
+            <UserPlaylists setPlaylistSelected={setPlaylistSelected} />
+          </AccordionItem>
+        </Accordion>
+      )}
     </motion.div>
   );
 }
