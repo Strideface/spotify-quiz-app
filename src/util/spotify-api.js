@@ -278,11 +278,13 @@ export async function fetchCompetePlaylists() {
   let accessToken = await getLocalAccessToken();
   // ** hard coding the specific playlists to be used as they have been pre-selected and should always remain the same
   // to standardize the competition and results. Will need to change if any of them get deleted **
+  // These playlists have been created by me because I need a way of telling the app which genre these playlists are. 
+  // The genre is stated in the description and then incorporated into the quizData object.
 
   const playlistIds = [
-    "61jNo7WKLOIQkahju8i0hw",
-    "6mtYuOxzl58vSGnEDtZ9uB",
-    "56un2laj6rmMUKhDlkUkAY",
+    "2LrFcj7DshhuDQF4lP2fSv",
+    "1hWjtqMectOC0ZA1tnBYOU",
+    "44H8EfWbeVdjCGOAQkKvng",
   ];
   // rock, modern pop, hip-hop
 

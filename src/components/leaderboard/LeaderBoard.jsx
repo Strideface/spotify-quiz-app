@@ -81,7 +81,7 @@ export default function Leaderboard() {
                     name={item.name}
                   />
                 </TableCell>
-                <TableCell>{item.genre}</TableCell>
+                <TableCell>{item.playlist.genre}</TableCell>
                 <TableCell>
                   {item.quizResults.percentageScore.toString()}
                 </TableCell>

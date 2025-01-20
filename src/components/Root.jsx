@@ -23,11 +23,11 @@ export default function Root() {
   const quizData = useRef({
     difficulty: null,
     gameId: null,
-    genre: null, // only applicable if 'COMPETE' quiz
     playlist: {
       id: null,
       name: null,
       playlistTotalTracks: null,
+      genre: null, // only applicable if 'COMPETE' quiz
     },
     quizTotalTracks: null,
     quizTracks: null,

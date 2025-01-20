@@ -1,10 +1,7 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useOutletContext } from "react-router-dom";
 import { convertToPercentageScore } from "../util/util";
 import { addUserResult } from "../util/firestoreDB-api";
-
-//TODO: Invalidate query key for fetchUserResults in case you add a result but user results was last fetched within 60 secs.
-// this is because you have a 60sec stale time on that query. 
 
 // A custom mutation hook just for adding a user result to the DB
 // As of writting, the mutation function that is returned is invoked in Quiz.jsx when user selects 'see results'
@@ -12,6 +9,7 @@ import { addUserResult } from "../util/firestoreDB-api";
 
 export function useMutateUserResults() {
   const { quizData } = useOutletContext();
+  const queryClient = useQueryClient();
 
   const percentageScore = convertToPercentageScore(
     quizData.current.quizResults.totalPoints,
@@ -20,23 +18,31 @@ export function useMutateUserResults() {
 
   const { mutate } = useMutation({
     mutationKey: ["addUserResult"],
-    mutationFn: () => addUserResult({
-      genre: "ROCK",
-      //quizData.current.genre
-      playlist: {
-        id: quizData.current.playlist.id,
-        name: quizData.current.playlist.name,
-      },
-      quizResults: {
-        percentageScore,
-        totalCorrectArtists: quizData.current.quizResults.totalCorrectArtists,
-        totalCorrectTracks: quizData.current.quizResults.totalCorrectTracks,
-        totalPoints: quizData.current.quizResults.totalPoints,
-        totalSkipped: quizData.current.quizResults.totalSkipped,
-        totalTimerFinished: quizData.current.quizResults.totalTimerFinished,
-      },
-      userId: quizData.current.userDetails.userId,
-    }),
+    mutationFn: () =>
+      addUserResult({
+        //quizData.current.genre
+        playlist: {
+          id: quizData.current.playlist.id,
+          name: quizData.current.playlist.name,
+          genre: quizData.current.playlist.genre,
+        },
+        quizResults: {
+          percentageScore,
+          totalCorrectArtists: quizData.current.quizResults.totalCorrectArtists,
+          totalCorrectTracks: quizData.current.quizResults.totalCorrectTracks,
+          totalPoints: quizData.current.quizResults.totalPoints,
+          totalSkipped: quizData.current.quizResults.totalSkipped,
+          totalTimerFinished: quizData.current.quizResults.totalTimerFinished,
+        },
+        userId: quizData.current.userDetails.userId,
+      }),
+    // invalidate the query made in LeaderBoard component to ensure latest user result is shown, as cache for
+    // that query may store old data now. Dependant on stale time set in that query and length of time it takes
+    // for a user to navigate to the leaderboard and finish a compete quiz. E.g. If stale time is 60secs, and i look at the leaderboard...
+    // then i start a compete quiz, app adds my results, then look at the leaderboard again, more than 60secs would have likely passed anyway
+    // and query would fetch new data.
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["fetchUserResults"] }),
     retry: 2,
   });
 

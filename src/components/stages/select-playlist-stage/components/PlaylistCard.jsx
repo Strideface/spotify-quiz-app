@@ -9,6 +9,7 @@ export default function PlaylistCard({
   name,
   totalTracks,
   image,
+  genre,
   setPlaylistSelected,
 }) {
   const { quizData } = useOutletContext();
@@ -17,6 +18,7 @@ export default function PlaylistCard({
     quizData.current.playlist.playlistTotalTracks = totalTracks;
     quizData.current.playlist.name = name;
     quizData.current.playlist.id = id;
+    quizData.current.playlist.genre = genre;
     setPlaylistSelected(true);
   };
 
