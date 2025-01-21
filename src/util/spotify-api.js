@@ -278,7 +278,7 @@ export async function fetchCompetePlaylists() {
   let accessToken = await getLocalAccessToken();
   // ** hard coding the specific playlists to be used as they have been pre-selected and should always remain the same
   // to standardize the competition and results. Will need to change if any of them get deleted **
-  // These playlists have been created by me because I need a way of telling the app which genre these playlists are. 
+  // These playlists have been created by me because I need a way of telling the app which genre these playlists are.
   // The genre is stated in the description and then incorporated into the quizData object.
 
   const playlistIds = [
@@ -609,7 +609,7 @@ export async function fetchUsers(userIds) {
 
   for (let i = 0; i < userIds.length; i++) {
     const response = await fetch(
-      "https://api.spotify.com/v1/users/" + userIds[i],
+      "https://api.spotify.com/v1/userss/" + userIds[i],
       {
         method: "GET",
         headers: { Authorization: `Bearer ${accessToken}` },
@@ -617,25 +617,37 @@ export async function fetchUsers(userIds) {
     );
 
     if (!response.ok) {
-      const error = new Error(
-        "An error occurred while fetching spotify user details"
-      );
-      error.code = response.status;
-      error.info = await response.json();
-      // eslint-disable-next-line no-console
-      console.log(
-        error +
-          " - status: " +
-          error.code +
-          "- message: " +
-          error.info.error.message
-      );
-      throw error;
+      // If an error occurs wihh a status: 400 - message: Invalid username - It should be because the user id no longer exists.
+      // This could happen if a Spotify user saves a result on the db but later deletes their Spotify account.
+      // add a custom object for these cases and then break the for loop so it fetches next user, or ends.
+      if (response.status === 400) {
+        userDetails.push({
+          name: "Deactivated User",
+          image: null,
+        });
+        break;
+
+      } else {
+        const error = new Error(
+          "An error occurred while fetching spotify user details"
+        );
+        error.code = response.status;
+        error.info = await response.json();
+        // eslint-disable-next-line no-console
+        console.log(
+          error +
+            " - status: " +
+            error.code +
+            "- message: " +
+            error.info.error.message
+        );
+        throw error;
+      }
     }
 
     let responseJson = await response.json();
     let name = responseJson.display_name;
-    let image = responseJson.images[0].url;
+    let image = responseJson.images[0] ? responseJson.images[0].url : null;
 
     userDetails.push({
       name,

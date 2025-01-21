@@ -35,13 +35,13 @@ export const fetchUserResults = async () => {
   // stored user id in a call to the spotify api, when the results are requested.
   const userResults = [];
   try {
-    // get user docs with results and user ID
+    //1) get user docs with results, including user ID
     const querySnapshot = await getDocs(collection(db, "userResults"));
     querySnapshot.forEach((doc) => {
       userResults.push(doc.data());
     });
 
-    // loop through the user IDs and get the user details from Spotify
+    //2) loop through the user IDs and get the user details from Spotify
     const userIds = [];
     userResults.forEach((user) => {
       userIds.push(user.userId);
@@ -57,7 +57,27 @@ export const fetchUserResults = async () => {
     // return an array with user results and details
     return userResults;
   } catch (error) {
-    console.log(error);
+    // This is error is expected and means that an unauthenticated user has landed on the Leaderboard page.
+    // As I still want unauthenticated users to view this page, return userResults array with unidentified names and no images.
+    // This isn't ideally how I wanted it, however, in order to retrieve Spotify user details, app users must have an access token (authenticate with Spotify)
+    // The error comes from the result of fetchUsers
+    if (error.info === "NO_TOKEN") {
+      for (let i = 0; i < userResults.length; i++) {
+        userResults[i].name = "?";
+        userResults[i].image = null;
+      }
+
+      return userResults;
+    } else {
+      console.log(
+        error +
+          " - status: " +
+          error.code +
+          "- message: " +
+          error.info.error.message
+      );
+      throw new Error("Sorry, an error occured. Please try again later.");
+    }
   }
 };
 
@@ -76,10 +96,10 @@ export const addUserResult = async (userResult) => {
 
 // {
 //   date: Date.now(),
-//   genre: null,
 //   playlist: {
 //     id: quizData.current.playlist.id,
 //     name: quizData.current.playlist.name,
+//     genre: quizData.current.playlist.description,
 //   },
 //   quizResults: {
 //     percentageScore,

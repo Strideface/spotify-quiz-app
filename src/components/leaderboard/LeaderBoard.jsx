@@ -15,19 +15,14 @@ export default function Leaderboard() {
   const {
     data: userResultsData,
     isFetching: userResultsIsFetching,
-    isSuccess: userResultsIsSuccess,
     isError: userResultsIsError,
+    error: userResultsError,
   } = useQuery({
     queryKey: ["fetchUserResults"],
     queryFn: fetchUserResults,
     staleTime: 60000, // if 60 secs old, refetch data. Arbitrary but to reduce API calls.
     retry: 1,
   });
-
-  //TODO: create a user doc on firebase with an id that does not exist to see what spotify throws as the error, then
-  // catch it and create an object with name and image as null or 'no longer exists'. To replicate if a user has
-  // since deleted their account. Need to ensure the array from getUserResults is always the same length as array
-  // from fetchUsers.
 
   return (
     <motion.div
@@ -57,13 +52,9 @@ export default function Leaderboard() {
           <TableBody emptyContent={"Loading..."}>{[]}</TableBody>
         )}
         {userResultsIsError && (
-          <TableBody
-            emptyContent={"Sorry, an error occured. Please try again later."}
-          >
-            {[]}
-          </TableBody>
+          <TableBody emptyContent={userResultsError.message}>{[]}</TableBody>
         )}
-        {userResultsData && userResultsData.length > 0 ? (
+        {userResultsData?.length > 0 && (
           <TableBody items={userResultsData}>
             {(item) => (
               <TableRow key={item.userId}>
@@ -90,7 +81,8 @@ export default function Leaderboard() {
               </TableRow>
             )}
           </TableBody>
-        ) : (
+        )}
+        {userResultsData?.length === 0 && (
           <TableBody emptyContent={"No Results"}>{[]}</TableBody>
         )}
       </Table>
