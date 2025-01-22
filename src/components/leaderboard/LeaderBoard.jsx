@@ -57,7 +57,7 @@ export default function Leaderboard() {
         {userResultsData?.length > 0 && (
           <TableBody items={userResultsData}>
             {(item) => (
-              <TableRow key={item.userId}>
+              <TableRow key={item.key}>
                 <TableCell>
                   <User
                     avatarProps={{
@@ -76,8 +76,8 @@ export default function Leaderboard() {
                 <TableCell>
                   {item.quizResults.percentageScore.toString()}
                 </TableCell>
-                {/* createdAt field is a firestore Timestamp instance and can be converted into a JS Date obj with toDate() */}
-                <TableCell>{item.createdAt.toDate().toString()}</TableCell>
+                {/* createdAt field is a firestore TimeStamp class instance and can be converted into a JS Date obj with toDate() */}
+                <TableCell>{item.createdAt.toDate().toLocaleDateString()}</TableCell>
               </TableRow>
             )}
           </TableBody>

@@ -609,7 +609,7 @@ export async function fetchUsers(userIds) {
 
   for (let i = 0; i < userIds.length; i++) {
     const response = await fetch(
-      "https://api.spotify.com/v1/userss/" + userIds[i],
+      "https://api.spotify.com/v1/users/" + userIds[i],
       {
         method: "GET",
         headers: { Authorization: `Bearer ${accessToken}` },

@@ -50,9 +50,12 @@ export const fetchUserResults = async () => {
     const userDetails = await fetchUsers(userIds);
 
     // add the user details to their respective results
+    // also add a unique key derived from the indexes. This will map to table row key in LeaderBoard.
+    // (no other data in a userResult doc is truly unique that can be used - same userId may appear more than once)
     for (let i = 0; i < userResults.length; i++) {
       userResults[i].name = userDetails[i].name;
       userResults[i].image = userDetails[i].image;
+      userResults[i].key = i;
     }
     // return an array with user results and details
     return userResults;
@@ -65,6 +68,7 @@ export const fetchUserResults = async () => {
       for (let i = 0; i < userResults.length; i++) {
         userResults[i].name = "?";
         userResults[i].image = null;
+        userResults[i].key = i;
       }
 
       return userResults;
