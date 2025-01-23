@@ -10,8 +10,11 @@ import {
 import { User } from "@nextui-org/user";
 import { fetchUserResults } from "../../util/firestoreDB-api";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState, useMemo } from "react";
 
 export default function Leaderboard() {
+
+
   const {
     data: userResultsData,
     isFetching: userResultsIsFetching,
@@ -23,6 +26,32 @@ export default function Leaderboard() {
     staleTime: 60000, // if 60 secs old, refetch data. Arbitrary but to reduce API calls.
     retry: 1,
   });
+
+  // How the table items are sorted in ascending/descending order is taken from the following example:
+  // https://www.heroui.com/docs/components/table#use-case-example
+
+  // set the column key and direction of order
+  // ## IMPORTANT: COLUMN KEYS MUST MATCH THE EXACT KEYS OF THE ITEMS USED TO MAP ONTO THE TABLE. ##
+  // ALWAYS ENSURE THE FIELDS IN USERRESULT DOC FROM DB MATCH THE TABLE KEYS HERE
+  const [sortDescriptor, setSortDescriptor] = useState({
+    column: "score",
+    direction: "ascending",
+  });
+
+  // function that sorts user results. Returns empty array if data not fetched yet.
+  // useMemo - Think of memoization as caching a value so that it does not need to be recalculated.
+  // only runs when one of its dependencies update.
+  const sortedItems = useMemo(() => {
+    return userResultsData
+      ? [...userResultsData].sort((a, b) => {
+          const first = a[sortDescriptor.column];
+          const second = b[sortDescriptor.column];
+          const cmp = first < second ? -1 : first > second ? 1 : 0;
+
+          return sortDescriptor.direction === "descending" ? -cmp : cmp;
+        })
+      : [];
+  }, [sortDescriptor, userResultsData]);
 
   return (
     <motion.div
@@ -41,27 +70,37 @@ export default function Leaderboard() {
           tbody: " sm:text-sm-screen-2 font-medium",
         }}
         aria-label="leaderboard table"
+        sortDescriptor={sortDescriptor}
+        onSortChange={setSortDescriptor}
       >
         <TableHeader>
-          <TableColumn>Player</TableColumn>
-          <TableColumn>Genre</TableColumn>
-          <TableColumn>Score</TableColumn>
-          <TableColumn>Date</TableColumn>
+          <TableColumn key="userName" allowsSorting>
+            Player
+          </TableColumn>
+          <TableColumn key="genre" allowsSorting>
+            Genre
+          </TableColumn>
+          <TableColumn key="score" allowsSorting>
+            Score
+          </TableColumn>
+          <TableColumn key="date" allowsSorting>
+            Date
+          </TableColumn>
         </TableHeader>
-        {userResultsIsFetching && (
-          <TableBody emptyContent={"Loading..."}>{[]}</TableBody>
-        )}
-        {userResultsIsError && (
-          <TableBody emptyContent={userResultsError.message}>{[]}</TableBody>
-        )}
-        {userResultsData?.length > 0 && (
-          <TableBody items={userResultsData}>
+
+        {!userResultsIsError ? (
+          <TableBody
+            isLoading={userResultsIsFetching}
+            loadingContent="Loading..."
+            emptyContent={"No Results"}
+            items={sortedItems}
+          >
             {(item) => (
               <TableRow key={item.key}>
                 <TableCell>
                   <User
                     avatarProps={{
-                      src: item.image,
+                      src: item.userImage,
                       alt: "user profile image",
                       showFallback: true,
                       size: "lg",
@@ -69,21 +108,20 @@ export default function Leaderboard() {
                       color: "primary",
                       radius: "sm",
                     }}
-                    name={item.name}
+                    name={item.userName}
                   />
                 </TableCell>
-                <TableCell>{item.playlist.genre}</TableCell>
-                <TableCell>
-                  {item.quizResults.percentageScore.toString()}
-                </TableCell>
+                <TableCell>{item.genre}</TableCell>
+                <TableCell>{item.score.toString()}</TableCell>
                 {/* createdAt field is a firestore TimeStamp class instance and can be converted into a JS Date obj with toDate() */}
-                <TableCell>{item.createdAt.toDate().toLocaleDateString()}</TableCell>
+                <TableCell>
+                  {item.createdAt.toDate().toLocaleDateString()}
+                </TableCell>
               </TableRow>
             )}
           </TableBody>
-        )}
-        {userResultsData?.length === 0 && (
-          <TableBody emptyContent={"No Results"}>{[]}</TableBody>
+        ) : (
+          <TableBody emptyContent={userResultsError.message}>{[]}</TableBody>
         )}
       </Table>
     </motion.div>

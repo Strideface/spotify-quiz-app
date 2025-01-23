@@ -53,8 +53,8 @@ export const fetchUserResults = async () => {
     // also add a unique key derived from the indexes. This will map to table row key in LeaderBoard.
     // (no other data in a userResult doc is truly unique that can be used - same userId may appear more than once)
     for (let i = 0; i < userResults.length; i++) {
-      userResults[i].name = userDetails[i].name;
-      userResults[i].image = userDetails[i].image;
+      userResults[i].userName = userDetails[i].name;
+      userResults[i].userImage = userDetails[i].image;
       userResults[i].key = i;
     }
     // return an array with user results and details
@@ -66,20 +66,16 @@ export const fetchUserResults = async () => {
     // The error comes from the result of fetchUsers
     if (error.info === "NO_TOKEN") {
       for (let i = 0; i < userResults.length; i++) {
-        userResults[i].name = "?";
-        userResults[i].image = null;
+        userResults[i].userName = "?";
+        userResults[i].userImage = null;
         userResults[i].key = i;
       }
 
       return userResults;
     } else {
-      console.log(
-        error +
-          " - status: " +
-          error.code +
-          "- message: " +
-          error.info.error.message
-      );
+      // only log error as trying to read the error (e.g. error.status) when it's a 'firebaseError' seems to
+      // cause another error (cannot read props of undefined)
+      console.log(error);
       throw new Error("Sorry, an error occured. Please try again later.");
     }
   }

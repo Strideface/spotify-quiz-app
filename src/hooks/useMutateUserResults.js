@@ -16,24 +16,15 @@ export function useMutateUserResults() {
     quizData.current.quizTotalTracks
   );
 
+  // ## ALWAYS ENSURE THE FIELDS IN USERRESULT DOC IN DB MATCH THE TABLE KEYS IN LEADERBOARD ##
   const { mutate } = useMutation({
     mutationKey: ["addUserResult"],
     mutationFn: () =>
       addUserResult({
-        //quizData.current.genre
-        playlist: {
-          id: quizData.current.playlist.id,
-          name: quizData.current.playlist.name,
-          genre: quizData.current.playlist.genre,
-        },
-        quizResults: {
-          percentageScore,
-          totalCorrectArtists: quizData.current.quizResults.totalCorrectArtists,
-          totalCorrectTracks: quizData.current.quizResults.totalCorrectTracks,
-          totalPoints: quizData.current.quizResults.totalPoints,
-          totalSkipped: quizData.current.quizResults.totalSkipped,
-          totalTimerFinished: quizData.current.quizResults.totalTimerFinished,
-        },
+        playlistId: quizData.current.playlist.id,
+        playlistName: quizData.current.playlist.name,
+        genre: quizData.current.playlist.genre,
+        score: percentageScore,
         userId: quizData.current.userDetails.userId,
       }),
     // invalidate the query made in LeaderBoard component to ensure latest user result is shown, as cache for
