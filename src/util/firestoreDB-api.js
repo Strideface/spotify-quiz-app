@@ -5,6 +5,8 @@ import {
   getDocs,
   addDoc,
   Timestamp,
+  query,
+  orderBy,
 } from "firebase/firestore/lite";
 
 import { fetchUsers } from "./spotify-api";
@@ -27,7 +29,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-// enable offline caching. Unsire if this is right: https://firebase.google.com/docs/firestore/manage-data/enable-offline?_gl=1*1rsc87*_up*MQ..*_ga*NjQ1ODg5MjQuMTczNjI3NTY2Mg..*_ga_CW55HF8NVT*MTczNjI3NTY2Mi4xLjAuMTczNjI3NTY2Mi4wLjAuMA..#configure_offline_persistence
+// enable offline caching. Unsure if this is right: https://firebase.google.com/docs/firestore/manage-data/enable-offline?_gl=1*1rsc87*_up*MQ..*_ga*NjQ1ODg5MjQuMTczNjI3NTY2Mg..*_ga_CW55HF8NVT*MTczNjI3NTY2Mi4xLjAuMTczNjI3NTY2Mi4wLjAuMA..#configure_offline_persistence
 // db.enablePersistence();
 
 export const fetchUserResults = async () => {
@@ -36,7 +38,12 @@ export const fetchUserResults = async () => {
   const userResults = [];
   try {
     //1) get user docs with results, including user ID
-    const querySnapshot = await getDocs(collection(db, "userResults"));
+
+    // create query object, ordering from highest score (an index for this query was created in DB)
+    const q = query(collection(db, "userResults"), orderBy("score", "desc"));
+    // get docs from the collection based on query specs
+    const querySnapshot = await getDocs(q);
+
     querySnapshot.forEach((doc) => {
       userResults.push(doc.data());
     });
@@ -60,7 +67,7 @@ export const fetchUserResults = async () => {
     // return an array with user results and details
     return userResults;
   } catch (error) {
-    // This is error is expected and means that an unauthenticated user has landed on the Leaderboard page.
+    // This error is expected and means that an unauthenticated user has landed on the Leaderboard page.
     // As I still want unauthenticated users to view this page, return userResults array with unidentified names and no images.
     // This isn't ideally how I wanted it, however, in order to retrieve Spotify user details, app users must have an access token (authenticate with Spotify)
     // The error comes from the result of fetchUsers
@@ -91,23 +98,3 @@ export const addUserResult = async (userResult) => {
     console.log(error);
   }
 };
-
-// Current 'schema' of userResult document and the values for fields
-
-// {
-//   date: Date.now(),
-//   playlist: {
-//     id: quizData.current.playlist.id,
-//     name: quizData.current.playlist.name,
-//     genre: quizData.current.playlist.description,
-//   },
-//   quizResults: {
-//     percentageScore,
-//     totalCorrectArtists: quizData.current.quizResults.totalCorrectArtists,
-//     totalCorrectTracks: quizData.current.quizResults.totalCorrectTracks,
-//     totalPoints: quizData.current.quizResults.totalPoints,
-//     totalSkipped: quizData.current.quizResults.totalSkipped,
-//     totalTimerFinished: quizData.current.quizResults.totalTimerFinished,
-//   },
-//   userId: quizData.current.userDetails.userId,
-// }

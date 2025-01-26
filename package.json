@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@heroui/checkbox": "^2.3.9",
     "@nextui-org/accordion": "^2.0.38",
     "@nextui-org/avatar": "^2.0.32",
     "@nextui-org/badge": "^2.0.31",
