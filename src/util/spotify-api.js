@@ -617,15 +617,17 @@ export async function fetchUsers(userIds) {
     );
 
     if (!response.ok) {
-      // If an error occurs wihh a status: 400 - message: Invalid username - It should be because the user id no longer exists.
+      // If an error occurs wihh a status: 400 - message: Invalid username, OR status: 404 Resource not found - 
+      // It should be because the user id no longer exists.
       // This could happen if a Spotify user saves a result on the db but later deletes their Spotify account.
       // add a custom object for these cases and then break the for loop so it fetches next user, or ends.
-      if (response.status === 400) {
+      if (response.status === 400 || response.status === 404) {
         userDetails.push({
-          name: "Deactivated User",
+          name: "Deactivated",
           image: null,
         });
-        break;
+        // skip to next userId in the loop
+        continue;
 
       } else {
         const error = new Error(

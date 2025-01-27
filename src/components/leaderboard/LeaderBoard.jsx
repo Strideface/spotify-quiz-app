@@ -7,11 +7,14 @@ import {
   TableRow,
   TableCell,
 } from "@nextui-org/table";
-import { Checkbox, CheckboxGroup } from "@heroui/checkbox";
+
 import { User } from "@nextui-org/user";
 import { fetchUserResults } from "../../util/firestoreDB-api";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState, useMemo, useRef } from "react";
+import { Chip } from "@nextui-org/chip";
+import { useOutletContext } from "react-router-dom";
+import GenreFilterSelector from "./GenreFilterSelector";
 
 export default function Leaderboard() {
   const {
@@ -27,7 +30,8 @@ export default function Leaderboard() {
     retry: 1,
   });
 
-  const [selectedGenre, setSelectedGenre] = useState([]);
+  const { isAuthenticated } = useOutletContext();
+
   const [items, setItems] = useState([]);
 
   // On first render, run this effect so that items are set once data has been fetched.
@@ -77,34 +81,11 @@ export default function Leaderboard() {
     });
   }, [items, sortDescriptor.column, sortDescriptor.direction]);
 
-  // FILTERING
-
-  // compare function for filtering:
-  const checkGenre = (item, genre) => {
-    return item.genre === genre;
-  };
-
-  // when the user presses a value in the checkbox, onValueChange will trigger this function and
-  // pass through the array of currently checked values (genres).
-  const filterItemsByGenre = (genres) => {
-    // 1) update selectedGenres
-    setSelectedGenre(genres);
-
-    // need to reset items to original state if there are no values checked, after previously having a value/values checked
-    if (genres.length === 0) {
-      setItems(userResultsData);
-    } else {
-      // 2) filter original array of items and return a new array of matches
-      let filteredItems = [];
-      // Remember, genres value is actually an array of one or more genres
-      for (const genre of genres) {
-        filteredItems.push(
-          ...userResultsData.filter((item) => checkGenre(item, genre))
-        );
-      }
-      // 3 set items to these filtered items
-      setItems(filteredItems);
-    }
+  // sets color of chip component in the table cell for genres
+  const chipColor = (genre) => {
+    if (genre === "Rock") return "danger";
+    if (genre === "Hip-Hop") return "success";
+    if (genre === "Pop") return "warning";
   };
 
   return (
@@ -117,31 +98,32 @@ export default function Leaderboard() {
       <h1 className=" flex justify-center pb-5 font-semibold underline underline-offset-8 decoration-primary decoration-4 sm:text-sm-screen-2">
         Leaderboard
       </h1>
-
-      <div className="flex flex-col gap-3">
-        <CheckboxGroup
-          color="primary"
-          value={selectedGenre}
-          onValueChange={(genres) => filterItemsByGenre(genres)}
-          label="Filter by Genre"
-          orientation="horizontal"
-        >
-          <Checkbox value="Rock">Rock</Checkbox>
-          <Checkbox value="Hip-Hop">Hip-Hop</Checkbox>
-          <Checkbox value="Pop">Pop</Checkbox>
-        </CheckboxGroup>
-      </div>
+      {!isAuthenticated && (
+        <p className="flex justify-center pb-2 text-mobile-1 sm:text-sm-screen-1">
+          *Sign in to reveal these Spotify users
+        </p>
+      )}
 
       <Table
-        color="primary"
         classNames={{
-          base: " max-w-xl m-auto",
+          base: " max-w-3xl m-auto bg-primary",
+          wrapper: "max-h-[500px]",
+          table: "h-80 max-h-[500px]",
           tbody: " sm:text-sm-screen-2 font-medium",
+          th: " text-mobile-1 sm:text-sm-screen-1",
+          td: " text-mobile-1 sm:text-sm-screen-1",
         }}
         aria-label="leaderboard table"
         sortDescriptor={sortDescriptor}
         onSortChange={({ column, direction }) =>
           handleOnSortChange({ column, direction })
+        }
+        topContent={
+          <GenreFilterSelector
+            setItems={setItems}
+            userResultsData={userResultsData}
+            userResultsIsError={userResultsIsError}
+          />
         }
       >
         <TableHeader>
@@ -180,10 +162,24 @@ export default function Leaderboard() {
                       radius: "sm",
                     }}
                     name={item.userName}
+                    classNames={{
+                      name: " text-mobile-1 sm:text-sm-screen-1 max-w-[120px] sm:max-w-[240px] truncate",
+                    }}
                   />
                 </TableCell>
-                <TableCell>{item.genre}</TableCell>
-                <TableCell>{item.score.toString()}</TableCell>
+                <TableCell>
+                  <Chip
+                    classNames={{
+                      base: "sm:max-w-[80px]",
+                      content: "sm:text-sm-screen-1",
+                    }}
+                    size="sm"
+                    color={chipColor(item.genre)}
+                  >
+                    {item.genre}
+                  </Chip>
+                </TableCell>
+                <TableCell>{item.score.toString() + "%"}</TableCell>
                 {/* createdAt field is a firestore TimeStamp class instance and can be converted into a JS Date obj with toDate() */}
                 <TableCell>
                   {item.createdAt.toDate().toLocaleDateString()}
