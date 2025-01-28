@@ -136,7 +136,7 @@ export default function Leaderboard() {
           <TableColumn key="score" allowsSorting>
             Score
           </TableColumn>
-          <TableColumn key="date" allowsSorting>
+          <TableColumn key="createdAt" allowsSorting>
             Date
           </TableColumn>
         </TableHeader>

@@ -19,7 +19,12 @@ export default function FinalResultsStage() {
           Final Results
         </h1>
         <Results />
-        <BackToStartButton label="Play Again!" />
+        <BackToStartButton
+          label="Play Again!"
+          size="lg"
+          fullWidth={true}
+          classes="max-w-xl mt-2 sm:mt-14"
+        />
       </motion.div>
     </>
   );

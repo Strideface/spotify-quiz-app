@@ -16,6 +16,7 @@ import { Button } from "@nextui-org/button";
 import { Radio, RadioGroup } from "@nextui-org/radio";
 import { Input } from "@nextui-org/input";
 import { useAuthCheck } from "../../../hooks/useCheckAuth";
+import BackToStartButton from "../../BackToStartButton";
 
 export default function SelectPlaylistStage() {
   const { setQuizStage, quizData } = useOutletContext();
@@ -227,6 +228,10 @@ export default function SelectPlaylistStage() {
           </AccordionItem>
         </Accordion>
       )}
+      <BackToStartButton label="Back to start" fullWidth={false} size="md"/>
     </motion.div>
   );
 }
+
+//TODO: Find out why the bottom of the screen has a scroller along the x-axis when hovering over back to start button.
+// may be to do with overflow styling class

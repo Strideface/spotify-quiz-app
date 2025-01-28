@@ -74,7 +74,7 @@ export default function Results() {
                     showFallback
                     size="lg"
                     isBordered
-                    color="primary"
+                    color="secondary"
                     radius="sm"
                   />
                 </Badge>

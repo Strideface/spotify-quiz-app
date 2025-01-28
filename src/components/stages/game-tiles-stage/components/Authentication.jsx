@@ -127,7 +127,7 @@ export default function Authentication() {
         classNames={{
           base: " bg-foreground text-primary hover:text-spotify-green-2",
           body: " text-center",
-          header: "justify-center",
+          header: "justify-center text-foreground hover:text-spotify-green-2",
         }}
       >
         {isAuthenticated && (
@@ -136,6 +136,7 @@ export default function Authentication() {
               src={userData?.images[0]?.url}
               alt="user profile image"
               showFallback
+              color="primary"
               size="lg"
               isBordered
               radius="sm"
