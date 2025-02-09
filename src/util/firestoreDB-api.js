@@ -1,5 +1,9 @@
 import { initializeApp } from "firebase/app";
 import {
+  initializeAppCheck,
+  ReCaptchaEnterpriseProvider,
+} from "firebase/app-check";
+import {
   getFirestore,
   collection,
   getDocs,
@@ -7,14 +11,23 @@ import {
   Timestamp,
   query,
   orderBy,
+  connectFirestoreEmulator,
 } from "firebase/firestore/lite";
 
 import { fetchUsers } from "./spotify-api";
 
-// https://firebase.google.com/docs/firestore/quickstart
-// Test mode
-// Good for getting started with the mobile and web client libraries, but allows anyone to read and overwrite your data.
-// After testing, make sure to review the Secure your data section.
+//** Important Notes */
+//If, after you have registered your app for App Check, you want to run your app in an environment that App Check would normally not classify as valid,
+//such as locally during development, you can create a debug build of your app that uses the App Check debug provider instead of a real attestation provider.
+// ** Warning: The debug provider allows access to your Firebase resources from unverified devices. Don't use the debug provider in production builds of your app **
+
+//Because this token allows access to your Firebase resources without a valid device, it is crucial that you keep it private.
+//Don't commit it to a public repository, and if a registered token is ever compromised, revoke it immediately in the Firebase console.
+//This token is stored locally in your browser and will be used whenever you use your app in the same browser on the same machine.
+//If you want to use the token in another browser or on another machine, set FIREBASE_APPCHECK_DEBUG_TOKEN to the token string instead of true (Stored in .env file)
+
+
+// 1) Create config object for Firebase:
 
 // The Firebase config object contains unique, but non-secret identifiers for your Firebase project.
 // https://firebase.google.com/docs/web/learn-more#config-object
@@ -27,10 +40,52 @@ const firebaseConfig = {
   appId: process.env.REACT_APP_FIREBASE_APP_ID,
 };
 
+// 2) Initialize Firebase instance:
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-// enable offline caching. Unsure if this is right: https://firebase.google.com/docs/firestore/manage-data/enable-offline?_gl=1*1rsc87*_up*MQ..*_ga*NjQ1ODg5MjQuMTczNjI3NTY2Mg..*_ga_CW55HF8NVT*MTczNjI3NTY2Mi4xLjAuMTczNjI3NTY2Mi4wLjAuMA..#configure_offline_persistence
-// db.enablePersistence();
+
+// 3) Create instance of Firestore DB (Dev v Prod):
+
+let db = null;
+
+//** DEV 
+// - set debug token to match what is currently in Firebase console / App Check / Manage debug tokens.
+// - run a local version of firestore using emulator.
+if (process.env.NODE_ENV === "development") {
+  window.FIREBASE_APPCHECK_DEBUG_TOKEN =
+    process.env.REACT_APP_SPOTIFY_QUIZ_APP_DEBUG_TOKEN; // true
+
+  db = getFirestore();
+  connectFirestoreEmulator(db, "127.0.0.1", 8080);
+  // If you need to connect to the prod version of firestore DB whilst in dev (and hash out previous two lines):
+  // db = getFirestore(app);
+} else {
+// ** PROD
+  db = getFirestore(app);
+  // enable offline caching. Unsure if this is right: https://firebase.google.com/docs/firestore/manage-data/enable-offline?_gl=1*1rsc87*_up*MQ..*_ga*NjQ1ODg5MjQuMTczNjI3NTY2Mg..*_ga_CW55HF8NVT*MTczNjI3NTY2Mi4xLjAuMTczNjI3NTY2Mi4wLjAuMA..#configure_offline_persistence
+  // db.enablePersistence();
+}
+
+
+
+
+
+// 4) Enable App Check
+
+// Create a ReCaptchaEnterpriseProvider instance using reCAPTCHA Enterprise site key.
+// ** Warning: Do not try to enable localhost debugging by adding localhost to reCAPTCHA’s allowed domains. Doing so would allow anyone to run your app from their local machines **
+
+//TODO: double-check this as I think you need to enable setTokenAutoRefreshEnabled(true) in order for auto refreshes to work.
+// However, having tried different ways, it's not clear how. https://firebase.google.com/docs/app-check/web/recaptcha-enterprise-provider#initialize
+const appCheck = initializeAppCheck(app, {
+  provider: new ReCaptchaEnterpriseProvider(
+    process.env.REACT_APP_RECAPTCHA_SITE_KEY
+  ),
+  isTokenAutoRefreshEnabled: true, // Set to true to allow auto-refresh.
+});
+
+//TODO: Enable App Check enforcement when you decide to deploy the latest new build: https://firebase.google.com/docs/app-check/enable-enforcement?authuser=0
+
+// Functions
 
 export const fetchUserResults = async () => {
   // due to GDPR, the DB does not store any PII. Therefore, the app needs to look up the user's details by using the
@@ -82,6 +137,7 @@ export const fetchUserResults = async () => {
     } else {
       // only log error as trying to read the error (e.g. error.status) when it's a 'firebaseError' seems to
       // cause another error (cannot read props of undefined)
+      // eslint-disable-next-line no-console
       console.log(error);
       throw new Error("Sorry, an error occured. Please try again later.");
     }
@@ -95,6 +151,17 @@ export const addUserResult = async (userResult) => {
     userResult.createdAt = Timestamp.now();
     await addDoc(collection(db, "userResults"), userResult);
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.log(error);
+    // error message is composed in ResultsSavedBanner where the status of this request is displayed.
+    throw new Error();
   }
 };
+
+// FIREBASE RULES FOR WRITES
+
+// 1) use appCheck
+// 2) check request.data to see if all the required fields are there
+// all fields should be required. Set character limits for strings.
+// 3) use cloud function, onDocumentCreated in the app to email you
+// whenever a doc gets created.

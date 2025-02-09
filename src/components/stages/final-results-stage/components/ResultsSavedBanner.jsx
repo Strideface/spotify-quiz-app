@@ -40,7 +40,7 @@ export default function ResultsSavedBanner() {
             <Alert message="Saving results..." color="foreground" isBordered />
           )}
           {mutationStatus[0] === "error" && (
-            <Alert message="Could not save results" isBordered />
+            <Alert message="Error: result not saved" isBordered />
           )}
           {mutationStatus[0] === "success" && (
             <Alert message="Results saved!" color="success" isBordered />

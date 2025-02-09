@@ -11,7 +11,7 @@ import {
 import { User } from "@nextui-org/user";
 import { fetchUserResults } from "../../util/firestoreDB-api";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState, useMemo, useRef } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Chip } from "@nextui-org/chip";
 import { useOutletContext } from "react-router-dom";
 import GenreFilterSelector from "./GenreFilterSelector";
