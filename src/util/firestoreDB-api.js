@@ -75,16 +75,12 @@ if (process.env.NODE_ENV === "development") {
 // Create a ReCaptchaEnterpriseProvider instance using reCAPTCHA Enterprise site key.
 // ** Warning: Do not try to enable localhost debugging by adding localhost to reCAPTCHA’s allowed domains. Doing so would allow anyone to run your app from their local machines **
 
-//TODO: double-check this as I think you need to enable setTokenAutoRefreshEnabled(true) in order for auto refreshes to work.
-// However, having tried different ways, it's not clear how. https://firebase.google.com/docs/app-check/web/recaptcha-enterprise-provider#initialize
 const appCheck = initializeAppCheck(app, {
   provider: new ReCaptchaEnterpriseProvider(
     process.env.REACT_APP_RECAPTCHA_SITE_KEY
   ),
   isTokenAutoRefreshEnabled: true, // Set to true to allow auto-refresh.
 });
-
-//TODO: Enable App Check enforcement when you decide to deploy the latest new build: https://firebase.google.com/docs/app-check/enable-enforcement?authuser=0
 
 // Functions
 
@@ -158,11 +154,3 @@ export const addUserResult = async (userResult) => {
     throw new Error();
   }
 };
-
-// FIREBASE RULES FOR WRITES
-
-// 1) use appCheck
-// 2) check request.data to see if all the required fields are there
-// all fields should be required. Set character limits for strings.
-// 3) use cloud function, onDocumentCreated in the app to email you
-// whenever a doc gets created.
