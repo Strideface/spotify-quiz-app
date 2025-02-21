@@ -208,7 +208,6 @@ export async function fetchUserPlaylists() {
       }
     }
   }
-
   return userPlaylistItems;
 }
 
@@ -275,8 +274,55 @@ export async function fetchSearchedItems(searchTerm, market, type, limit) {
   return searchResultsItems;
 }
 
+export async function fetchCompetePlaylists() {
+  let accessToken = await getLocalAccessToken();
+  // ** hard coding the specific playlists to be used as they have been pre-selected and should always remain the same
+  // to standardize the competition and results. Will need to change if any of them get deleted **
+  // These playlists have been created by me because I need a way of telling the app which genre these playlists are.
+  // The genre is stated in the description and then incorporated into the quizData object.
+
+  const playlistIds = [
+    "2LrFcj7DshhuDQF4lP2fSv",
+    "1hWjtqMectOC0ZA1tnBYOU",
+    "44H8EfWbeVdjCGOAQkKvng",
+  ];
+  // rock, modern pop, hip-hop
+
+  // Loop through array of playlist Ids and store each playlist object returned.
+  const playlists = [];
+  for (let i = 0; i < playlistIds.length; i++) {
+    const response = await fetch(
+      "https://api.spotify.com/v1/playlists/" + playlistIds[i],
+      {
+        method: "GET",
+        headers: { Authorization: `Bearer ${accessToken}` },
+      }
+    );
+
+    if (!response.ok) {
+      const error = new Error("An error occurred while fetching playlists.");
+      error.code = response.status;
+      error.info = await response.json();
+      // eslint-disable-next-line no-console
+      console.log(
+        error +
+          " - status: " +
+          error.code +
+          "- message: " +
+          error.info.error.message
+      );
+      throw error;
+    }
+
+    let responseJson = await response.json();
+    playlists.push(responseJson);
+  }
+
+  return playlists;
+}
+
 export async function fetchPlaylistTracks(
-  playlistTracksHref,
+  id,
   market,
   limit,
   playlistTotalTracks
@@ -303,10 +349,13 @@ export async function fetchPlaylistTracks(
   let remainingLimit = limit;
 
   while (getNext) {
-    const response = await fetch(playlistTracksHref + "?" + queryParams, {
-      method: "GET",
-      headers: { Authorization: `Bearer ${accessToken}` },
-    });
+    const response = await fetch(
+      `https://api.spotify.com/v1/playlists/${id}/tracks?` + queryParams,
+      {
+        method: "GET",
+        headers: { Authorization: `Bearer ${accessToken}` },
+      }
+    );
 
     if (!response.ok) {
       const error = new Error(
@@ -550,4 +599,63 @@ export async function pausePlayback() {
   }
 
   return "pause playback success";
+}
+
+export async function fetchUsers(userIds) {
+  let accessToken = await getLocalAccessToken();
+
+  // loop through each id in the userIds array and get details for each user
+  const userDetails = [];
+
+  for (let i = 0; i < userIds.length; i++) {
+    const response = await fetch(
+      "https://api.spotify.com/v1/users/" + userIds[i],
+      {
+        method: "GET",
+        headers: { Authorization: `Bearer ${accessToken}` },
+      }
+    );
+
+    if (!response.ok) {
+      // If an error occurs wihh a status: 400 - message: Invalid username, OR status: 404 Resource not found - 
+      // It should be because the user id no longer exists.
+      // This could happen if a Spotify user saves a result on the db but later deletes their Spotify account.
+      // add a custom object for these cases and then break the for loop so it fetches next user, or ends.
+      if (response.status === 400 || response.status === 404) {
+        userDetails.push({
+          name: "Deactivated",
+          image: null,
+        });
+        // skip to next userId in the loop
+        continue;
+
+      } else {
+        const error = new Error(
+          "An error occurred while fetching spotify user details"
+        );
+        error.code = response.status;
+        error.info = await response.json();
+        // eslint-disable-next-line no-console
+        console.log(
+          error +
+            " - status: " +
+            error.code +
+            "- message: " +
+            error.info.error.message
+        );
+        throw error;
+      }
+    }
+
+    let responseJson = await response.json();
+    let name = responseJson.display_name;
+    let image = responseJson.images[0] ? responseJson.images[0].url : null;
+
+    userDetails.push({
+      name,
+      image,
+    });
+  }
+
+  return userDetails;
 }

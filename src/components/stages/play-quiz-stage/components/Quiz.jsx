@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useOutletContext } from "react-router-dom";
+import { useMutateUserResults } from "../../../../hooks/useMutateUserResults";
 import { fetchPlaylistTracks } from "../../../../util/spotify-api";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
@@ -33,6 +34,7 @@ export default function Quiz({ inPlay, setTracksReady, setError }) {
   activeTrackIndex.current = userResponse.length;
 
   const { quizData, setQuizStage } = useOutletContext();
+  const mutateUserResults = useMutateUserResults();
 
   const {
     data: playlistTracksData,
@@ -41,21 +43,22 @@ export default function Quiz({ inPlay, setTracksReady, setError }) {
   } = useQuery({
     queryFn: () =>
       fetchPlaylistTracks(
-        quizData.current.playlistTracksHref,
+        quizData.current.playlist.id,
         quizData.current.userDetails.country,
         quizData.current.quizTotalTracks,
-        quizData.current.playlistTotalTracks
+        quizData.current.playlist.playlistTotalTracks
       ),
+    // because the app always refreshes (via BackToStart.jsx button or refreshng the browser - same result - )
+    // caching here is irrelvevant. If it were to keep the cached results, then if the same playlist was played again,
+    // the exact same tracks would be got from the cache, and how many the user selected would make no difference.
     queryKey: [
       "fetchPlaylistTracks",
-      { tracks: quizData.current.playlistTracksHref },
+      { tracks: quizData.current.playlist.id },
     ],
     refetchOnWindowFocus: false,
     staleTime: Infinity, // Only get playlist tracks once. Data is never considered old so no auto refetches.
     retry: 2,
   });
-  //! the query is not caching previous results, probably due to what's in the response header
-  // 'Cache-Control: public, max-age=0'
 
   // get quiz tracks result from fetchPlaylistTracks once available
   useEffect(() => {
@@ -103,6 +106,8 @@ export default function Quiz({ inPlay, setTracksReady, setError }) {
   const handleModalOnClick = () => {
     // change UI to the final results stage once tracks are exhausted
     if (userResponse.length === quizData.current.quizTracks.length) {
+      // add results to the DB before moving to final results stage, if compete quiz
+      if (quizData.current.gameId === 'COMPETE') mutateUserResults();
       setModalIsOpen(false);
       setQuizStage((prevState) => ({
         ...prevState,

@@ -9,14 +9,14 @@ import {
 import { Badge } from "@nextui-org/badge";
 import { Avatar } from "@nextui-org/avatar";
 import { useOutletContext } from "react-router-dom";
+import { convertToPercentageScore } from "../../../../util/util";
 
 export default function Results() {
   const { quizData } = useOutletContext();
 
-  const percentageScore = Math.floor(
-    (quizData.current.quizResults.totalPoints /
-      (quizData.current.quizTotalTracks * 2)) *
-      100
+  const percentageScore = convertToPercentageScore(
+    quizData.current.quizResults.totalPoints,
+    quizData.current.quizTotalTracks
   );
 
   return (
@@ -74,7 +74,7 @@ export default function Results() {
                     showFallback
                     size="lg"
                     isBordered
-                    color="primary"
+                    color="secondary"
                     radius="sm"
                   />
                 </Badge>

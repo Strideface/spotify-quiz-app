@@ -7,22 +7,15 @@ export default function GameTile({ title, description, image, gameId }) {
   const { setQuizStage, isAuthenticated, quizData } = useOutletContext();
 
   const handleOnClick = () => {
+    // set the selected game
     quizData.current.gameId = gameId;
-
-    // else if because may want to add more games at a later point.
-    if (quizData.current.gameId === "INTROS") {
-      setQuizStage((prevState) => ({
-        ...prevState,
-        gameTilesStage: false,
-        selectPlaylistStage: true,
-      }));
-    } else if (quizData.current.gameId === "COMPETE") {
-      setQuizStage((prevState) => ({
-        ...prevState,
-        gameTilesStage: false,
-        playQuizStage: true,
-      }));
-    }
+    // Move to the next stage, which will show either the compete or user and search playlists
+    // depending on the game selected
+    setQuizStage((prevState) => ({
+      ...prevState,
+      gameTilesStage: false,
+      selectPlaylistStage: true,
+    }));
   };
 
   return (

@@ -5,17 +5,20 @@ import { motion } from "framer-motion";
 import { Tooltip } from "@nextui-org/tooltip";
 
 export default function PlaylistCard({
+  id,
   name,
-  playlistTracksHref,
   totalTracks,
   image,
+  genre,
   setPlaylistSelected,
 }) {
   const { quizData } = useOutletContext();
 
-  const handleOnClick = (playlistTracksHref) => {
-    quizData.current.playlistTracksHref = playlistTracksHref;
-    quizData.current.playlistTotalTracks = totalTracks;
+  const handleOnClick = (id) => {
+    quizData.current.playlist.playlistTotalTracks = totalTracks;
+    quizData.current.playlist.name = name;
+    quizData.current.playlist.id = id;
+    quizData.current.playlist.genre = genre;
     setPlaylistSelected(true);
   };
 
@@ -24,7 +27,7 @@ export default function PlaylistCard({
       <Card
         isPressable
         shadow="lg"
-        onPress={() => handleOnClick(playlistTracksHref)}
+        onPress={() => handleOnClick(id)}
         classNames={{
           base: "flex-none border py-3 w-60 sm:w-80 sm:h-96 bg-foreground text-default",
           body: "overflow-visible py-1 ",
