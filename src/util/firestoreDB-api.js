@@ -1,4 +1,4 @@
-import { initializeApp } from "firebase/app";
+import { initializeApp, getApp } from "firebase/app";
 import {
   initializeAppCheck,
   ReCaptchaEnterpriseProvider,
@@ -13,6 +13,7 @@ import {
   orderBy,
   connectFirestoreEmulator,
 } from "firebase/firestore/lite";
+import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
 
 import { fetchUsers } from "./spotify-api";
 
@@ -25,7 +26,6 @@ import { fetchUsers } from "./spotify-api";
 //Don't commit it to a public repository, and if a registered token is ever compromised, revoke it immediately in the Firebase console.
 //This token is stored locally in your browser and will be used whenever you use your app in the same browser on the same machine.
 //If you want to use the token in another browser or on another machine, set FIREBASE_APPCHECK_DEBUG_TOKEN to the token string instead of true (Stored in .env file)
-
 
 // 1) Create config object for Firebase:
 
@@ -43,31 +43,32 @@ const firebaseConfig = {
 // 2) Initialize Firebase instance:
 const app = initializeApp(firebaseConfig);
 
-// 3) Create instance of Firestore DB (Dev v Prod):
+// 3) Get instance of Firestore DB (Dev v Prod):
 
 let db = null;
 
-//** DEV 
+//** DEV
 // - set debug token to match what is currently in Firebase console / App Check / Manage debug tokens.
 // - run a local version of firestore using emulator.
+// - configure interaction with the Cloud Functions for Firebase emulator
 if (process.env.NODE_ENV === "development") {
   window.FIREBASE_APPCHECK_DEBUG_TOKEN =
     process.env.REACT_APP_SPOTIFY_QUIZ_APP_DEBUG_TOKEN; // true
 
   db = getFirestore();
   connectFirestoreEmulator(db, "127.0.0.1", 8080);
-  // If you need to connect to the prod version of firestore DB whilst in dev (and hash out previous two lines):
+  // Optional - if you need to connect to the prod version of firestore DB whilst in dev (and hash out previous two lines):
   // db = getFirestore(app);
+
+  const functions = getFunctions(getApp());
+  connectFunctionsEmulator(functions, "127.0.0.1", 5001);
 } else {
-// ** PROD
+  // ** PROD
   db = getFirestore(app);
-  // enable offline caching. Unsure if this is right: https://firebase.google.com/docs/firestore/manage-data/enable-offline?_gl=1*1rsc87*_up*MQ..*_ga*NjQ1ODg5MjQuMTczNjI3NTY2Mg..*_ga_CW55HF8NVT*MTczNjI3NTY2Mi4xLjAuMTczNjI3NTY2Mi4wLjAuMA..#configure_offline_persistence
-  // db.enablePersistence();
 }
 
-
-
-
+//**by default, if app goes offline, firestore will get any data from local memory cache so if it tries to write data in that time, it will do once back online  */
+// https://firebase.google.com/docs/firestore/manage-data/enable-offline?_gl=1*1rsc87*_up*MQ..*_ga*NjQ1ODg5MjQuMTczNjI3NTY2Mg..*_ga_CW55HF8NVT*MTczNjI3NTY2Mi4xLjAuMTczNjI3NTY2Mi4wLjAuMA..#configure_offline_persistence
 
 // 4) Enable App Check
 

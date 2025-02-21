@@ -58,7 +58,7 @@
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject",
-    "emulators": "firebase emulators:start"
+    "emulators": "firebase emulators:start --inspect-functions"
   },
   "eslintConfig": {
     "extends": [
