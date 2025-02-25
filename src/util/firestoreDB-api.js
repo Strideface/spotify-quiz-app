@@ -55,10 +55,10 @@ if (process.env.NODE_ENV === "development") {
   window.FIREBASE_APPCHECK_DEBUG_TOKEN =
     process.env.REACT_APP_SPOTIFY_QUIZ_APP_DEBUG_TOKEN; // true
 
-  // db = getFirestore();
-  // connectFirestoreEmulator(db, "127.0.0.1", 8080);
+  db = getFirestore();
+  connectFirestoreEmulator(db, "127.0.0.1", 8080);
   // Optional - if you need to connect to the prod version of firestore DB whilst in dev (and hash out previous two lines):
-  db = getFirestore(app);
+  // db = getFirestore(app);
 
   const functions = getFunctions(getApp());
   connectFunctionsEmulator(functions, "127.0.0.1", 5001);
