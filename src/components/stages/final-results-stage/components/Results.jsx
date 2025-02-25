@@ -26,6 +26,7 @@ export default function Results() {
         base: " max-w-xl m-auto",
         td: " sm:text-sm-screen-2 font-medium",
       }}
+      aria-label="results table"
     >
       <TableHeader>
         <TableColumn></TableColumn>

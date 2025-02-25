@@ -25,7 +25,7 @@ export default function SelectPlaylistStage() {
   const [selectedDifficulty, setSelectedDifficulty] = useState("medium");
   const [numberOfTracks, setNumberOfTracks] = useState();
   //set the default number of tracks for a compete quiz
-  const competeNumberOfTracks = useRef(2); //TEST
+  const competeNumberOfTracks = useRef(15);
 
   // Authentication check
   useAuthCheck();

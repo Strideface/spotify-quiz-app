@@ -3,10 +3,7 @@
  * See a full list of supported triggers at https://firebase.google.com/docs/functions
  */
 require("dotenv").config();
-const {
-  info,
-  error,
-} = require("firebase-functions/logger");
+const { info, error } = require("firebase-functions/logger");
 require("firebase-functions/logger/compat");
 const { onDocumentCreated } = require("firebase-functions/v2/firestore");
 const nodemailer = require("nodemailer");
@@ -27,7 +24,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-//** Optional - create an alternative transport that uses Brevo in prod but Mailtrap in dev. 
+//** Optional - create an alternative transport that uses Brevo in prod but Mailtrap in dev.
 // Could be helpful for debugging as it intercepts the email before it hits the recipient*/
 
 // const transporter = nodemailer.createTransport(
@@ -42,14 +39,13 @@ const transporter = nodemailer.createTransport({
 //       }
 //     : {
 //         host: process.env.MAILTRAP_HOST,
-//         port: process.env.MAILTRAP_POST,
+//         port: process.env.MAILTRAP_PORT,
 //         auth: {
 //           user: process.env.MAILTRAP_USERNAME,
 //           pass: process.env.MAILTRAP_PASSWORD,
 //         },
 //       }
 // );
-
 
 // 2) function that creates the email and sends
 async function sendEmail(data) {
