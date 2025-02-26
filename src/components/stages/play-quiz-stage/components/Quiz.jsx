@@ -51,10 +51,7 @@ export default function Quiz({ inPlay, setTracksReady, setError }) {
     // because the app always refreshes (via BackToStart.jsx button or refreshng the browser - same result - )
     // caching here is irrelvevant. If it were to keep the cached results, then if the same playlist was played again,
     // the exact same tracks would be got from the cache, and how many the user selected would make no difference.
-    queryKey: [
-      "fetchPlaylistTracks",
-      { tracks: quizData.current.playlist.id },
-    ],
+    queryKey: ["fetchPlaylistTracks", { tracks: quizData.current.playlist.id }],
     refetchOnWindowFocus: false,
     staleTime: Infinity, // Only get playlist tracks once. Data is never considered old so no auto refetches.
     retry: 2,
@@ -107,7 +104,7 @@ export default function Quiz({ inPlay, setTracksReady, setError }) {
     // change UI to the final results stage once tracks are exhausted
     if (userResponse.length === quizData.current.quizTracks.length) {
       // add results to the DB before moving to final results stage, if compete quiz
-      if (quizData.current.gameId === 'COMPETE') mutateUserResults();
+      if (quizData.current.gameId === "COMPETE") mutateUserResults();
       setModalIsOpen(false);
       setQuizStage((prevState) => ({
         ...prevState,
