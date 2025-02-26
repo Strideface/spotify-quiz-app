@@ -10,14 +10,60 @@ Due to Spotify's TOS, the app cannot be approved for the 'extended quota mode' w
 
 To run locally, you need to add a .env file at the root of the directory, with the following enviroment variables:
 
-`REACT_APP_SPOTIFY_CLIENT_ID=*my_spotify_client_id`\
+(Remember that in a 'Create React App' app, EVs must start with 'REACT_APP', else they won't be recognized.)
+
+#Firebase Configuration object
+
+`REACT_APP_FIREBASE_API_KEY=xxx`
+
+`REACT_APP_FIREBASE_AUTH_DOMAIN=xxx`
+
+`REACT_APP_FIREBASE_PROJECT_ID=xxx`
+
+`REACT_APP_FIREBASE_STORAGE_BUCKET=xxx`
+
+`REACT_APP_FIREBASE_MESSAGING_SENDER_ID=xxx`
+
+`REACT_APP_FIREBASE_APP_ID=xxx`
+
+#AppCheck details
+
+`REACT_APP_SPOTIFY_QUIZ_APP_DEBUG_TOKEN=xxx`
+
+#Spotify API account details
+
+`REACT_APP_SPOTIFY_CLIENT_ID=*my_spotify_client_id`
+
 `REACT_APP_SPOTIFY_REDIRECT_URI_DEV=http://localhost:3000/`
 
-Original .env file for this project has been ignored by Git and does not show in this repo.
 
+A seperate .env file needs to be included in the root of the 'Functions' sub directory in order to make the Firebase Function work:
 
+#SMTP details and credentials for Brevo account
 
+`BREVO_HOST=xx`
 
+`BREVO_PORT=xxx`
+
+`BREVO_USERNAME=xxx`
+
+`BREVO_PASSWORD=xxx`
+
+`BREVO_FROM=*the email address sending the email`
+
+`RECIPIENT_EMAIL=*the email address receiving the email`
+
+#SMTP details and credentials for Mailtrap account
+
+`MAILTRAP_HOST=xxx`
+
+`MAILTRAP_PORT=xxx`
+
+`MAILTRAP_USERNAME=xxx`
+
+`MAILTRAP_PASSWORD=xxx`
+
+### Variable values with 'xxx' will need to be provided in a secure manner by the admin 
 
 # Getting Started with Create React App
 
