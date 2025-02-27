@@ -10,11 +10,11 @@ import {
   fetchUserDetails,
 } from "../../../../util/spotify-api.js";
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
+import { Spinner } from "@nextui-org/spinner";
 import { Avatar } from "@nextui-org/avatar";
 import Alert from "../../../Alert.jsx";
 
 export default function Authentication() {
-
   const queryClient = useQueryClient();
 
   const { isAuthenticated, setIsAuthenticated, quizData } = useOutletContext();
@@ -111,14 +111,12 @@ export default function Authentication() {
       } else {
         // need to clear cache used by tanstack query so that if a different user signs in immediately after,
         // it will be forced to get new data, not old from cache stored after the initial fetch.
-        queryClient.clear();      
+        queryClient.clear();
         authError.current = "Sorry, this app is only for Spotify Premium users";
         setIsAuthenticated(false);
-        
       }
     }
   }, [queryClient, quizData, setIsAuthenticated, userData, userIsSuccess]);
-
 
   return (
     <div className=" flex min-w-72">
@@ -132,15 +130,18 @@ export default function Authentication() {
       >
         {isAuthenticated && (
           <CardHeader>
-            <Avatar
-              src={userData?.images[0]?.url}
-              alt="user profile image"
-              showFallback
-              color="primary"
-              size="lg"
-              isBordered
-              radius="sm"
-            />
+            {userIsLoading && <Spinner />}
+            {userData && (
+              <Avatar
+                src={userData?.images[0]?.url}
+                alt="user profile image"
+                showFallback
+                color="primary"
+                size="lg"
+                isBordered
+                radius="sm"
+              />
+            )}
           </CardHeader>
         )}
         <CardBody className=" font-medium gap-4 justify-center text-mobile-3 sm:text-sm-screen-2">

@@ -335,6 +335,7 @@ export async function fetchPlaylistTracks(
     // randomize the offset if limit selected is different to playlistTotalTracks. Otherwise, always be getting from first track.
     offset: Math.floor(Math.random() * (playlistTotalTracks - limit)), // Returns a random integer from 0 to the difference of playlistTotalTracks - limit:
   });
+
   // only pass in a market value if one was receieved through params
   // (if user details were not retrieved for any reason, market value would be empty as this is where I'm getting it from currently)
   // however, also note that: "If a valid user access token is specified in the request header, the country associated with the user account will take priority over this parameter."
@@ -617,7 +618,7 @@ export async function fetchUsers(userIds) {
     );
 
     if (!response.ok) {
-      // If an error occurs wihh a status: 400 - message: Invalid username, OR status: 404 Resource not found - 
+      // If an error occurs wihh a status: 400 - message: Invalid username, OR status: 404 Resource not found -
       // It should be because the user id no longer exists.
       // This could happen if a Spotify user saves a result on the db but later deletes their Spotify account.
       // add a custom object for these cases and then break the for loop so it fetches next user, or ends.
@@ -628,7 +629,6 @@ export async function fetchUsers(userIds) {
         });
         // skip to next userId in the loop
         continue;
-
       } else {
         const error = new Error(
           "An error occurred while fetching spotify user details"
