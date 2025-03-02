@@ -22,6 +22,7 @@ import { Image } from "@nextui-org/image";
 import { Button } from "@nextui-org/button";
 import CorrectIcon from "../../../../images/CorrectIcon";
 import IncorrectIcon from "../../../../images/IncorrectIcon";
+import SpotifyIcon from "../../../../images/Spotify_Icon_RGB_Green.png";
 
 export default function Quiz({ inPlay, setTracksReady, setError }) {
   const activeTrackIndex = useRef();
@@ -166,7 +167,11 @@ export default function Quiz({ inPlay, setTracksReady, setError }) {
                     src={
                       userResponse.length > 0 &&
                       quizData.current.quizTracks[activeTrackIndex.current - 1]
-                        .album.images[0].url
+                        .album.images[0]
+                        ? quizData.current.quizTracks[
+                            activeTrackIndex.current - 1
+                          ].album.images[0].url
+                        : SpotifyIcon
                     }
                     isZoomed
                   />

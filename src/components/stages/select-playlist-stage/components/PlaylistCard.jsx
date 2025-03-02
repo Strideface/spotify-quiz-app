@@ -3,6 +3,7 @@ import { Image } from "@nextui-org/image";
 import { useOutletContext } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Tooltip } from "@nextui-org/tooltip";
+import spotifyIcon from "../../../../images/Spotify_Icon_RGB_Green.png";
 
 export default function PlaylistCard({
   id,
@@ -47,7 +48,7 @@ export default function PlaylistCard({
           <Image
             alt="Playlist Cover Image"
             className="object-cover rounded-xl aspect-square"
-            src={image.url}
+            src={image ? image.url : spotifyIcon}
           />
         </CardBody>
       </Card>

@@ -557,7 +557,17 @@ export async function resumePlayback(trackUri, resumeFromStart) {
   );
 
   if (!response.ok) {
-    const error = new Error("An error occurred when attempting playback");
+    let error = null;
+    //show user that the error seems to be related to a track that cannot be found on Spotify. This occurs when a track is_local
+    //and was uploaded by a user at some point but now does not exist ("Invalid track uri").
+    if (response.status === 400) {
+      error = new Error("Spotify cannot play this track. It may not exist");
+    }
+    // otherwise, it's an undetermined error
+    else {
+      error = new Error("An error occurred when attempting playback");
+    }
+
     error.code = response.status;
     error.info = await response.json();
     // eslint-disable-next-line no-console

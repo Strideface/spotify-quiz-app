@@ -31,7 +31,7 @@ export default function SelectPlaylistStage() {
   useAuthCheck();
 
   // assign selected total tracks for quiz
-  const handleOnSubmit = (event) => {
+  const handleOnSubmit = () => {
     // close modal first
     setPlaylistSelected(false);
 
@@ -228,7 +228,7 @@ export default function SelectPlaylistStage() {
           </AccordionItem>
         </Accordion>
       )}
-      <BackToStartButton label="Back to start" fullWidth={false} size="md"/>
+      <BackToStartButton label="Back to start" fullWidth={false} size="md" />
     </motion.div>
   );
 }
