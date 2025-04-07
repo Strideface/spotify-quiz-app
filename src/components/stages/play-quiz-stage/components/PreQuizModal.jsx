@@ -54,13 +54,13 @@ export default function PreQuizModal({ inPlay, setInPlay, tracksReady, error }) 
         <span className=" text-orange-500 underline">Medium</span>
       </li>
       <li>
-        Time Limt per track: <span className=" underline">30 seconds</span>
+        Time Limt per track: <span className=" underline">60 seconds</span>
       </li>
       <li>
         Repeat track from start limit:{" "}
         <span className=" underline">Unlimited</span>
       </li>
-      <li>A 60 second preview of the track can be played</li>
+      <li>A 30 second preview of the track can be played</li>
     </ul>
   );
 
